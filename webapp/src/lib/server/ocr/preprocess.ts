@@ -2,11 +2,23 @@ import sharp from 'sharp';
 import { env } from '$env/dynamic/private';
 
 const DEFAULT_MIN_BLUR_VARIANCE = 0;
+/** After EXIF auto-orient: extra rotation so Tesseract sees horizontal text lines (portrait in-frame camera crop is often sideways). Sharp: positive = clockwise, negative = counter‑clockwise (“90° nach links” = -90). */
+const DEFAULT_ROTATE_AFTER_EXIF = -90;
 
 export async function preprocessForOcr(imageBuffer: Buffer): Promise<Buffer> {
 	const configuredThreshold = Number(env.OCR_MIN_BLUR_VARIANCE ?? DEFAULT_MIN_BLUR_VARIANCE);
 	const minBlurVariance = Number.isFinite(configuredThreshold) ? Math.max(0, configuredThreshold) : 0;
-	const normalized = sharp(imageBuffer).rotate().grayscale().normalize();
+	const rotateParsed = Number.parseInt(
+		env.OCR_ROTATE_AFTER_EXIF ?? String(DEFAULT_ROTATE_AFTER_EXIF),
+		10
+	);
+	const rotateAfterExif = Number.isFinite(rotateParsed) ? rotateParsed : DEFAULT_ROTATE_AFTER_EXIF;
+
+	let pipeline = sharp(imageBuffer).rotate();
+	if (rotateAfterExif !== 0) {
+		pipeline = pipeline.rotate(rotateAfterExif);
+	}
+	const normalized = pipeline.grayscale().normalize();
 	const { data, info } = await normalized
 		.clone()
 		.resize({ width: 1800, withoutEnlargement: true })
