@@ -5,6 +5,12 @@ import { sveltekit } from '@sveltejs/kit/vite';
 
 export default defineConfig({
 	plugins: [tailwindcss(), sveltekit()],
+	server: {
+		https: {
+			key: './private.key',
+			cert: './certificate.crt'
+		}
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [
