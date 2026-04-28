@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
+	import { overlayBusinessCardGate } from '$lib/scan/overlay-card-detection';
 
 	type CaptureMode = 'manual' | 'auto';
 
@@ -29,16 +30,16 @@
 
 	/** Physical card width ÷ height (landscape). Scan frame is portrait: frame height ÷ frame width = this. */
 	const CARD_RATIO = 1.586;
-	const ANALYSIS_INTERVAL_MS = 220;
-	const REQUIRED_STABLE_FRAMES = 5;
+	const ANALYSIS_INTERVAL_MS = 180;
+	/** Few good frames then capture; burst still picks sharpest full-res shot. */
+	const REQUIRED_STABLE_FRAMES = 3;
 	const ANALYSIS_WIDTH = 320;
 	const ANALYSIS_HEIGHT = 240;
 	const CAPTURE_BURST_FRAMES = 3;
 	const CAPTURE_BURST_DELAY_MS = 90;
-	const LIVE_BLUR_THRESHOLD = 22;
+	/** Only used if ENABLE_BLUR_BLOCKING is true; burst capture already picks the sharpest frame. */
+	const LIVE_BLUR_THRESHOLD = 8;
 	const ENABLE_BLUR_BLOCKING = false;
-	const CARD_MARGIN_MIN_RATIO = 0.015;
-	const CARD_MARGIN_MAX_RATIO = 0.11;
 	/** Guide frame: use almost full width of the visible crop; cap height if the card would not fit. */
 	const OVERLAY_WIDTH_FRAC = 0.94;
 	const OVERLAY_HEIGHT_FRAC = 0.94;
@@ -101,7 +102,7 @@
 				await videoRef.play();
 				updateGuideLayout();
 				startAutoAnalysis();
-				status = 'Searching for a stable card...';
+				status = 'Place the card in the frame…';
 			}
 		} catch {
 			error = 'Camera access failed. Use file upload instead.';
@@ -234,8 +235,6 @@
 		const data = imageData.data;
 
 		let totalBrightness = 0;
-		let edgeHits = 0;
-		let totalGradient = 0;
 		let pixelCount = 0;
 
 		for (let i = 0; i < data.length; i += 4) {
@@ -244,56 +243,17 @@
 			pixelCount++;
 		}
 
-		const width = imageData.width;
-		const height = imageData.height;
-		const edgeThreshold = 28;
-		const edgeMap = new Uint8Array(width * height);
-		for (let y = 0; y < height - 1; y++) {
-			for (let x = 0; x < width - 1; x++) {
-				const index = (y * width + x) * 4;
-				const right = index + 4;
-				const down = ((y + 1) * width + x) * 4;
-				const brightnessA = (data[index] + data[index + 1] + data[index + 2]) / 3;
-				const brightnessRight = (data[right] + data[right + 1] + data[right + 2]) / 3;
-				const brightnessDown = (data[down] + data[down + 1] + data[down + 2]) / 3;
-				const gradient =
-					Math.abs(brightnessA - brightnessRight) + Math.abs(brightnessA - brightnessDown);
-				totalGradient += gradient;
-				if (gradient > edgeThreshold) {
-					edgeHits++;
-					edgeMap[y * width + x] = 1;
-				}
-			}
-		}
-
 		const avgBrightness = totalBrightness / Math.max(pixelCount, 1);
-		const edgeDensity = edgeHits / Math.max(width * height, 1);
-		const blurScore = totalGradient / Math.max((width - 1) * (height - 1), 1);
 
 		const sample = sampleFrame(data, 8);
 		const motionScore = previousSampleFrame ? computeDiff(previousSampleFrame, sample) : 0;
 		previousSampleFrame = sample;
 
-		const brightnessOk = avgBrightness > 68 && avgBrightness < 210;
-		const edgeOk = edgeDensity > 0.06 && edgeDensity < 0.3;
-		const stableOk = motionScore < 14;
-		const blurOk = blurScore > LIVE_BLUR_THRESHOLD;
-		const cardFit = estimateCardFit(edgeMap, width, height);
-		const marginLeft = cardFit.left / Math.max(width, 1);
-		const marginRight = (width - cardFit.right - 1) / Math.max(width, 1);
-		const marginTop = cardFit.top / Math.max(height, 1);
-		const marginBottom = (height - cardFit.bottom - 1) / Math.max(height, 1);
-		const sizeOk =
-			cardFit.found &&
-			marginLeft >= CARD_MARGIN_MIN_RATIO &&
-			marginLeft <= CARD_MARGIN_MAX_RATIO &&
-			marginRight >= CARD_MARGIN_MIN_RATIO &&
-			marginRight <= CARD_MARGIN_MAX_RATIO &&
-			marginTop >= CARD_MARGIN_MIN_RATIO &&
-			marginTop <= CARD_MARGIN_MAX_RATIO &&
-			marginBottom >= CARD_MARGIN_MIN_RATIO &&
-			marginBottom <= CARD_MARGIN_MAX_RATIO;
-		const ready = brightnessOk && edgeOk && stableOk && sizeOk;
+		const brightnessOk = avgBrightness > 40 && avgBrightness < 248;
+		const stableOk = motionScore < 40;
+		const cardGate = overlayBusinessCardGate(imageData);
+		const cardOk = cardGate.pass;
+		const ready = brightnessOk && stableOk && cardOk;
 
 		qualityReady = ready;
 		if (ready) {
@@ -305,15 +265,13 @@
 		} else {
 			stableFrames = 0;
 			if (!brightnessOk) {
-				status = avgBrightness <= 68 ? 'Too dark. Add more light.' : 'Too bright. Reduce glare.';
-			} else if (!blurOk) {
-				status = 'Image is blurry. Hold still or move closer.';
+				status = avgBrightness <= 40 ? 'Too dark. Add more light.' : 'Too bright. Reduce glare.';
 			} else if (!stableOk) {
-				status = 'Hold steady.';
-			} else if (!sizeOk) {
-				status = 'Move card closer and keep all edges inside the guide band.';
+				status = 'Hold still briefly…';
+			} else if (cardGate.detail === 'weak_scene') {
+				status = 'Place a business card in the frame.';
 			} else {
-				status = 'Place card fully inside the frame.';
+				status = 'Keep the full card inside the frame — do not crop any edge.';
 			}
 		}
 
@@ -329,65 +287,6 @@
 			sampled[cursor++] = (data[i] + data[i + 1] + data[i + 2]) / 3;
 		}
 		return sampled;
-	}
-
-	function estimateCardFit(
-		edgeMap: Uint8Array,
-		width: number,
-		height: number
-	): { found: boolean; left: number; right: number; top: number; bottom: number } {
-		const minHitsPerRow = Math.max(8, Math.floor(width * 0.04));
-		const minHitsPerCol = Math.max(8, Math.floor(height * 0.04));
-		let top = -1;
-		let bottom = -1;
-		let left = -1;
-		let right = -1;
-
-		for (let y = 0; y < height; y++) {
-			let hits = 0;
-			for (let x = 0; x < width; x++) {
-				hits += edgeMap[y * width + x];
-			}
-			if (hits >= minHitsPerRow) {
-				top = y;
-				break;
-			}
-		}
-		for (let y = height - 1; y >= 0; y--) {
-			let hits = 0;
-			for (let x = 0; x < width; x++) {
-				hits += edgeMap[y * width + x];
-			}
-			if (hits >= minHitsPerRow) {
-				bottom = y;
-				break;
-			}
-		}
-		for (let x = 0; x < width; x++) {
-			let hits = 0;
-			for (let y = 0; y < height; y++) {
-				hits += edgeMap[y * width + x];
-			}
-			if (hits >= minHitsPerCol) {
-				left = x;
-				break;
-			}
-		}
-		for (let x = width - 1; x >= 0; x--) {
-			let hits = 0;
-			for (let y = 0; y < height; y++) {
-				hits += edgeMap[y * width + x];
-			}
-			if (hits >= minHitsPerCol) {
-				right = x;
-				break;
-			}
-		}
-
-		if (top < 0 || bottom < 0 || left < 0 || right < 0 || bottom <= top || right <= left) {
-			return { found: false, left: 0, right: width - 1, top: 0, bottom: height - 1 };
-		}
-		return { found: true, left, right, top, bottom };
 	}
 
 	function computeDiff(a: Uint8ClampedArray, b: Uint8ClampedArray): number {
