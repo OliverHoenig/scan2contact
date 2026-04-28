@@ -1,7 +1,6 @@
 <script lang="ts">
 	import CameraCapture from '$lib/components/scan/CameraCapture.svelte';
 	import ContactForm from '$lib/components/scan/ContactForm.svelte';
-	import ImagePreview from '$lib/components/scan/ImagePreview.svelte';
 	import VcfDownloadButton from '$lib/components/scan/VcfDownloadButton.svelte';
 	import { contactSchema, type Contact } from '$lib/contact';
 
@@ -26,16 +25,25 @@
 	let offline = $state(false);
 	let step = $state<'capture' | 'processing' | 'review'>('capture');
 
-	async function onCapture(file: File, mode: 'manual' | 'auto') {
-		selectedFile = file;
-		error = '';
-		if (mode === 'auto') await scanImage(file);
-	}
+	let cameraRef = $state<{ captureFrame: () => Promise<File> } | null>(null);
+	let scanBusy = $state(false);
 
-	function onFileChange(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		selectedFile = input.files?.[0] || null;
+	async function handleScan() {
+		if (offline || scanBusy || loading) return;
+		if (!cameraRef) {
+			error = 'Camera is still loading — try again in a moment.';
+			return;
+		}
+		scanBusy = true;
 		error = '';
+		try {
+			const file = await cameraRef.captureFrame();
+			await scanImage(file);
+		} catch (unknownError) {
+			error = unknownError instanceof Error ? unknownError.message : 'Scan failed';
+		} finally {
+			scanBusy = false;
+		}
 	}
 
 	async function scanImage(fileOverride?: File) {
@@ -86,52 +94,68 @@
 		window.addEventListener('online', () => (offline = false));
 		window.addEventListener('offline', () => (offline = true));
 	}
+
+	$effect(() => {
+		if (typeof document === 'undefined') return;
+		if (step !== 'capture') return;
+		const html = document.documentElement;
+		const body = document.body;
+		const prevHtml = html.style.overflow;
+		const prevBody = body.style.overflow;
+		html.style.overflow = 'hidden';
+		body.style.overflow = 'hidden';
+		return () => {
+			html.style.overflow = prevHtml;
+			body.style.overflow = prevBody;
+		};
+	});
 </script>
 
-<main class="page">
-	<header>
-		<h1>Scan2Contact</h1>
-		<p>Hold a business card in view, wait for auto-scan, then verify and export as .vcf.</p>
-	</header>
-
-	{#if offline}
-		<p class="warn">You are offline. OCR requires an internet connection.</p>
-	{/if}
-
+<main class="page" class:page--capture={step === 'capture'}>
 	{#if step === 'capture'}
-		<section class="card">
-			<h2>1. Capture card</h2>
-			<CameraCapture onCaptured={onCapture} autoStart={true} />
-
-			<label class="upload">
-				Upload image (alternative for HTTP/mobile)
-				<input
-					type="file"
-					accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/*"
-					capture="environment"
-					onchange={onFileChange}
-				/>
-			</label>
-			<ImagePreview file={selectedFile} />
+		<header class="capture-header">
+			<h1>Scan2Contact</h1>
+		</header>
+		{#if offline}
+			<p class="capture-offline warn">You are offline. OCR requires an internet connection.</p>
+		{/if}
+		<div
+			class="capture-scanner"
+			style="--capture-bottom-toolbar: calc(2.95rem + env(safe-area-inset-bottom, 0px));"
+		>
+			<CameraCapture bind:this={cameraRef} autoStart={true} fullBleed />
+		</div>
+		<div class="capture-toolbar">
 			<button
 				type="button"
-				onclick={() => scanImage()}
-				disabled={!selectedFile || loading || offline}
+				class="toolbar-scan"
+				onclick={handleScan}
+				disabled={offline || scanBusy || loading}
 			>
-				Scan selected image
+				Scan
 			</button>
+		</div>
+		{#if error}
+			<p class="capture-error">{error}</p>
+		{/if}
+	{:else}
+		<header class="page-header">
+			<h1>Scan2Contact</h1>
+			<p>Point the camera at a business card, press Scan, then verify and export as .vcf.</p>
+		</header>
 
-			{#if error}
-				<p class="error">{error}</p>
-			{/if}
-		</section>
-	{:else if step === 'processing'}
+		{#if offline}
+			<p class="warn">You are offline. OCR requires an internet connection.</p>
+		{/if}
+	{/if}
+
+	{#if step === 'processing'}
 		<section class="card processing">
 			<h2>2. Processing card</h2>
 			<div class="loader" aria-hidden="true"></div>
 			<p>We are extracting text with OCR. This may take a few seconds.</p>
 		</section>
-	{:else}
+	{:else if step === 'review'}
 		<section class="card">
 			<h2>3. Review extracted contact</h2>
 			<p class="consent">Check and correct fields before downloading your vCard.</p>
@@ -154,12 +178,103 @@
 		padding: 0.875rem;
 		display: grid;
 		gap: 0.875rem;
+		min-height: 100dvh;
+		box-sizing: border-box;
 	}
-	header h1 {
+	.page--capture {
+		position: fixed;
+		inset: 0;
+		width: 100%;
+		max-width: none;
+		height: 100dvh;
+		max-height: 100dvh;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		display: block;
+		z-index: 1;
+	}
+	.capture-header {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 20;
+		padding: calc(0.45rem + env(safe-area-inset-top, 0px)) 0.75rem 0.65rem;
+		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.62), transparent);
+		pointer-events: none;
+	}
+	.capture-header h1 {
+		margin: 0;
+		font-size: 1.05rem;
+		font-weight: 700;
+		color: #fafafa;
+		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+	}
+	.capture-offline {
+		position: absolute;
+		top: calc(env(safe-area-inset-top, 0px) + 2.6rem);
+		left: 0.65rem;
+		right: 0.65rem;
+		z-index: 21;
+		margin: 0;
+		font-size: 0.82rem;
+		padding: 0.45rem 0.55rem;
+	}
+	.capture-scanner {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+	}
+	.capture-toolbar {
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 25;
+		display: flex;
+		flex-wrap: nowrap;
+		align-items: center;
+		justify-content: center;
+		padding: 0.4rem 0.75rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
+		background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.2));
+		backdrop-filter: blur(10px);
+		box-sizing: border-box;
+	}
+	.toolbar-scan {
+		width: 100%;
+		max-width: 20rem;
+		min-height: 2.65rem;
+		padding: 0.55rem 1rem;
+		font-size: 1rem;
+		border-radius: 0.55rem;
+		border: 1px solid #fafafa;
+		background: #fafafa;
+		color: #18181b;
+		font-weight: 700;
+	}
+	.toolbar-scan:disabled {
+		opacity: 0.45;
+	}
+	.capture-error {
+		position: absolute;
+		left: 0.6rem;
+		right: 0.6rem;
+		top: calc(env(safe-area-inset-top, 0px) + 2.75rem);
+		z-index: 22;
+		margin: 0;
+		padding: 0.45rem 0.55rem;
+		border-radius: 0.45rem;
+		background: rgba(127, 29, 29, 0.92);
+		color: #fff;
+		font-size: 0.82rem;
+		line-height: 1.3;
+	}
+	.page-header h1 {
 		margin: 0;
 		font-size: clamp(1.45rem, 6vw, 1.95rem);
 	}
-	header p {
+	.page-header p {
 		margin: 0.35rem 0 0;
 		font-size: 0.98rem;
 		color: #3f3f46;
@@ -170,11 +285,6 @@
 		border-radius: 0.8rem;
 		display: grid;
 		gap: 0.8rem;
-	}
-	.upload {
-		display: grid;
-		gap: 0.35rem;
-		font-weight: 600;
 	}
 	.actions {
 		display: flex;
@@ -197,9 +307,6 @@
 	.ghost {
 		background: transparent;
 		color: #18181b;
-	}
-	.error {
-		color: #b91c1c;
 	}
 	.warn {
 		color: #92400e;

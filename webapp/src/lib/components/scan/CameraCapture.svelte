@@ -1,13 +1,7 @@
 <script lang="ts">
 	import { onDestroy, onMount } from 'svelte';
-	import { overlayBusinessCardGate } from '$lib/scan/overlay-card-detection';
 
-	type CaptureMode = 'manual' | 'auto';
-
-	let {
-		onCaptured,
-		autoStart = false
-	}: { onCaptured: (file: File, mode: CaptureMode) => void | Promise<void>; autoStart?: boolean } =
+	let { autoStart = false, fullBleed = false }: { autoStart?: boolean; fullBleed?: boolean } =
 		$props();
 
 	let videoRef = $state<HTMLVideoElement | null>(null);
@@ -16,25 +10,11 @@
 	let guideBoxStyle = $state('');
 	let stream = $state<MediaStream | null>(null);
 	let error = $state('');
-	let status = $state('Align your business card inside the frame.');
-	let qualityReady = $state(false);
-	let autoCaptureLocked = $state(false);
-	let stableFrames = $state(0);
-	let analyzing = $state(false);
+	let status = $state('');
 	let captureBusy = $state(false);
-
-	let analysisCanvas: HTMLCanvasElement | null = null;
-	let analysisContext: CanvasRenderingContext2D | null = null;
-	let analyzeInterval: number | null = null;
-	let previousSampleFrame: Uint8ClampedArray | null = null;
 
 	/** Physical card width ÷ height (landscape). Scan frame is portrait: frame height ÷ frame width = this. */
 	const CARD_RATIO = 1.586;
-	const ANALYSIS_INTERVAL_MS = 180;
-	/** Few good frames then capture; burst still picks sharpest full-res shot. */
-	const REQUIRED_STABLE_FRAMES = 3;
-	const ANALYSIS_WIDTH = 320;
-	const ANALYSIS_HEIGHT = 240;
 	const CAPTURE_BURST_FRAMES = 3;
 	const CAPTURE_BURST_DELAY_MS = 90;
 	/** Only used if ENABLE_BLUR_BLOCKING is true; burst capture already picks the sharpest frame. */
@@ -101,16 +81,14 @@
 				videoRef.onresize = () => updateGuideLayout();
 				await videoRef.play();
 				updateGuideLayout();
-				startAutoAnalysis();
-				status = 'Place the card in the frame…';
+				status = 'Position the card, then press Scan.';
 			}
 		} catch {
-			error = 'Camera access failed. Use file upload instead.';
+			error = 'Camera access failed.';
 		}
 	}
 
 	function stopCamera() {
-		stopAutoAnalysis();
 		stream?.getTracks().forEach((track) => track.stop());
 		stream = null;
 		guideBoxStyle = '';
@@ -119,37 +97,8 @@
 			videoRef.onresize = null;
 			videoRef.srcObject = null;
 		}
-		qualityReady = false;
-		autoCaptureLocked = false;
-		stableFrames = 0;
-		previousSampleFrame = null;
-		status = 'Align your business card inside the frame.';
-	}
-
-	function resetAutoCapture() {
-		autoCaptureLocked = false;
 		captureBusy = false;
-		stableFrames = 0;
-	}
-
-	function stopAutoAnalysis() {
-		if (analyzeInterval !== null) {
-			clearInterval(analyzeInterval);
-			analyzeInterval = null;
-		}
-		analyzing = false;
-	}
-
-	function startAutoAnalysis() {
-		stopAutoAnalysis();
-		if (typeof document === 'undefined') return;
-		if (!analysisCanvas) {
-			analysisCanvas = document.createElement('canvas');
-			analysisContext = analysisCanvas.getContext('2d', { willReadFrequently: true });
-		}
-		if (!videoRef || !analysisCanvas || !analysisContext) return;
-		analyzing = true;
-		analyzeInterval = window.setInterval(analyzeFrame, ANALYSIS_INTERVAL_MS);
+		status = 'Camera stopped.';
 	}
 
 	/** Card in portrait: narrow edge left–right, long edge top–bottom (fits phone held upright). */
@@ -207,116 +156,34 @@
 		guideBoxStyle = `left:${Math.round(left)}px;top:${Math.round(top)}px;width:${Math.round(w)}px;height:${Math.round(h)}px`;
 	}
 
-	function analyzeFrame() {
-		if (
-			!videoRef ||
-			!analysisCanvas ||
-			!analysisContext ||
-			!stream ||
-			autoCaptureLocked ||
-			captureBusy
-		) {
-			return;
+	/** Called from parent when the user presses Scan: capture frame and return image file. */
+	export async function captureFrame(): Promise<File> {
+		if (!supportsCamera) {
+			throw new Error(cameraUnavailableReason || 'Camera is not available');
 		}
-		if (videoRef.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
-		if (videoRef.videoWidth === 0 || videoRef.videoHeight === 0) return;
-
-		analysisCanvas.width = ANALYSIS_WIDTH;
-		analysisCanvas.height = ANALYSIS_HEIGHT;
-		analysisContext.drawImage(videoRef, 0, 0, ANALYSIS_WIDTH, ANALYSIS_HEIGHT);
-
-		const overlayRect = getOverlayRect(ANALYSIS_WIDTH, ANALYSIS_HEIGHT);
-		const imageData = analysisContext.getImageData(
-			Math.round(overlayRect.x),
-			Math.round(overlayRect.y),
-			Math.round(overlayRect.width),
-			Math.round(overlayRect.height)
-		);
-		const data = imageData.data;
-
-		let totalBrightness = 0;
-		let pixelCount = 0;
-
-		for (let i = 0; i < data.length; i += 4) {
-			const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
-			totalBrightness += brightness;
-			pixelCount++;
+		if (!stream) {
+			throw new Error('Camera is still starting — try again in a moment.');
 		}
-
-		const avgBrightness = totalBrightness / Math.max(pixelCount, 1);
-
-		const sample = sampleFrame(data, 8);
-		const motionScore = previousSampleFrame ? computeDiff(previousSampleFrame, sample) : 0;
-		previousSampleFrame = sample;
-
-		const brightnessOk = avgBrightness > 40 && avgBrightness < 248;
-		const stableOk = motionScore < 40;
-		const cardGate = overlayBusinessCardGate(imageData);
-		const cardOk = cardGate.pass;
-		const ready = brightnessOk && stableOk && cardOk;
-
-		qualityReady = ready;
-		if (ready) {
-			stableFrames += 1;
-			status =
-				stableFrames >= REQUIRED_STABLE_FRAMES
-					? 'Card stable. Capturing...'
-					: `Hold still... ${REQUIRED_STABLE_FRAMES - stableFrames}`;
-		} else {
-			stableFrames = 0;
-			if (!brightnessOk) {
-				status = avgBrightness <= 40 ? 'Too dark. Add more light.' : 'Too bright. Reduce glare.';
-			} else if (!stableOk) {
-				status = 'Hold still briefly…';
-			} else if (cardGate.detail === 'weak_scene') {
-				status = 'Place a business card in the frame.';
-			} else {
-				status = 'Keep the full card inside the frame — do not crop any edge.';
-			}
+		if (!videoRef || captureBusy) {
+			throw new Error('Capture is busy.');
 		}
-
-		if (stableFrames >= REQUIRED_STABLE_FRAMES) {
-			takeSnapshot('auto');
+		if (videoRef.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+			throw new Error('Video is not ready yet.');
 		}
-	}
-
-	function sampleFrame(data: Uint8ClampedArray, step: number): Uint8ClampedArray {
-		const sampled = new Uint8ClampedArray(Math.ceil(data.length / (4 * step)));
-		let cursor = 0;
-		for (let i = 0; i < data.length; i += 4 * step) {
-			sampled[cursor++] = (data[i] + data[i + 1] + data[i + 2]) / 3;
-		}
-		return sampled;
-	}
-
-	function computeDiff(a: Uint8ClampedArray, b: Uint8ClampedArray): number {
-		const length = Math.min(a.length, b.length);
-		if (length === 0) return 0;
-		let total = 0;
-		for (let i = 0; i < length; i++) {
-			total += Math.abs(a[i] - b[i]);
-		}
-		return total / length;
-	}
-
-	async function takeSnapshot(mode: CaptureMode) {
-		if (!videoRef || captureBusy) return;
 		captureBusy = true;
-		if (mode === 'auto') {
-			autoCaptureLocked = true;
-		}
+		error = '';
 		try {
-			status =
-				mode === 'auto' ? 'Capturing best frame...' : 'Capturing burst and selecting sharpest frame...';
+			status = 'Capturing…';
 			const file = await captureBestBurstFrame();
-			status = mode === 'auto' ? 'Uploading card for OCR...' : 'Captured.';
-			await onCaptured(file, mode);
-		} catch {
-			error = 'Capture failed. Please try again.';
-			resetAutoCapture();
+			return file;
+		} catch (unknownError) {
+			const msg =
+				unknownError instanceof Error ? unknownError.message : 'Capture failed. Please try again.';
+			throw new Error(msg);
 		} finally {
-			if (mode === 'manual') {
-				captureBusy = false;
+			captureBusy = false;
+			if (stream) {
+				status = 'Position the card, then press Scan.';
 			}
 		}
 	}
@@ -415,7 +282,10 @@
 	onMount(() => {
 		detectCameraSupport();
 		if (autoStart) {
+			status = 'Starting camera…';
 			void startCamera();
+		} else {
+			status = 'Press Start camera to begin.';
 		}
 	});
 
@@ -434,42 +304,40 @@
 	});
 </script>
 
-<div class="camera-panel">
-	<h2>Camera capture</h2>
+<div class="camera-panel" class:full-bleed={fullBleed}>
+	{#if !fullBleed}
+		<h2>Camera capture</h2>
+	{/if}
 	{#if supportsCamera}
-		<div class="video-shell" bind:this={videoShellRef}>
+		<div class="video-shell" class:full-bleed={fullBleed} bind:this={videoShellRef}>
 			<video bind:this={videoRef} playsinline muted></video>
-			<div class="card-overlay" class:ready={qualityReady}>
+			<div class="card-overlay">
 				{#if guideBoxStyle}
 					<div class="card-window" style={guideBoxStyle}>
 						<div class="card-window-inner"></div>
 					</div>
 				{/if}
 			</div>
-			<div class="status-overlay" role="status" aria-live="polite">
+			<div class="status-overlay" class:full-bleed={fullBleed} role="status" aria-live="polite">
 				{status}
 			</div>
 		</div>
-		<p class="guide-note">
-			Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right). Fill
-			the frame; keep the card inside the band between the dashed line and the outer border.
-		</p>
-		<div class="actions">
-			<button type="button" onclick={startCamera}>Start camera</button>
-			<button
-				type="button"
-				onclick={() => takeSnapshot('manual')}
-				disabled={!stream || captureBusy}
-			>
-				Capture manually
-			</button>
-			<button type="button" onclick={stopCamera} disabled={!stream}>Stop</button>
-		</div>
+		{#if !fullBleed}
+			<p class="guide-note">
+				Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right). Fill
+				the frame; keep the card inside the band between the dashed line and the outer border. Press
+				<strong>Scan</strong> in the app to capture and run OCR.
+			</p>
+			<div class="actions">
+				<button type="button" onclick={startCamera}>Start camera</button>
+				<button type="button" onclick={stopCamera} disabled={!stream}>Stop</button>
+			</div>
+		{/if}
 	{:else}
-		<p>{cameraUnavailableReason || 'Camera API is not available in this browser.'}</p>
+		<p class:fallback-msg={fullBleed}>{cameraUnavailableReason || 'Camera API is not available in this browser.'}</p>
 	{/if}
 	{#if error}
-		<p class="error">{error}</p>
+		<p class="error" class:error--bleed={fullBleed}>{error}</p>
 	{/if}
 </div>
 
@@ -478,10 +346,24 @@
 		display: grid;
 		gap: 0.75rem;
 	}
+	.camera-panel.full-bleed {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		width: 100%;
+		min-height: 0;
+		gap: 0;
+	}
 	.video-shell {
 		position: relative;
 		overflow: hidden;
 		border-radius: 0.75rem;
+	}
+	.video-shell.full-bleed {
+		flex: 1;
+		min-height: 0;
+		width: 100%;
+		border-radius: 0;
 	}
 	video {
 		width: 100%;
@@ -490,6 +372,16 @@
 		aspect-ratio: 3 / 4;
 		min-height: min(70vh, 34rem);
 		object-fit: cover;
+		pointer-events: none;
+	}
+	.video-shell.full-bleed video {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		min-height: 0;
+		aspect-ratio: unset;
+		border-radius: 0;
 	}
 	.card-overlay {
 		position: absolute;
@@ -510,13 +402,6 @@
 		border: 2px dashed #f4f4f5;
 		border-radius: 0.7rem;
 	}
-	.ready .card-window {
-		border-color: #22c55e;
-		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.2);
-	}
-	.ready .card-window-inner {
-		border-color: #22c55e;
-	}
 	.status-overlay {
 		position: absolute;
 		left: 50%;
@@ -532,6 +417,35 @@
 		text-align: center;
 		pointer-events: none;
 		backdrop-filter: blur(2px);
+	}
+	.status-overlay.full-bleed {
+		bottom: calc(var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.35rem);
+	}
+	.fallback-msg {
+		position: absolute;
+		left: 0.75rem;
+		right: 0.75rem;
+		bottom: calc(var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.5rem);
+		margin: 0;
+		padding: 0.6rem;
+		border-radius: 0.5rem;
+		background: rgba(24, 24, 27, 0.88);
+		color: #fafafa;
+		font-size: 0.88rem;
+		z-index: 5;
+	}
+	.error--bleed {
+		position: absolute;
+		left: 0.75rem;
+		right: 0.75rem;
+		top: calc(env(safe-area-inset-top, 0px) + 3.25rem);
+		margin: 0;
+		padding: 0.5rem 0.6rem;
+		border-radius: 0.5rem;
+		background: rgba(127, 29, 29, 0.92);
+		color: #fff;
+		z-index: 15;
+		font-size: 0.85rem;
 	}
 	.actions {
 		display: flex;
@@ -555,6 +469,10 @@
 		video {
 			aspect-ratio: 4 / 3;
 			min-height: 22rem;
+		}
+		.video-shell.full-bleed video {
+			aspect-ratio: unset;
+			min-height: 0;
 		}
 		.actions button {
 			flex: 0 0 auto;
