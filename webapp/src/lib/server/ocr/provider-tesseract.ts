@@ -15,13 +15,14 @@ async function getWorker(language: string): Promise<Worker> {
 export class TesseractOcrProvider implements OcrProvider {
 	async extractText(imageBuffer: Buffer): Promise<OcrResult> {
 		try {
-			const language = env.OCR_TESSERACT_LANG || 'deu+eng';
-			const psmInput = env.OCR_TESSERACT_PSM || '6';
+			const language = 'deu+eng';
+			const psmInput = '6';
 			const psm = toPsm(psmInput);
 			const preprocessed = await preprocessForOcr(imageBuffer);
 			const worker = await getWorker(language);
 			await worker.setParameters({
 				tessedit_pageseg_mode: psm,
+				tessedit_char_whitelist: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz@.-+ /',
 				preserve_interword_spaces: '1'
 			});
 			const result = await worker.recognize(preprocessed);
