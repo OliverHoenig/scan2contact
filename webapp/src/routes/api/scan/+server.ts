@@ -26,21 +26,21 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const ocr = getOcrProvider();
 		const ocrResult = await ocr.extractText(imageBuffer, image.type);
-		console.log('========== ocrResult ==========');
-		console.log(ocrResult);
 		const parsedContact = contactSchema.parse({ notes: ocrResult.text });
-
-		console.log('========== parsedContact ==========');
-		console.log(parsedContact);
 
 		return json(parsedContact);
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unexpected OCR error';
 		const status = message.includes('Unsupported OCR provider') ? 500 : 502;
+		const qualityHint = message.toLowerCase().includes('blurry')
+			? 'Try again with steadier hands and better focus.'
+			: message.toLowerCase().includes('confidence too low')
+				? 'Retake the photo in brighter light and keep the card flat.'
+				: 'Check OCR_PROVIDER=tesseract, OCR_TESSERACT_LANG, OCR_TESSERACT_PSM, and server resources (RAM/CPU).';
 		return json(
 			{
 				error: `OCR failed: ${message}`,
-				hint: 'Check OCR_PROVIDER=tesseract, OCR_TESSERACT_LANG, and server resources (RAM/CPU).'
+				hint: qualityHint
 			},
 			{ status }
 		);
