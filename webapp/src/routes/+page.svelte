@@ -24,13 +24,12 @@
 	let error = $state('');
 	let consentNotice = $state('');
 	let offline = $state(false);
+	let step = $state<'capture' | 'processing' | 'review'>('capture');
 
 	async function onCapture(file: File, mode: 'manual' | 'auto') {
 		selectedFile = file;
 		error = '';
-		if (mode === 'auto') {
-			await scanImage(file);
-		}
+		if (mode === 'auto') await scanImage(file);
 	}
 
 	function onFileChange(event: Event) {
@@ -43,6 +42,7 @@
 		const file = fileOverride ?? selectedFile;
 		if (!file) return;
 		selectedFile = file;
+		step = 'processing';
 		loading = true;
 		error = '';
 		try {
@@ -59,11 +59,21 @@
 			}
 			contact = payload.contact;
 			consentNotice = payload.consentNotice || '';
+			step = 'review';
 		} catch (unknownError) {
 			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
+			step = 'capture';
 		} finally {
 			loading = false;
 		}
+	}
+
+	function restartFlow() {
+		step = 'capture';
+		selectedFile = null;
+		contact = { ...emptyContact };
+		error = '';
+		consentNotice = '';
 	}
 
 	if (typeof window !== 'undefined') {
@@ -76,37 +86,58 @@
 <main class="page">
 	<header>
 		<h1>Scan2Contact</h1>
-		<p>Capture a business card, review the recognized fields, then export a .vcf file.</p>
+		<p>Hold a business card in view, wait for auto-scan, then verify and export as .vcf.</p>
 	</header>
 
 	{#if offline}
 		<p class="warn">You are offline. OCR requires an internet connection.</p>
 	{/if}
 
-	<section class="card">
-		<CameraCapture onCaptured={onCapture} />
-		<p class="consent">By scanning, you consent that the image is sent to the configured OCR backend provider.</p>
-		<label class="upload">
-			Upload image
-			<input type="file" accept="image/png,image/jpeg,image/webp" onchange={onFileChange} />
-		</label>
-		<ImagePreview file={selectedFile} />
-		<button type="button" onclick={() => scanImage()} disabled={!selectedFile || loading || offline}>
-			{#if loading}Extracting...{:else}Scan card{/if}
-		</button>
-		{#if error}
-			<p class="error">{error}</p>
-		{/if}
-		{#if consentNotice}
-			<p class="consent">{consentNotice}</p>
-		{/if}
-	</section>
+	{#if step === 'capture'}
+		<section class="card">
+			<h2>1. Capture card</h2>
+			<CameraCapture onCaptured={onCapture} autoStart={true} />
 
-	<section class="card">
-		<h2>Review contact fields</h2>
-		<ContactForm bind:contact />
-		<VcfDownloadButton {contact} disabled={loading} />
-	</section>
+			<label class="upload">
+				Upload image (alternative)
+				<input type="file" accept="image/png,image/jpeg,image/webp" onchange={onFileChange} />
+			</label>
+			<!--
+			<ImagePreview file={selectedFile} />
+			<button
+				type="button"
+				onclick={() => scanImage()}
+				disabled={!selectedFile || loading || offline}
+			>
+				Scan selected image
+			</button>
+
+			-->
+
+			{#if error}
+				<p class="error">{error}</p>
+			{/if}
+		</section>
+	{:else if step === 'processing'}
+		<section class="card processing">
+			<h2>2. Processing card</h2>
+			<div class="loader" aria-hidden="true"></div>
+			<p>We are extracting text with OCR. This may take a few seconds.</p>
+		</section>
+	{:else}
+		<section class="card">
+			<h2>3. Review extracted contact</h2>
+			<p class="consent">Check and correct fields before downloading your vCard.</p>
+			{#if consentNotice}
+				<p class="consent">{consentNotice}</p>
+			{/if}
+			<ContactForm bind:contact />
+			<div class="actions">
+				<VcfDownloadButton {contact} disabled={loading} />
+				<button type="button" class="ghost" onclick={restartFlow}>Scan another card</button>
+			</div>
+		</section>
+	{/if}
 </main>
 
 <style>
@@ -129,6 +160,11 @@
 		gap: 0.35rem;
 		font-weight: 600;
 	}
+	.actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+	}
 	button {
 		width: fit-content;
 		padding: 0.7rem 0.95rem;
@@ -140,6 +176,10 @@
 	}
 	button:disabled {
 		opacity: 0.5;
+	}
+	.ghost {
+		background: transparent;
+		color: #18181b;
 	}
 	.error {
 		color: #b91c1c;
@@ -153,5 +193,22 @@
 	.consent {
 		color: #3f3f46;
 		font-size: 0.92rem;
+	}
+	.processing {
+		justify-items: center;
+		text-align: center;
+	}
+	.loader {
+		width: 3rem;
+		height: 3rem;
+		border-radius: 9999px;
+		border: 4px solid #e4e4e7;
+		border-top-color: #18181b;
+		animation: spin 0.9s linear infinite;
+	}
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
 	}
 </style>

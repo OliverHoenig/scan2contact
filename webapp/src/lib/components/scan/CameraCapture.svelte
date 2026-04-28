@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 
 	type CaptureMode = 'manual' | 'auto';
 
 	let {
-		onCaptured
-	}: { onCaptured: (file: File, mode: CaptureMode) => void | Promise<void> } = $props();
+		onCaptured,
+		autoStart = false
+	}: { onCaptured: (file: File, mode: CaptureMode) => void | Promise<void>; autoStart?: boolean } =
+		$props();
 
 	let videoRef = $state<HTMLVideoElement | null>(null);
 	let stream = $state<MediaStream | null>(null);
@@ -34,7 +36,7 @@
 		typeof navigator.mediaDevices.getUserMedia === 'function';
 
 	async function startCamera() {
-		if (!supportsCamera) return;
+		if (!supportsCamera || stream) return;
 
 		try {
 			stream = await navigator.mediaDevices.getUserMedia({
@@ -106,7 +108,14 @@
 	}
 
 	function analyzeFrame() {
-		if (!videoRef || !analysisCanvas || !analysisContext || !stream || autoCaptureLocked || captureBusy) {
+		if (
+			!videoRef ||
+			!analysisCanvas ||
+			!analysisContext ||
+			!stream ||
+			autoCaptureLocked ||
+			captureBusy
+		) {
 			return;
 		}
 		if (videoRef.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) return;
@@ -146,7 +155,8 @@
 				const brightnessA = (data[index] + data[index + 1] + data[index + 2]) / 3;
 				const brightnessRight = (data[right] + data[right + 1] + data[right + 2]) / 3;
 				const brightnessDown = (data[down] + data[down + 1] + data[down + 2]) / 3;
-				const gradient = Math.abs(brightnessA - brightnessRight) + Math.abs(brightnessA - brightnessDown);
+				const gradient =
+					Math.abs(brightnessA - brightnessRight) + Math.abs(brightnessA - brightnessDown);
 				if (gradient > edgeThreshold) edgeHits++;
 			}
 		}
@@ -220,26 +230,35 @@
 			return;
 		}
 		context.drawImage(videoRef, 0, 0);
-		canvas.toBlob(async (blob) => {
-			if (!blob) {
-				resetAutoCapture();
-				return;
-			}
-			try {
-				status = mode === 'auto' ? 'Uploading card for OCR...' : 'Captured.';
-				await onCaptured(new File([blob], 'business-card.jpg', { type: 'image/jpeg' }), mode);
-			} catch {
-				error = 'Capture failed. Please try again.';
-				resetAutoCapture();
-			} finally {
-				if (mode === 'manual') {
-					captureBusy = false;
+		canvas.toBlob(
+			async (blob) => {
+				if (!blob) {
+					resetAutoCapture();
+					return;
 				}
-			}
-		}, 'image/jpeg', 0.92);
+				try {
+					status = mode === 'auto' ? 'Uploading card for OCR...' : 'Captured.';
+					await onCaptured(new File([blob], 'business-card.jpg', { type: 'image/jpeg' }), mode);
+				} catch {
+					error = 'Capture failed. Please try again.';
+					resetAutoCapture();
+				} finally {
+					if (mode === 'manual') {
+						captureBusy = false;
+					}
+				}
+			},
+			'image/jpeg',
+			0.92
+		);
 	}
 
 	onDestroy(() => stopCamera());
+	onMount(() => {
+		if (autoStart) {
+			void startCamera();
+		}
+	});
 </script>
 
 <div class="camera-panel">
@@ -254,7 +273,11 @@
 		<p class="status">{status}</p>
 		<div class="actions">
 			<button type="button" onclick={startCamera}>Start camera</button>
-			<button type="button" onclick={() => takeSnapshot('manual')} disabled={!stream || captureBusy}>
+			<button
+				type="button"
+				onclick={() => takeSnapshot('manual')}
+				disabled={!stream || captureBusy}
+			>
 				Capture manually
 			</button>
 			<button type="button" onclick={stopCamera} disabled={!stream}>Stop</button>
