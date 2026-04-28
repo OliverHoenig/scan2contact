@@ -1,14 +1,11 @@
 import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
 import { getOcrProvider } from '$lib/server/ocr';
-import { parseBusinessCardText } from '$lib/server/ocr/parse-business-card';
-import { db } from '$lib/server/db';
-import { contactCandidate, scanJob } from '$lib/server/db/schema';
 import { contactSchema } from '$lib/contact';
 import type { RequestHandler } from './$types';
 import { uploadSchema, validateImageUpload } from '$lib/server/scan/validation';
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({ request }) => {
 	const formData = await request.formData();
 	const parsed = uploadSchema.safeParse({ image: formData.get('image') });
 	if (!parsed.success) {
@@ -29,42 +26,12 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	try {
 		const ocr = getOcrProvider();
 		const ocrResult = await ocr.extractText(imageBuffer, image.type);
-		console.log(ocrResult);
-		const parsedContact = contactSchema.parse(parseBusinessCardText(ocrResult.text));
+		const parsedContact = contactSchema.parse({ notes: ocrResult.text });
 
-		const [job] = await db
-			.insert(scanJob)
-			.values({
-				...(locals.user?.id ? { userId: locals.user.id } : {}),
-				status: 'completed',
-				originalImageName: image.name || 'capture',
-				originalImageMimeType: image.type,
-				ocrProvider: ocrResult.provider,
-				rawOcrJson: ocrResult.raw
-			})
-			.returning({ id: scanJob.id, createdAt: scanJob.createdAt });
+		console.log('========== parsedContact ==========');
+		console.log(parsedContact);
 
-		await db.insert(contactCandidate).values({
-			scanJobId: job.id,
-			firstName: parsedContact.firstName,
-			lastName: parsedContact.lastName,
-			fullName: parsedContact.fullName,
-			company: parsedContact.company,
-			title: parsedContact.title,
-			emails: parsedContact.emails,
-			phones: parsedContact.phones,
-			website: parsedContact.website,
-			address: parsedContact.address,
-			notes: parsedContact.notes
-		});
-
-		return json({
-			scanJobId: job.id,
-			createdAt: job.createdAt,
-			contact: parsedContact,
-			consentNotice:
-				'Image text extraction is processed by a backend OCR provider. Avoid uploading confidential cards without consent.'
-		});
+		return json(parsedContact);
 	} catch (error) {
 		const message = error instanceof Error ? error.message : 'Unexpected OCR error';
 		const status = message.includes('Unsupported OCR provider') ? 500 : 502;
