@@ -26,6 +26,8 @@ export const POST: RequestHandler = async ({ request }) => {
 	try {
 		const ocr = getOcrProvider();
 		const ocrResult = await ocr.extractText(imageBuffer, image.type);
+		console.log('========== ocrResult ==========');
+		console.log(ocrResult);
 		const parsedContact = contactSchema.parse({ notes: ocrResult.text });
 
 		console.log('========== parsedContact ==========');

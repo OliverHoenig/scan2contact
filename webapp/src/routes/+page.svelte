@@ -3,7 +3,7 @@
 	import ContactForm from '$lib/components/scan/ContactForm.svelte';
 	import ImagePreview from '$lib/components/scan/ImagePreview.svelte';
 	import VcfDownloadButton from '$lib/components/scan/VcfDownloadButton.svelte';
-	import type { Contact } from '$lib/contact';
+	import { contactSchema, type Contact } from '$lib/contact';
 
 	const emptyContact: Contact = {
 		firstName: '',
@@ -57,7 +57,12 @@
 				const hint = payload.hint ? ` ${payload.hint}` : '';
 				throw new Error((payload.error || 'OCR failed') + hint);
 			}
-			contact = payload.contact;
+			// Accept both response shapes and normalize through shared schema.
+			const parsedContact = contactSchema.safeParse(payload?.contact ?? payload);
+			if (!parsedContact.success) {
+				throw new Error('OCR returned an invalid contact payload');
+			}
+			contact = parsedContact.data;
 			consentNotice = payload.consentNotice || '';
 			step = 'review';
 		} catch (unknownError) {
