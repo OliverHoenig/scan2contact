@@ -10,6 +10,9 @@
 		$props();
 
 	let videoRef = $state<HTMLVideoElement | null>(null);
+	let videoShellRef = $state<HTMLDivElement | null>(null);
+	/** Pixel box aligned to visible video (object-fit: cover) + getOverlayRect; empty until layout runs. */
+	let guideBoxStyle = $state('');
 	let stream = $state<MediaStream | null>(null);
 	let error = $state('');
 	let status = $state('Align your business card inside the frame.');
@@ -24,6 +27,7 @@
 	let analyzeInterval: number | null = null;
 	let previousSampleFrame: Uint8ClampedArray | null = null;
 
+	/** Physical card width ÷ height (landscape). Scan frame is portrait: frame height ÷ frame width = this. */
 	const CARD_RATIO = 1.586;
 	const ANALYSIS_INTERVAL_MS = 220;
 	const REQUIRED_STABLE_FRAMES = 5;
@@ -35,6 +39,9 @@
 	const ENABLE_BLUR_BLOCKING = false;
 	const CARD_MARGIN_MIN_RATIO = 0.015;
 	const CARD_MARGIN_MAX_RATIO = 0.11;
+	/** Guide frame: use almost full width of the visible crop; cap height if the card would not fit. */
+	const OVERLAY_WIDTH_FRAC = 0.94;
+	const OVERLAY_HEIGHT_FRAC = 0.94;
 
 	let supportsCamera = $state(false);
 	let cameraUnavailableReason = $state('');
@@ -72,8 +79,8 @@
 			stream = await navigator.mediaDevices.getUserMedia({
 				video: {
 					facingMode: { ideal: 'environment' },
-					width: { ideal: 1920, min: 1280 },
-					height: { ideal: 1080, min: 720 }
+					width: { ideal: 1080, min: 720 },
+					height: { ideal: 1920, min: 1280 }
 				},
 				audio: false
 			});
@@ -89,7 +96,10 @@
 			}
 			if (videoRef) {
 				videoRef.srcObject = stream;
+				videoRef.onloadedmetadata = () => updateGuideLayout();
+				videoRef.onresize = () => updateGuideLayout();
 				await videoRef.play();
+				updateGuideLayout();
 				startAutoAnalysis();
 				status = 'Searching for a stable card...';
 			}
@@ -102,6 +112,12 @@
 		stopAutoAnalysis();
 		stream?.getTracks().forEach((track) => track.stop());
 		stream = null;
+		guideBoxStyle = '';
+		if (videoRef) {
+			videoRef.onloadedmetadata = null;
+			videoRef.onresize = null;
+			videoRef.srcObject = null;
+		}
 		qualityReady = false;
 		autoCaptureLocked = false;
 		stableFrames = 0;
@@ -135,20 +151,59 @@
 		analyzeInterval = window.setInterval(analyzeFrame, ANALYSIS_INTERVAL_MS);
 	}
 
+	/** Card in portrait: narrow edge left–right, long edge top–bottom (fits phone held upright). */
 	function getOverlayRect(width: number, height: number) {
-		const targetWidth = width * 0.84;
-		const targetHeight = targetWidth / CARD_RATIO;
-		if (targetHeight <= height * 0.84) {
-			const x = (width - targetWidth) / 2;
-			const y = (height - targetHeight) / 2;
-			return { x, y, width: targetWidth, height: targetHeight };
+		const maxW = width * OVERLAY_WIDTH_FRAC;
+		const maxH = height * OVERLAY_HEIGHT_FRAC;
+		let targetWidth = maxW;
+		let targetHeight = targetWidth * CARD_RATIO;
+		if (targetHeight > maxH) {
+			targetHeight = maxH;
+			targetWidth = targetHeight / CARD_RATIO;
 		}
+		const x = (width - targetWidth) / 2;
+		const y = (height - targetHeight) / 2;
+		return { x, y, width: targetWidth, height: targetHeight };
+	}
 
-		const resizedHeight = height * 0.84;
-		const resizedWidth = resizedHeight * CARD_RATIO;
-		const x = (width - resizedWidth) / 2;
-		const y = (height - resizedHeight) / 2;
-		return { x, y, width: resizedWidth, height: resizedHeight };
+	/** Maps intrinsic video coords to the on-screen box when the video uses object-fit: cover. */
+	function videoCoverMapping(
+		vw: number,
+		vh: number,
+		cw: number,
+		ch: number
+	): { scale: number; dx: number; dy: number } {
+		const scale = Math.max(cw / vw, ch / vh);
+		const dispW = vw * scale;
+		const dispH = vh * scale;
+		const dx = (cw - dispW) / 2;
+		const dy = (ch - dispH) / 2;
+		return { scale, dx, dy };
+	}
+
+	function updateGuideLayout() {
+		const v = videoRef;
+		const shell = videoShellRef;
+		if (!v || !shell || v.videoWidth === 0 || v.videoHeight === 0) {
+			guideBoxStyle = '';
+			return;
+		}
+		const vw = v.videoWidth;
+		const vh = v.videoHeight;
+		const cr = shell.getBoundingClientRect();
+		const cw = cr.width;
+		const ch = cr.height;
+		if (cw === 0 || ch === 0) {
+			guideBoxStyle = '';
+			return;
+		}
+		const { scale, dx, dy } = videoCoverMapping(vw, vh, cw, ch);
+		const r = getOverlayRect(vw, vh);
+		const left = dx + r.x * scale;
+		const top = dy + r.y * scale;
+		const w = r.width * scale;
+		const h = r.height * scale;
+		guideBoxStyle = `left:${Math.round(left)}px;top:${Math.round(top)}px;width:${Math.round(w)}px;height:${Math.round(h)}px`;
 	}
 
 	function analyzeFrame() {
@@ -464,25 +519,41 @@
 			void startCamera();
 		}
 	});
+
+	$effect(() => {
+		const shell = videoShellRef;
+		if (typeof ResizeObserver === 'undefined' || !shell) return;
+		const ro = new ResizeObserver(() => updateGuideLayout());
+		ro.observe(shell);
+		const onWinResize = () => updateGuideLayout();
+		window.addEventListener('resize', onWinResize);
+		queueMicrotask(() => updateGuideLayout());
+		return () => {
+			ro.disconnect();
+			window.removeEventListener('resize', onWinResize);
+		};
+	});
 </script>
 
 <div class="camera-panel">
 	<h2>Camera capture</h2>
 	{#if supportsCamera}
-		<div class="video-shell">
+		<div class="video-shell" bind:this={videoShellRef}>
 			<video bind:this={videoRef} playsinline muted></video>
 			<div class="card-overlay" class:ready={qualityReady}>
-				<div class="card-window">
-					<div class="card-window-inner"></div>
-				</div>
+				{#if guideBoxStyle}
+					<div class="card-window" style={guideBoxStyle}>
+						<div class="card-window-inner"></div>
+					</div>
+				{/if}
 			</div>
 			<div class="status-overlay" role="status" aria-live="polite">
 				{status}
 			</div>
 		</div>
 		<p class="guide-note">
-			Place the card as large as possible: fully inside the frame, with the card edge inside the
-			band between the inner dashed line and the outer border.
+			Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right). Fill
+			the frame; keep the card inside the band between the dashed line and the outer border.
 		</p>
 		<div class="actions">
 			<button type="button" onclick={startCamera}>Start camera</button>
@@ -510,26 +581,25 @@
 	}
 	.video-shell {
 		position: relative;
+		overflow: hidden;
+		border-radius: 0.75rem;
 	}
 	video {
 		width: 100%;
 		border-radius: 0.75rem;
 		background: #111;
-		aspect-ratio: 4 / 3;
+		aspect-ratio: 3 / 4;
+		min-height: min(70vh, 34rem);
 		object-fit: cover;
 	}
 	.card-overlay {
 		position: absolute;
 		inset: 0;
-		display: grid;
-		place-items: center;
 		pointer-events: none;
 	}
 	.card-window {
-		position: relative;
-		width: 84%;
-		aspect-ratio: 1.586;
-		max-height: 84%;
+		position: absolute;
+		box-sizing: border-box;
 		border: 2px solid #f4f4f5;
 		border-radius: 0.85rem;
 		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.34);
@@ -569,6 +639,10 @@
 		flex-wrap: wrap;
 		gap: 0.5rem;
 	}
+	.actions button {
+		flex: 1 1 100%;
+		min-height: 2.9rem;
+	}
 	.error {
 		color: #b91c1c;
 		font-size: 0.9rem;
@@ -577,5 +651,14 @@
 		margin: 0;
 		font-size: 0.9rem;
 		color: #3f3f46;
+	}
+	@media (min-width: 640px) {
+		video {
+			aspect-ratio: 4 / 3;
+			min-height: 22rem;
+		}
+		.actions button {
+			flex: 0 0 auto;
+		}
 	}
 </style>

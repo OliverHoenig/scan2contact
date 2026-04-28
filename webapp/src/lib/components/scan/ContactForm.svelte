@@ -43,7 +43,11 @@
 	textarea {
 		font: inherit;
 		padding: 0.65rem;
+		min-height: 2.75rem;
 		border-radius: 0.5rem;
 		border: 1px solid #d4d4d8;
+	}
+	textarea {
+		min-height: 7rem;
 	}
 </style>

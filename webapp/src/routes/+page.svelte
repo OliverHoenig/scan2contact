@@ -149,14 +149,23 @@
 
 <style>
 	.page {
-		max-width: 52rem;
+		width: min(100%, 34rem);
 		margin: 0 auto;
-		padding: 1rem;
+		padding: 0.875rem;
 		display: grid;
-		gap: 1rem;
+		gap: 0.875rem;
+	}
+	header h1 {
+		margin: 0;
+		font-size: clamp(1.45rem, 6vw, 1.95rem);
+	}
+	header p {
+		margin: 0.35rem 0 0;
+		font-size: 0.98rem;
+		color: #3f3f46;
 	}
 	.card {
-		padding: 1rem;
+		padding: 0.95rem;
 		border: 1px solid #e4e4e7;
 		border-radius: 0.8rem;
 		display: grid;
@@ -173,8 +182,9 @@
 		gap: 0.6rem;
 	}
 	button {
-		width: fit-content;
-		padding: 0.7rem 0.95rem;
+		width: 100%;
+		padding: 0.8rem 1rem;
+		min-height: 2.9rem;
 		border-radius: 0.55rem;
 		border: 1px solid #18181b;
 		background: #18181b;
@@ -216,6 +226,19 @@
 	@keyframes spin {
 		to {
 			transform: rotate(360deg);
+		}
+	}
+	@media (min-width: 640px) {
+		.page {
+			width: min(100%, 46rem);
+			padding: 1.1rem;
+			gap: 1rem;
+		}
+		.card {
+			padding: 1rem;
+		}
+		button {
+			width: fit-content;
 		}
 	}
 </style>
