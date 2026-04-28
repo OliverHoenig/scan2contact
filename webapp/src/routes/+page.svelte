@@ -104,10 +104,14 @@
 			<CameraCapture onCaptured={onCapture} autoStart={true} />
 
 			<label class="upload">
-				Upload image (alternative)
-				<input type="file" accept="image/png,image/jpeg,image/webp" onchange={onFileChange} />
+				Upload image (alternative for HTTP/mobile)
+				<input
+					type="file"
+					accept="image/png,image/jpeg,image/webp,image/*"
+					capture="environment"
+					onchange={onFileChange}
+				/>
 			</label>
-			<!--
 			<ImagePreview file={selectedFile} />
 			<button
 				type="button"
@@ -116,8 +120,6 @@
 			>
 				Scan selected image
 			</button>
-
-			-->
 
 			{#if error}
 				<p class="error">{error}</p>

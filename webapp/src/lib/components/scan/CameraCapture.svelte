@@ -36,10 +36,34 @@
 	const CARD_MARGIN_MIN_RATIO = 0.015;
 	const CARD_MARGIN_MAX_RATIO = 0.11;
 
-	const supportsCamera =
-		typeof navigator !== 'undefined' &&
-		!!navigator.mediaDevices &&
-		typeof navigator.mediaDevices.getUserMedia === 'function';
+	let supportsCamera = $state(false);
+	let cameraUnavailableReason = $state('');
+
+	function detectCameraSupport() {
+		if (typeof window === 'undefined' || typeof navigator === 'undefined') {
+			supportsCamera = false;
+			cameraUnavailableReason = '';
+			return;
+		}
+
+		const isSecure = window.isSecureContext;
+		const hasMediaDevices = !!navigator.mediaDevices;
+		const hasGetUserMedia = typeof navigator.mediaDevices?.getUserMedia === 'function';
+		supportsCamera = isSecure && hasMediaDevices && hasGetUserMedia;
+
+		if (supportsCamera) {
+			cameraUnavailableReason = '';
+			return;
+		}
+
+		if (!isSecure) {
+			cameraUnavailableReason = 'Camera access requires HTTPS (or localhost).';
+		} else if (!hasMediaDevices || !hasGetUserMedia) {
+			cameraUnavailableReason = 'This browser does not support camera capture.';
+		} else {
+			cameraUnavailableReason = 'Camera is unavailable on this device/browser.';
+		}
+	}
 
 	async function startCamera() {
 		if (!supportsCamera || stream) return;
@@ -435,6 +459,7 @@
 
 	onDestroy(() => stopCamera());
 	onMount(() => {
+		detectCameraSupport();
 		if (autoStart) {
 			void startCamera();
 		}
@@ -471,7 +496,7 @@
 			<button type="button" onclick={stopCamera} disabled={!stream}>Stop</button>
 		</div>
 	{:else}
-		<p>Camera API is not available in this browser.</p>
+		<p>{cameraUnavailableReason || 'Camera API is not available in this browser.'}</p>
 	{/if}
 	{#if error}
 		<p class="error">{error}</p>
