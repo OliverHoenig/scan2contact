@@ -4,6 +4,7 @@ import { getOcrProvider } from '$lib/server/ocr';
 import { contactSchema } from '$lib/contact';
 import type { RequestHandler } from './$types';
 import { uploadSchema, validateImageUpload } from '$lib/server/scan/validation';
+import { convertImageToOcrInput } from '$lib/server/scan/convert-image';
 
 export const POST: RequestHandler = async ({ request }) => {
 	const formData = await request.formData();
@@ -24,8 +25,9 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const imageBuffer = Buffer.from(await image.arrayBuffer());
 	try {
+		const converted = await convertImageToOcrInput(imageBuffer, image.type, image.name);
 		const ocr = getOcrProvider();
-		const ocrResult = await ocr.extractText(imageBuffer, image.type);
+		const ocrResult = await ocr.extractText(converted.buffer, converted.mimeType);
 		const parsedContact = contactSchema.parse({ notes: ocrResult.text });
 
 		return json(parsedContact);

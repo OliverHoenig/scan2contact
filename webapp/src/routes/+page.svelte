@@ -107,7 +107,7 @@
 				Upload image (alternative for HTTP/mobile)
 				<input
 					type="file"
-					accept="image/png,image/jpeg,image/webp,image/*"
+					accept="image/png,image/jpeg,image/webp,image/heic,image/heif,image/*"
 					capture="environment"
 					onchange={onFileChange}
 				/>
