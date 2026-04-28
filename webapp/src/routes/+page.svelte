@@ -9,6 +9,7 @@
 		lastName: '',
 		fullName: '',
 		company: '',
+		role: '',
 		title: '',
 		emails: [],
 		phones: [],

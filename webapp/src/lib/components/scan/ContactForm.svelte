@@ -20,6 +20,7 @@
 	<label>First name <input bind:value={contact.firstName} /></label>
 	<label>Last name <input bind:value={contact.lastName} /></label>
 	<label>Company <input bind:value={contact.company} /></label>
+	<label>Role <input bind:value={contact.role} /></label>
 	<label>Job title <input bind:value={contact.title} /></label>
 	<label>Email(s), comma-separated <input value={listValue('emails')} oninput={(e) => updateList('emails', e.currentTarget.value)} /></label>
 	<label>Phone(s), comma-separated <input value={listValue('phones')} oninput={(e) => updateList('phones', e.currentTarget.value)} /></label>

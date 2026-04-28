@@ -15,7 +15,8 @@ export function generateVCard(contact: Contact): string {
 	lines.push(`N:${escapeValue(contact.lastName || '')};${escapeValue(contact.firstName || '')};;;`);
 
 	if (contact.company) lines.push(`ORG:${escapeValue(contact.company)}`);
-	if (contact.title) lines.push(`TITLE:${escapeValue(contact.title)}`);
+	const titleLine = [contact.role, contact.title].filter(Boolean).join(' — ');
+	if (titleLine) lines.push(`TITLE:${escapeValue(titleLine)}`);
 	if (contact.website) lines.push(`URL:${escapeValue(contact.website)}`);
 	if (contact.address) lines.push(`ADR:;;${escapeValue(contact.address)};;;;`);
 	if (contact.notes) lines.push(`NOTE:${escapeValue(contact.notes)}`);

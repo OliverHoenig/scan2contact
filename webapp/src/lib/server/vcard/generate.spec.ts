@@ -8,6 +8,7 @@ describe('generateVCard', () => {
 			lastName: 'Mustermann',
 			fullName: 'Max Mustermann',
 			company: 'Example GmbH',
+			role: '',
 			title: 'CTO',
 			emails: ['max@example.com'],
 			phones: ['+491701234567'],

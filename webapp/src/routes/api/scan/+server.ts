@@ -1,11 +1,76 @@
 import { json } from '@sveltejs/kit';
 import { env } from '$env/dynamic/private';
-import { getOcrProvider } from '$lib/server/ocr';
 import { contactSchema } from '$lib/contact';
 import type { RequestHandler } from './$types';
 import { uploadSchema, validateImageUpload } from '$lib/server/scan/validation';
 import { convertImageToOcrInput } from '$lib/server/scan/convert-image';
-import OpenAI from "openai";
+import OpenAI from 'openai';
+import { z } from 'zod';
+
+function stripMarkdownCodeFence(raw: string): string {
+	let s = raw.trim();
+	if (s.startsWith('```')) {
+		s = s.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+	}
+	return s;
+}
+
+function toTrimmedString(value: unknown): string {
+	if (value == null) return '';
+	return String(value).trim();
+}
+
+function toStringList(value: unknown): string[] {
+	if (Array.isArray(value)) {
+		return value.map((item) => toTrimmedString(item)).filter(Boolean);
+	}
+	if (typeof value === 'string') {
+		return value
+			.split(/[,;]+/)
+			.map((s) => s.trim())
+			.filter(Boolean);
+	}
+	return [];
+}
+
+function takeValidEmails(values: string[]): string[] {
+	const email = z.string().email();
+	return values.filter((v) => email.safeParse(v).success).slice(0, 5);
+}
+
+function parseModelContactJson(content: string | null): Record<string, unknown> {
+	if (!content?.trim()) {
+		throw new Error('Empty model response');
+	}
+	const stripped = stripMarkdownCodeFence(content);
+	const parsed: unknown = JSON.parse(stripped);
+	if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+		throw new Error('Model response was not a JSON object');
+	}
+	return parsed as Record<string, unknown>;
+}
+
+function normalizedContactFromLlm(raw: Record<string, unknown>) {
+	const firstName = toTrimmedString(raw.firstName);
+	const lastName = toTrimmedString(raw.lastName);
+	const fullNameFromModel = toTrimmedString(raw.fullName);
+	const fullName =
+		fullNameFromModel || [firstName, lastName].filter(Boolean).join(' ').trim();
+
+	return {
+		firstName,
+		lastName,
+		fullName,
+		company: toTrimmedString(raw.company),
+		role: toTrimmedString(raw.role),
+		title: toTrimmedString(raw.title),
+		emails: takeValidEmails(toStringList(raw.emails)),
+		phones: toStringList(raw.phones).slice(0, 5),
+		website: toTrimmedString(raw.website),
+		address: toTrimmedString(raw.address),
+		notes: toTrimmedString(raw.notes)
+	};
+}
 
 export const POST: RequestHandler = async ({ request }) => {
 	const formData = await request.formData();
@@ -72,11 +137,9 @@ export const POST: RequestHandler = async ({ request }) => {
 			top_p: 0.9
 		});
 
-		console.log(response.choices[0].message.content);
-		const parsedContact = contactSchema.parse({ notes: response.choices[0].message.content });
-
-
-
+		const content = response.choices[0]?.message?.content ?? null;
+		const rawObject = parseModelContactJson(content);
+		const parsedContact = contactSchema.parse(normalizedContactFromLlm(rawObject));
 
 		return json(parsedContact);
 	} catch (error) {
