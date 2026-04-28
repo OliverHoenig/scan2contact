@@ -269,8 +269,10 @@
 			<div class="card-overlay" class:ready={qualityReady}>
 				<div class="card-window"></div>
 			</div>
+			<div class="status-overlay" role="status" aria-live="polite">
+				{status}
+			</div>
 		</div>
-		<p class="status">{status}</p>
 		<div class="actions">
 			<button type="button" onclick={startCamera}>Start camera</button>
 			<button
@@ -325,10 +327,21 @@
 		border-color: #22c55e;
 		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.2);
 	}
-	.status {
-		margin: 0;
-		font-size: 0.92rem;
-		color: #3f3f46;
+	.status-overlay {
+		position: absolute;
+		left: 50%;
+		bottom: 0.9rem;
+		transform: translateX(-50%);
+		max-width: calc(100% - 1.5rem);
+		padding: 0.45rem 0.7rem;
+		border-radius: 0.65rem;
+		background: rgba(17, 17, 17, 0.72);
+		color: #fafafa;
+		font-size: 0.9rem;
+		line-height: 1.25;
+		text-align: center;
+		pointer-events: none;
+		backdrop-filter: blur(2px);
 	}
 	.actions {
 		display: flex;
