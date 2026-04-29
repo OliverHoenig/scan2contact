@@ -12,6 +12,8 @@
 	let error = $state('');
 	let status = $state('');
 	let captureBusy = $state(false);
+	let lightSupported = $state(false);
+	let lightEnabled = $state(false);
 
 	/** Physical card width ÷ height (landscape). Scan frame is portrait: frame height ÷ frame width = this. */
 	const CARD_RATIO = 1.586;
@@ -23,6 +25,8 @@
 	/** Guide frame: use almost full width of the visible crop; cap height if the card would not fit. */
 	const OVERLAY_WIDTH_FRAC = 0.94;
 	const OVERLAY_HEIGHT_FRAC = 0.94;
+	/** Media Capture constraint key for the device light (browser API name). */
+	const MEDIA_CAPTURE_LIGHT_KEY = 'torch' as const;
 
 	let supportsCamera = $state(false);
 	let cameraUnavailableReason = $state('');
@@ -75,6 +79,7 @@
 					// Ignore unsupported focus mode constraints.
 				}
 			}
+			await detectLightSupport();
 			if (videoRef) {
 				videoRef.srcObject = stream;
 				videoRef.onloadedmetadata = () => updateGuideLayout();
@@ -91,6 +96,8 @@
 	function stopCamera() {
 		stream?.getTracks().forEach((track) => track.stop());
 		stream = null;
+		lightSupported = false;
+		lightEnabled = false;
 		guideBoxStyle = '';
 		if (videoRef) {
 			videoRef.onloadedmetadata = null;
@@ -99,6 +106,40 @@
 		}
 		captureBusy = false;
 		status = 'Camera stopped.';
+	}
+
+	async function detectLightSupport() {
+		const track = stream?.getVideoTracks()[0];
+		if (!track) {
+			lightSupported = false;
+			lightEnabled = false;
+			return;
+		}
+		const capabilities = track.getCapabilities?.() as Record<string, unknown> | undefined;
+		lightSupported = !!capabilities?.[MEDIA_CAPTURE_LIGHT_KEY];
+		if (!lightSupported) {
+			lightEnabled = false;
+		}
+	}
+
+	async function setLight(enabled: boolean) {
+		if (!lightSupported) return;
+		const track = stream?.getVideoTracks()[0];
+		if (!track?.applyConstraints) return;
+		try {
+			await track.applyConstraints({
+				advanced: [
+					{ [MEDIA_CAPTURE_LIGHT_KEY]: enabled } as unknown as MediaTrackConstraintSet
+				]
+			});
+			lightEnabled = enabled;
+		} catch {
+			error = 'Light could not be changed on this device.';
+		}
+	}
+
+	async function toggleLight() {
+		await setLight(!lightEnabled);
 	}
 
 	/** Card in portrait: narrow edge left–right, long edge top–bottom (fits phone held upright). */
@@ -339,7 +380,7 @@
 			bind:this={videoShellRef}
 		>
 			<video
-				class={`w-full bg-[var(--bg-base)] object-cover pointer-events-none ${fullBleed ? 'absolute inset-0 h-full min-h-0 rounded-none [aspect-ratio:unset]' : 'rounded-[var(--radius-md)] [aspect-ratio:3/4] min-h-[min(70vh,34rem)] sm:[aspect-ratio:4/3] sm:min-h-[22rem]'}`}
+				class={`pointer-events-none w-full bg-[var(--bg-base)] object-cover ${fullBleed ? 'absolute inset-0 [aspect-ratio:unset] h-full min-h-0 rounded-none' : '[aspect-ratio:3/4] min-h-[min(70vh,34rem)] rounded-[var(--radius-md)] sm:[aspect-ratio:4/3] sm:min-h-[22rem]'}`}
 				bind:this={videoRef}
 				playsinline
 				muted
@@ -356,6 +397,17 @@
 					</div>
 				{/if}
 			</div>
+			{#if stream && lightSupported}
+				<div class="absolute top-3 right-3 z-[6]">
+					<button
+						type="button"
+						class="min-h-10 cursor-pointer rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-3 text-[0.8rem] font-semibold text-[var(--text)] backdrop-blur-[12px] hover:not-disabled:border-[rgba(255,255,255,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
+						onclick={toggleLight}
+					>
+						{lightEnabled ? 'Light off' : 'Light on'}
+					</button>
+				</div>
+			{/if}
 			<div
 				class={`pointer-events-none absolute left-1/2 max-w-[calc(100%-1.5rem)] -translate-x-1/2 rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-[0.85rem] py-2 text-center text-[0.8125rem] leading-[1.35] text-[var(--text-muted)] backdrop-blur-[12px] ${fullBleed ? 'bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.35rem)]' : 'bottom-[0.9rem]'}`}
 				role="status"
@@ -367,11 +419,9 @@
 		{#if !fullBleed}
 			<p class="m-0 text-[0.9rem] leading-[1.5] text-[var(--text-muted)]">
 				Hold the card <strong class="font-semibold text-[var(--text)]">upright</strong> (narrow
-				edges top/bottom, long edges left/right).
-				Fill the frame; keep the card inside the band between the dashed line and the outer border.
-				Press
-				<strong class="font-semibold text-[var(--text)]">Scan</strong> in the app to capture and run
-				OCR.
+				edges top/bottom, long edges left/right). Fill the frame; keep the card inside the band
+				between the dashed line and the outer border. Press
+				<strong class="font-semibold text-[var(--text)]">Scan</strong> in the app to capture and run OCR.
 			</p>
 			<div class="flex flex-wrap gap-2">
 				<button
@@ -380,7 +430,7 @@
 					onclick={startCamera}>Start camera</button
 				>
 				<button
-					class="min-h-12 flex-[1_1_100%] cursor-pointer rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] font-semibold text-[var(--text)] hover:not-disabled:border-[rgba(255,255,255,0.22)] sm:flex-none disabled:cursor-not-allowed"
+					class="min-h-12 flex-[1_1_100%] cursor-pointer rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] font-semibold text-[var(--text)] hover:not-disabled:border-[rgba(255,255,255,0.22)] disabled:cursor-not-allowed sm:flex-none"
 					type="button"
 					onclick={stopCamera}
 					disabled={!stream}>Stop</button
@@ -390,7 +440,7 @@
 	{:else}
 		<p
 			class={fullBleed
-				? 'absolute right-3 left-3 bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.5rem)] z-[5] m-0 rounded-lg bg-[rgba(24,24,27,0.88)] p-[0.6rem] text-[0.88rem] text-[#fafafa]'
+				? 'absolute right-3 bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.5rem)] left-3 z-[5] m-0 rounded-lg bg-[rgba(24,24,27,0.88)] p-[0.6rem] text-[0.88rem] text-[#fafafa]'
 				: ''}
 		>
 			{cameraUnavailableReason || 'Camera API is not available in this browser.'}
@@ -398,7 +448,7 @@
 	{/if}
 	{#if error}
 		<p
-			class={`text-[0.9rem] text-[var(--danger)] ${fullBleed ? 'absolute right-3 left-3 top-[calc(env(safe-area-inset-top,0px)+3.25rem)] z-[15] m-0 rounded-lg bg-[rgba(127,29,29,0.92)] px-[0.6rem] py-2 text-[0.85rem] text-white' : ''}`}
+			class={`text-[0.9rem] text-[var(--danger)] ${fullBleed ? 'absolute top-[calc(env(safe-area-inset-top,0px)+3.25rem)] right-3 left-3 z-[15] m-0 rounded-lg bg-[rgba(127,29,29,0.92)] px-[0.6rem] py-2 text-[0.85rem] text-white' : ''}`}
 		>
 			{error}
 		</p>
