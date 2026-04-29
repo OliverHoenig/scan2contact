@@ -7,7 +7,6 @@
 	const emptyContact: Contact = {
 		firstName: '',
 		lastName: '',
-		fullName: '',
 		company: '',
 		role: '',
 		title: '',

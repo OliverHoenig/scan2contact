@@ -10,7 +10,6 @@ describe('/api/vcf POST', () => {
 				contact: {
 					firstName: 'Max',
 					lastName: 'Mustermann',
-					fullName: 'Max Mustermann',
 					company: 'Example GmbH',
 					title: 'CTO',
 					emails: ['max@example.com'],

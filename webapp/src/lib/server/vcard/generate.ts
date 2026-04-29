@@ -9,7 +9,7 @@ function escapeValue(value: string): string {
 }
 
 export function generateVCard(contact: Contact): string {
-	const fullName = contact.fullName || [contact.firstName, contact.lastName].filter(Boolean).join(' ');
+	const fullName = [contact.firstName, contact.lastName].filter(Boolean).join(' ').trim();
 	const lines = ['BEGIN:VCARD', 'VERSION:3.0', `FN:${escapeValue(fullName)}`];
 
 	lines.push(`N:${escapeValue(contact.lastName || '')};${escapeValue(contact.firstName || '')};;;`);

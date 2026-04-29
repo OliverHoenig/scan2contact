@@ -6,7 +6,6 @@ describe('generateVCard', () => {
 		const output = generateVCard({
 			firstName: 'Max',
 			lastName: 'Mustermann',
-			fullName: 'Max Mustermann',
 			company: 'Example GmbH',
 			role: '',
 			title: 'CTO',

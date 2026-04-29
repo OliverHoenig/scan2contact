@@ -24,7 +24,6 @@ export const contactCandidate = pgTable('contact_candidate', {
 		.references(() => scanJob.id, { onDelete: 'cascade' }),
 	firstName: text('first_name'),
 	lastName: text('last_name'),
-	fullName: text('full_name'),
 	company: text('company'),
 	title: text('title'),
 	emails: jsonb('emails').$type<string[]>().notNull().default([]),

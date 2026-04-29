@@ -15,7 +15,6 @@ test('scan, edit and download vcf', async ({ page }) => {
 				contact: {
 					firstName: 'Max',
 					lastName: 'Mustermann',
-					fullName: 'Max Mustermann',
 					company: 'Example GmbH',
 					title: 'Sales Manager',
 					emails: ['max@example.com'],
@@ -52,7 +51,8 @@ test('scan, edit and download vcf', async ({ page }) => {
 	});
 
 	await page.getByRole('button', { name: 'Scan card' }).click();
-	await expect(page.getByLabel('Full name')).toHaveValue('Max Mustermann');
+	await expect(page.getByLabel('First name')).toHaveValue('Max');
+	await expect(page.getByLabel('Last name')).toHaveValue('Mustermann');
 
 	await page.getByLabel('Company').fill('Changed Corp');
 

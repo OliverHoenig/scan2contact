@@ -15,7 +15,6 @@ function normalizeWebsiteInput(value: string): string {
 export const contactSchema = z.object({
 	firstName: z.string().trim().max(120).optional().default(''),
 	lastName: z.string().trim().max(120).optional().default(''),
-	fullName: z.string().trim().max(240).optional().default(''),
 	company: z.string().trim().max(200).optional().default(''),
 	role: z.string().trim().max(200).optional().default(''),
 	title: z.string().trim().max(200).optional().default(''),

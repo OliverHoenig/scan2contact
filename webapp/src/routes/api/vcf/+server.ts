@@ -13,7 +13,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 	const contact = parsed.data;
 	const vcard = generateVCard(contact);
-	const safeName = (contact.fullName || `${contact.firstName} ${contact.lastName}` || 'contact')
+	const safeName = (`${contact.firstName} ${contact.lastName}`.trim() || 'contact')
 		.trim()
 		.replace(/[^a-zA-Z0-9_-]+/g, '_');
 

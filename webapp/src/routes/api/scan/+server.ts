@@ -53,14 +53,10 @@ function parseModelContactJson(content: string | null): Record<string, unknown> 
 function normalizedContactFromLlm(raw: Record<string, unknown>) {
 	const firstName = toTrimmedString(raw.firstName);
 	const lastName = toTrimmedString(raw.lastName);
-	const fullNameFromModel = toTrimmedString(raw.fullName);
-	const fullName =
-		fullNameFromModel || [firstName, lastName].filter(Boolean).join(' ').trim();
 
 	return {
 		firstName,
 		lastName,
-		fullName,
 		company: toTrimmedString(raw.company),
 		role: toTrimmedString(raw.role),
 		title: toTrimmedString(raw.title),

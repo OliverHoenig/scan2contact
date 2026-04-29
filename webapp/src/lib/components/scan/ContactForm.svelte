@@ -21,7 +21,6 @@
 </script>
 
 <div class="grid gap-4">
-	<label class={labelClass}>Full name <input class={controlClass} bind:value={contact.fullName} /></label>
 	<label class={labelClass}>First name <input class={controlClass} bind:value={contact.firstName} /></label>
 	<label class={labelClass}>Last name <input class={controlClass} bind:value={contact.lastName} /></label>
 	<label class={labelClass}>Company <input class={controlClass} bind:value={contact.company} /></label>
