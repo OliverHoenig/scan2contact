@@ -5,28 +5,11 @@
 	let loading = $state(false);
 	let error = $state('');
 let cachedVcf = $state<{ blob: Blob; filename: string } | null>(null);
-
-	const OPEN_REVOKE_MS = 120_000;
 	const primaryButtonClass =
 		'w-full min-h-12 cursor-pointer rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none';
 	const secondaryButtonClass =
 	'min-h-11 w-full cursor-pointer rounded-[var(--radius-md)] border border-white/20 bg-white/5 px-4 py-[0.65rem] text-[0.875rem] font-semibold text-inherit shadow-none active:enabled:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45';
 	const errorClass = 'mt-2 text-[0.875rem] leading-[1.4] text-[var(--danger)]';
-
-	function scheduleRevoke(url: string) {
-		setTimeout(() => URL.revokeObjectURL(url), OPEN_REVOKE_MS);
-	}
-
-	function tryOpenVcardInNewTab(blob: Blob): boolean {
-		const url = URL.createObjectURL(blob);
-		const opened = window.open(url, '_blank', 'noopener,noreferrer');
-		if (opened) {
-			scheduleRevoke(url);
-			return true;
-		}
-		URL.revokeObjectURL(url);
-		return false;
-	}
 
 	function triggerBlobDownload(blob: Blob, filename: string) {
 		const url = URL.createObjectURL(blob);
@@ -90,22 +73,14 @@ async function fetchVcf(): Promise<{ blob: Blob; filename: string }> {
 
 	async function onPrimaryClick() {
 		error = '';
-	const popup = window.open('about:blank', '_blank', 'noopener,noreferrer');
 
 		loading = true;
 		try {
-		const { blob, filename } = await fetchVcf();
-		if (popup) {
-			const url = URL.createObjectURL(blob);
-			popup.location.href = url;
-			scheduleRevoke(url);
-			popup.focus();
-				return;
-			}
-		if (tryOpenVcardInNewTab(blob)) return;
-		triggerBlobDownload(blob, filename);
+		const { blob } = await fetchVcf();
+		const url = URL.createObjectURL(blob);
+		// Open in the same browser tab so users can directly import into Contacts.
+		window.location.assign(url);
 		} catch (unknownError) {
-		if (popup && !popup.closed) popup.close();
 			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
 		} finally {
 			loading = false;
