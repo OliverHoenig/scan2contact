@@ -112,27 +112,50 @@
 	});
 </script>
 
-<main class="page" class:page--capture={step === 'capture'}>
+<main
+	class={`relative box-border min-h-dvh ${step === 'capture' ? 'fixed inset-0 z-[1] m-0 block h-dvh max-h-dvh w-full max-w-none overflow-hidden p-0' : 'mx-auto grid w-full max-w-[36rem] gap-5 p-5 pb-8 sm:max-w-[44rem] sm:gap-6 sm:px-6 sm:pt-8 sm:pb-12'}`}
+>
+	{#if step !== 'capture'}
+		<div
+			aria-hidden="true"
+			class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_120%_80%_at_50%_-30%,rgba(94,234,212,0.09),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_0%,rgba(99,102,241,0.06),transparent_45%),var(--bg-base)]"
+		></div>
+	{/if}
 	{#if step === 'capture'}
-		<header class="capture-header">
-			<div class="capture-brand">
-				<span class="capture-mark" aria-hidden="true"></span>
-				<h1>Scan2Contact</h1>
+		<header
+			class="pointer-events-none absolute top-0 right-0 left-0 z-20 bg-gradient-to-b from-[rgba(6,6,7,0.88)] via-[rgba(6,6,7,0.35)] to-transparent px-4 pt-[calc(0.55rem+env(safe-area-inset-top,0px))] pb-5"
+		>
+			<div class="flex items-center gap-[0.55rem]">
+				<span
+					class="h-[0.45rem] w-[0.45rem] shrink-0 rounded-full bg-[var(--accent)] shadow-[0_0_18px_var(--accent)]"
+					aria-hidden="true"
+				></span>
+				<h1
+					class="m-0 text-[0.95rem] font-semibold tracking-[0.02em] text-[var(--text)] drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]"
+				>
+					Scan2Contact
+				</h1>
 			</div>
 		</header>
 		{#if offline}
-			<p class="capture-offline warn">You are offline. OCR requires an internet connection.</p>
+			<p
+				class="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"
+			>
+				You are offline. OCR requires an internet connection.
+			</p>
 		{/if}
 		<div
-			class="capture-scanner"
+			class="absolute inset-0 z-0"
 			style="--capture-bottom-toolbar: calc(2.95rem + env(safe-area-inset-bottom, 0px));"
 		>
 			<CameraCapture bind:this={cameraRef} autoStart={true} fullBleed />
 		</div>
-		<div class="capture-toolbar">
+		<div
+			class="absolute right-0 bottom-0 left-0 z-[25] box-border flex flex-nowrap items-center justify-center bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] backdrop-blur-[16px]"
+		>
 			<button
 				type="button"
-				class="toolbar-scan"
+				class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
 				onclick={handleScan}
 				disabled={offline || scanBusy || loading}
 			>
@@ -140,362 +163,90 @@
 			</button>
 		</div>
 		{#if error}
-			<p class="capture-error">{error}</p>
+			<p
+				class="absolute top-[calc(env(safe-area-inset-top,0px)+3.15rem)] right-3 left-3 z-[22] m-0 rounded-[var(--radius-sm)] border border-[rgba(248,113,113,0.35)] bg-[var(--danger-bg)] px-[0.7rem] py-[0.55rem] text-[0.8125rem] leading-[1.35] text-white backdrop-blur-[8px]"
+			>
+				{error}
+			</p>
 		{/if}
 	{:else}
-		<header class="page-header">
-			<p class="eyebrow">Business card → vCard</p>
-			<h1><span class="title-word">Scan</span><span class="title-word title-word--dim">2</span><span class="title-word">Contact</span></h1>
-			<p class="lede">
-				Point the camera at a card, tap Scan, then refine details and export a clean <code>.vcf</code>.
+		<header class="pt-1">
+			<p
+				class="mt-0 mb-2 text-[0.6875rem] font-semibold tracking-[0.2em] text-[var(--accent)] uppercase"
+			>
+				Business card → vCard
+			</p>
+			<h1 class="m-0 text-[clamp(2rem,8vw,2.65rem)] leading-[1.08] font-bold tracking-[-0.03em]">
+				<span class="inline">Scan</span><span class="inline font-semibold text-[var(--text-subtle)]"
+					>2</span
+				><span class="inline">Contact</span>
+			</h1>
+			<p
+				class="mt-4 max-w-[32ch] text-[1.0625rem] leading-[1.55] font-normal text-[var(--text-muted)]"
+			>
+				Point the camera at a card, tap Scan, then refine details and export a clean <code
+					class="rounded-[0.35rem] border border-[var(--border)] bg-[var(--bg-surface)] px-[0.35em] py-[0.12em] font-mono text-[0.9em] text-[var(--accent)]"
+					>.vcf</code
+				>.
 			</p>
 		</header>
 
 		{#if offline}
-			<p class="warn">You are offline. OCR requires an internet connection.</p>
+			<p
+				class="m-0 rounded-[var(--radius-md)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-[0.9rem] py-3 text-[0.9rem] leading-[1.45] text-[var(--warn-text)]"
+			>
+				You are offline. OCR requires an internet connection.
+			</p>
 		{/if}
 	{/if}
 
 	{#if step === 'processing'}
-		<section class="card processing">
-			<p class="step-label">Step 2</p>
-			<h2>Processing</h2>
-			<div class="loader" aria-hidden="true"></div>
-			<p class="processing-copy">Extracting text with OCR. Usually a few seconds.</p>
+		<section
+			class="grid justify-items-center gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] px-5 py-[1.35rem] text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
+		>
+			<p
+				class="m-0 w-full justify-self-stretch text-left text-[0.6875rem] font-semibold tracking-[0.18em] text-[var(--text-subtle)] uppercase sm:text-center"
+			>
+				Step 2
+			</p>
+			<h2
+				class="mt-[0.15rem] w-full justify-self-stretch text-left text-[1.35rem] font-semibold tracking-[-0.02em] sm:text-center"
+			>
+				Processing
+			</h2>
+			<div
+				class="my-2 h-11 w-11 animate-spin rounded-full border-[3px] border-[var(--border)] border-t-[var(--accent)]"
+				aria-hidden="true"
+			></div>
+			<p class="m-0 max-w-[26ch] text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
+				Extracting text with OCR. Usually a few seconds.
+			</p>
 		</section>
 	{:else if step === 'review'}
-		<section class="card">
-			<p class="step-label">Step 3</p>
-			<h2>Review contact</h2>
-			<p class="consent">Check and correct fields before downloading your vCard.</p>
+		<section
+			class="grid gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] px-5 py-[1.35rem] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
+		>
+			<p
+				class="m-0 text-[0.6875rem] font-semibold tracking-[0.18em] text-[var(--text-subtle)] uppercase"
+			>
+				Step 3
+			</p>
+			<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
+			<p class="m-0 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
+				Check and correct fields before downloading your vCard.
+			</p>
 			{#if consentNotice}
-				<p class="consent">{consentNotice}</p>
+				<p class="m-0 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
 			{/if}
 			<ContactForm bind:contact />
-			<div class="actions">
+			<div class="flex flex-wrap items-center gap-3 pt-1">
 				<VcfDownloadButton {contact} disabled={loading} />
-				<button type="button" class="ghost" onclick={restartFlow}>Scan another card</button>
+				<button
+					type="button"
+					class="min-h-12 w-full rounded-[var(--radius-md)] border border-[var(--border)] bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit"
+					onclick={restartFlow}>Scan another card</button
+				>
 			</div>
 		</section>
 	{/if}
 </main>
-
-<style>
-	.page {
-		position: relative;
-		width: min(100%, 36rem);
-		margin: 0 auto;
-		padding: 1.25rem 1.125rem 2rem;
-		display: grid;
-		gap: 1.25rem;
-		min-height: 100dvh;
-		box-sizing: border-box;
-	}
-	.page:not(.page--capture)::before {
-		content: '';
-		position: fixed;
-		inset: 0;
-		z-index: -1;
-		pointer-events: none;
-		background:
-			radial-gradient(ellipse 120% 80% at 50% -30%, rgba(94, 234, 212, 0.09), transparent 55%),
-			radial-gradient(ellipse 70% 50% at 100% 0%, rgba(99, 102, 241, 0.06), transparent 45%),
-			var(--bg-base);
-	}
-	.page--capture {
-		position: fixed;
-		inset: 0;
-		width: 100%;
-		max-width: none;
-		height: 100dvh;
-		max-height: 100dvh;
-		margin: 0;
-		padding: 0;
-		overflow: hidden;
-		display: block;
-		z-index: 1;
-	}
-	.capture-header {
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		z-index: 20;
-		padding: calc(0.55rem + env(safe-area-inset-top, 0px)) 1rem 1.25rem;
-		background: linear-gradient(to bottom, rgba(6, 6, 7, 0.88) 0%, rgba(6, 6, 7, 0.35) 55%, transparent);
-		pointer-events: none;
-	}
-	.capture-brand {
-		display: flex;
-		align-items: center;
-		gap: 0.55rem;
-	}
-	.capture-mark {
-		width: 0.45rem;
-		height: 0.45rem;
-		border-radius: var(--radius-pill);
-		background: var(--accent);
-		box-shadow: 0 0 18px var(--accent);
-		flex-shrink: 0;
-	}
-	.capture-header h1 {
-		margin: 0;
-		font-size: 0.95rem;
-		font-weight: 600;
-		letter-spacing: 0.02em;
-		color: var(--text);
-		text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
-	}
-	.capture-offline {
-		position: absolute;
-		top: calc(env(safe-area-inset-top, 0px) + 3rem);
-		left: 0.85rem;
-		right: 0.85rem;
-		z-index: 21;
-		margin: 0;
-		font-size: 0.8125rem;
-		padding: 0.55rem 0.75rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid var(--warn-border);
-		background: var(--warn-bg);
-		color: var(--warn-text);
-		line-height: 1.35;
-	}
-	.capture-scanner {
-		position: absolute;
-		inset: 0;
-		z-index: 0;
-	}
-	.capture-toolbar {
-		position: absolute;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		z-index: 25;
-		display: flex;
-		flex-wrap: nowrap;
-		align-items: center;
-		justify-content: center;
-		padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
-		background: linear-gradient(to top, rgba(6, 6, 7, 0.92) 0%, rgba(6, 6, 7, 0.55) 45%, transparent);
-		backdrop-filter: blur(16px);
-		-webkit-backdrop-filter: blur(16px);
-		box-sizing: border-box;
-	}
-	.toolbar-scan {
-		width: 100%;
-		max-width: 20rem;
-		min-height: 3rem;
-		padding: 0.65rem 1.25rem;
-		font-size: 0.9375rem;
-		font-weight: 600;
-		letter-spacing: 0.03em;
-		text-transform: uppercase;
-		border-radius: var(--radius-pill);
-		border: none;
-		background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
-		color: var(--accent-ink);
-		box-shadow:
-			0 0 0 1px rgba(255, 255, 255, 0.12) inset,
-			0 4px 24px rgba(45, 212, 191, 0.25);
-		transition:
-			transform 0.2s var(--ease-out),
-			box-shadow 0.2s var(--ease-out);
-	}
-	.toolbar-scan:not(:disabled):active {
-		transform: scale(0.98);
-	}
-	.toolbar-scan:disabled {
-		opacity: 0.4;
-		box-shadow: none;
-	}
-	.capture-error {
-		position: absolute;
-		left: 0.75rem;
-		right: 0.75rem;
-		top: calc(env(safe-area-inset-top, 0px) + 3.15rem);
-		z-index: 22;
-		margin: 0;
-		padding: 0.55rem 0.7rem;
-		border-radius: var(--radius-sm);
-		border: 1px solid rgba(248, 113, 113, 0.35);
-		background: var(--danger-bg);
-		backdrop-filter: blur(8px);
-		color: #fff;
-		font-size: 0.8125rem;
-		line-height: 1.35;
-	}
-	.page-header {
-		padding-top: 0.25rem;
-	}
-	.eyebrow {
-		margin: 0 0 0.5rem;
-		font-size: 0.6875rem;
-		font-weight: 600;
-		letter-spacing: 0.2em;
-		text-transform: uppercase;
-		color: var(--accent);
-	}
-	.page-header h1 {
-		margin: 0;
-		font-size: clamp(2rem, 8vw, 2.65rem);
-		font-weight: 700;
-		line-height: 1.08;
-		letter-spacing: -0.03em;
-	}
-	.title-word {
-		display: inline;
-	}
-	.title-word--dim {
-		color: var(--text-subtle);
-		font-weight: 600;
-	}
-	.lede {
-		margin: 1rem 0 0;
-		font-size: 1.0625rem;
-		font-weight: 400;
-		color: var(--text-muted);
-		max-width: 32ch;
-		line-height: 1.55;
-	}
-	.lede code {
-		font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
-		font-size: 0.9em;
-		padding: 0.12em 0.35em;
-		border-radius: 0.35rem;
-		background: var(--bg-surface);
-		border: 1px solid var(--border);
-		color: var(--accent);
-	}
-	.step-label {
-		margin: 0;
-		font-size: 0.6875rem;
-		font-weight: 600;
-		letter-spacing: 0.18em;
-		text-transform: uppercase;
-		color: var(--text-subtle);
-	}
-	.card h2 {
-		margin: 0.15rem 0 0;
-		font-size: 1.35rem;
-		font-weight: 600;
-		letter-spacing: -0.02em;
-	}
-	.card {
-		padding: 1.35rem 1.25rem;
-		border: 1px solid var(--border);
-		border-radius: var(--radius-lg);
-		background: linear-gradient(165deg, rgba(24, 24, 30, 0.92) 0%, rgba(12, 12, 15, 0.96) 100%);
-		box-shadow:
-			0 0 0 1px rgba(255, 255, 255, 0.04) inset,
-			0 24px 64px rgba(0, 0, 0, 0.45);
-		display: grid;
-		gap: 1rem;
-	}
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		align-items: center;
-		padding-top: 0.25rem;
-	}
-	button {
-		width: 100%;
-		padding: 0.85rem 1.15rem;
-		min-height: 3rem;
-		border-radius: var(--radius-md);
-		border: 1px solid var(--border-strong, var(--border));
-		background: var(--bg-raised);
-		color: var(--text);
-		font-family: inherit;
-		font-size: 0.9375rem;
-		font-weight: 600;
-		cursor: pointer;
-		transition:
-			background 0.2s var(--ease-out),
-			border-color 0.2s var(--ease-out),
-			color 0.2s var(--ease-out);
-	}
-	button:disabled {
-		opacity: 0.45;
-		cursor: not-allowed;
-	}
-	.ghost {
-		background: transparent;
-		border-color: var(--border);
-		color: var(--text-muted);
-	}
-	.ghost:hover:not(:disabled) {
-		border-color: rgba(255, 255, 255, 0.18);
-		color: var(--text);
-	}
-	.warn {
-		margin: 0;
-		color: var(--warn-text);
-		background: var(--warn-bg);
-		border: 1px solid var(--warn-border);
-		padding: 0.75rem 0.9rem;
-		border-radius: var(--radius-md);
-		font-size: 0.9rem;
-		line-height: 1.45;
-	}
-	.consent {
-		margin: 0;
-		color: var(--text-muted);
-		font-size: 0.9375rem;
-		line-height: 1.5;
-	}
-	.processing {
-		justify-items: center;
-		text-align: center;
-	}
-	.processing .step-label,
-	.processing h2 {
-		justify-self: stretch;
-		text-align: left;
-		width: 100%;
-	}
-	.processing .loader {
-		margin: 0.5rem 0;
-	}
-	.processing-copy {
-		margin: 0;
-		color: var(--text-muted);
-		font-size: 0.9375rem;
-		max-width: 26ch;
-		line-height: 1.5;
-	}
-	.loader {
-		width: 2.75rem;
-		height: 2.75rem;
-		border-radius: var(--radius-pill);
-		border: 3px solid var(--border);
-		border-top-color: var(--accent);
-		animation: spin 0.85s linear infinite;
-	}
-	@keyframes spin {
-		to {
-			transform: rotate(360deg);
-		}
-	}
-	@media (min-width: 640px) {
-		.page {
-			width: min(100%, 44rem);
-			padding: 2rem 1.5rem 3rem;
-			gap: 1.5rem;
-		}
-		.card {
-			padding: 1.5rem 1.5rem;
-		}
-		button {
-			width: fit-content;
-		}
-		.processing {
-			text-align: center;
-		}
-		.processing .step-label,
-		.processing h2 {
-			text-align: center;
-		}
-	}
-</style>
