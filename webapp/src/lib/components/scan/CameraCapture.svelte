@@ -329,208 +329,78 @@
 	});
 </script>
 
-<div class="camera-panel" class:full-bleed={fullBleed}>
+<div class={`grid gap-3 ${fullBleed ? 'flex h-full min-h-0 w-full flex-col gap-0' : ''}`}>
 	{#if !fullBleed}
 		<h2>Camera capture</h2>
 	{/if}
 	{#if supportsCamera}
-		<div class="video-shell" class:full-bleed={fullBleed} bind:this={videoShellRef}>
-			<video bind:this={videoRef} playsinline muted></video>
-			<div class="card-overlay">
+		<div
+			class={`relative overflow-hidden ${fullBleed ? 'min-h-0 w-full flex-1 rounded-none border-0 shadow-none' : 'rounded-[var(--radius-md)] border border-[var(--border)] shadow-[0_20px_50px_rgba(0,0,0,0.35)]'}`}
+			bind:this={videoShellRef}
+		>
+			<video
+				class={`w-full bg-[var(--bg-base)] object-cover pointer-events-none ${fullBleed ? 'absolute inset-0 h-full min-h-0 rounded-none [aspect-ratio:unset]' : 'rounded-[var(--radius-md)] [aspect-ratio:3/4] min-h-[min(70vh,34rem)] sm:[aspect-ratio:4/3] sm:min-h-[22rem]'}`}
+				bind:this={videoRef}
+				playsinline
+				muted
+			></video>
+			<div class="pointer-events-none absolute inset-0">
 				{#if guideBoxStyle}
-					<div class="card-window" style={guideBoxStyle}>
-						<div class="card-window-inner"></div>
+					<div
+						class="absolute box-border rounded-2xl border-2 border-[rgba(94,234,212,0.85)] bg-transparent shadow-[0_0_0_9999px_rgba(0,0,0,0.42),0_0_28px_rgba(94,234,212,0.2)]"
+						style={guideBoxStyle}
+					>
+						<div
+							class="absolute inset-[5%] rounded-[0.8rem] border-2 border-dashed border-[rgba(244,244,245,0.45)]"
+						></div>
 					</div>
 				{/if}
 			</div>
-			<div class="status-overlay" class:full-bleed={fullBleed} role="status" aria-live="polite">
+			<div
+				class={`pointer-events-none absolute left-1/2 max-w-[calc(100%-1.5rem)] -translate-x-1/2 rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-[0.85rem] py-2 text-center text-[0.8125rem] leading-[1.35] text-[var(--text-muted)] backdrop-blur-[12px] ${fullBleed ? 'bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.35rem)]' : 'bottom-[0.9rem]'}`}
+				role="status"
+				aria-live="polite"
+			>
 				{status}
 			</div>
 		</div>
 		{#if !fullBleed}
-			<p class="guide-note">
-				Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right).
+			<p class="m-0 text-[0.9rem] leading-[1.5] text-[var(--text-muted)]">
+				Hold the card <strong class="font-semibold text-[var(--text)]">upright</strong> (narrow
+				edges top/bottom, long edges left/right).
 				Fill the frame; keep the card inside the band between the dashed line and the outer border.
 				Press
-				<strong>Scan</strong> in the app to capture and run OCR.
+				<strong class="font-semibold text-[var(--text)]">Scan</strong> in the app to capture and run
+				OCR.
 			</p>
-			<div class="actions">
-				<button type="button" onclick={startCamera}>Start camera</button>
-				<button type="button" onclick={stopCamera} disabled={!stream}>Stop</button>
+			<div class="flex flex-wrap gap-2">
+				<button
+					class="min-h-12 flex-[1_1_100%] cursor-pointer rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] font-semibold text-[var(--text)] hover:not-disabled:border-[rgba(255,255,255,0.22)] sm:flex-none"
+					type="button"
+					onclick={startCamera}>Start camera</button
+				>
+				<button
+					class="min-h-12 flex-[1_1_100%] cursor-pointer rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] font-semibold text-[var(--text)] hover:not-disabled:border-[rgba(255,255,255,0.22)] sm:flex-none disabled:cursor-not-allowed"
+					type="button"
+					onclick={stopCamera}
+					disabled={!stream}>Stop</button
+				>
 			</div>
 		{/if}
 	{:else}
-		<p class:fallback-msg={fullBleed}>
+		<p
+			class={fullBleed
+				? 'absolute right-3 left-3 bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.5rem)] z-[5] m-0 rounded-lg bg-[rgba(24,24,27,0.88)] p-[0.6rem] text-[0.88rem] text-[#fafafa]'
+				: ''}
+		>
 			{cameraUnavailableReason || 'Camera API is not available in this browser.'}
 		</p>
 	{/if}
 	{#if error}
-		<p class="error" class:error--bleed={fullBleed}>{error}</p>
+		<p
+			class={`text-[0.9rem] text-[var(--danger)] ${fullBleed ? 'absolute right-3 left-3 top-[calc(env(safe-area-inset-top,0px)+3.25rem)] z-[15] m-0 rounded-lg bg-[rgba(127,29,29,0.92)] px-[0.6rem] py-2 text-[0.85rem] text-white' : ''}`}
+		>
+			{error}
+		</p>
 	{/if}
 </div>
-
-<style>
-	.camera-panel {
-		display: grid;
-		gap: 0.75rem;
-	}
-	.camera-panel.full-bleed {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		width: 100%;
-		min-height: 0;
-		gap: 0;
-	}
-	.video-shell {
-		position: relative;
-		overflow: hidden;
-		border-radius: var(--radius-md);
-		border: 1px solid var(--border);
-		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-	}
-	.video-shell.full-bleed {
-		flex: 1;
-		min-height: 0;
-		width: 100%;
-		border-radius: 0;
-		border: none;
-		box-shadow: none;
-	}
-	video {
-		width: 100%;
-		border-radius: var(--radius-md);
-		background: var(--bg-base);
-		aspect-ratio: 3 / 4;
-		min-height: min(70vh, 34rem);
-		object-fit: cover;
-		pointer-events: none;
-	}
-	.video-shell.full-bleed video {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		min-height: 0;
-		aspect-ratio: unset;
-		border-radius: 0;
-	}
-	.card-overlay {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-	.card-window {
-		position: absolute;
-		box-sizing: border-box;
-		border: 2px solid rgba(94, 234, 212, 0.85);
-		border-radius: 1rem;
-		box-shadow:
-			0 0 0 9999px rgba(0, 0, 0, 0.42),
-			0 0 28px rgba(94, 234, 212, 0.2);
-		background: transparent;
-	}
-	.card-window-inner {
-		position: absolute;
-		inset: 5%;
-		border: 2px dashed rgba(244, 244, 245, 0.45);
-		border-radius: 0.8rem;
-	}
-	.status-overlay {
-		position: absolute;
-		left: 50%;
-		bottom: 0.9rem;
-		transform: translateX(-50%);
-		max-width: calc(100% - 1.5rem);
-		padding: 0.5rem 0.85rem;
-		border-radius: var(--radius-pill);
-		background: rgba(12, 12, 15, 0.82);
-		border: 1px solid var(--border);
-		color: var(--text-muted);
-		font-size: 0.8125rem;
-		line-height: 1.35;
-		text-align: center;
-		pointer-events: none;
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-	}
-	.status-overlay.full-bleed {
-		bottom: calc(
-			var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.35rem
-		);
-	}
-	.fallback-msg {
-		position: absolute;
-		left: 0.75rem;
-		right: 0.75rem;
-		bottom: calc(
-			var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.5rem
-		);
-		margin: 0;
-		padding: 0.6rem;
-		border-radius: 0.5rem;
-		background: rgba(24, 24, 27, 0.88);
-		color: #fafafa;
-		font-size: 0.88rem;
-		z-index: 5;
-	}
-	.error--bleed {
-		position: absolute;
-		left: 0.75rem;
-		right: 0.75rem;
-		top: calc(env(safe-area-inset-top, 0px) + 3.25rem);
-		margin: 0;
-		padding: 0.5rem 0.6rem;
-		border-radius: 0.5rem;
-		background: rgba(127, 29, 29, 0.92);
-		color: #fff;
-		z-index: 15;
-		font-size: 0.85rem;
-	}
-	.actions {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.5rem;
-	}
-	.actions button {
-		flex: 1 1 100%;
-		min-height: 3rem;
-		font-family: inherit;
-		font-weight: 600;
-		border-radius: var(--radius-md);
-		border: 1px solid var(--border-strong);
-		background: var(--bg-surface);
-		color: var(--text);
-		cursor: pointer;
-	}
-	.actions button:hover:not(:disabled) {
-		border-color: rgba(255, 255, 255, 0.22);
-	}
-	.error {
-		color: var(--danger);
-		font-size: 0.9rem;
-	}
-	.guide-note {
-		margin: 0;
-		font-size: 0.9rem;
-		color: var(--text-muted);
-		line-height: 1.5;
-	}
-	.guide-note strong {
-		color: var(--text);
-		font-weight: 600;
-	}
-	@media (min-width: 640px) {
-		video {
-			aspect-ratio: 4 / 3;
-			min-height: 22rem;
-		}
-		.video-shell.full-bleed video {
-			aspect-ratio: unset;
-			min-height: 0;
-		}
-		.actions button {
-			flex: 0 0 auto;
-		}
-	}
-</style>
