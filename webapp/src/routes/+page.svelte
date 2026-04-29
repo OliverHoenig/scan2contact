@@ -170,7 +170,7 @@
 		<section class="flex flex-col sm:px-6 sm:py-6">
 			<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 			<p class="m-0 mb-16 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
-				Check and correct fields before downloading your vCard.
+				Check and correct fields before opening or sharing your contact.
 			</p>
 			{#if consentNotice}
 				<p class="m-0 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
