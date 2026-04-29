@@ -24,7 +24,7 @@
 	let error = $state('');
 	let consentNotice = $state('');
 	let offline = $state(false);
-	let step = $state<'capture' | 'processing' | 'review'>('capture');
+	let step = $state<'capture' | 'processing' | 'review'>('review');
 
 	let cameraRef = $state<{ captureFrame: () => Promise<File> } | null>(null);
 	let scanBusy = $state(false);
@@ -147,46 +147,12 @@
 				</p>
 			{/if}
 		</section>
-	{:else}
-		<header class="pt-1">
-			<p
-				class="mt-0 mb-2 text-[0.6875rem] font-semibold tracking-[0.2em] text-[var(--accent)] uppercase"
-			>
-				Business card → vCard
-			</p>
-			<h1 class="m-0 text-[clamp(2rem,8vw,2.65rem)] leading-[1.08] font-bold tracking-[-0.03em]">
-				<span class="inline">Scan</span><span class="inline font-semibold text-[var(--text-subtle)]"
-					>2</span
-				><span class="inline">Contact</span>
-			</h1>
-			<p
-				class="mt-4 max-w-[32ch] text-[1.0625rem] leading-[1.55] font-normal text-[var(--text-muted)]"
-			>
-				Point the camera at a card, tap Scan, then refine details and export a clean <code
-					class="rounded-[0.35rem] border border-[var(--border)] bg-[var(--bg-surface)] px-[0.35em] py-[0.12em] font-mono text-[0.9em] text-[var(--accent)]"
-					>.vcf</code
-				>.
-			</p>
-		</header>
-
-		{#if offline}
-			<p
-				class="m-0 rounded-[var(--radius-md)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-[0.9rem] py-3 text-[0.9rem] leading-[1.45] text-[var(--warn-text)]"
-			>
-				You are offline. OCR requires an internet connection.
-			</p>
-		{/if}
 	{/if}
 
 	{#if step === 'processing'}
 		<section
 			class="grid justify-items-center gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] px-5 py-[1.35rem] text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
 		>
-			<p
-				class="m-0 w-full justify-self-stretch text-left text-[0.6875rem] font-semibold tracking-[0.18em] text-[var(--text-subtle)] uppercase sm:text-center"
-			>
-				Step 2
-			</p>
 			<h2
 				class="mt-[0.15rem] w-full justify-self-stretch text-left text-[1.35rem] font-semibold tracking-[-0.02em] sm:text-center"
 			>
@@ -201,20 +167,13 @@
 			</p>
 		</section>
 	{:else if step === 'review'}
-		<section
-			class="grid gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] px-5 py-[1.35rem] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
-		>
-			<p
-				class="m-0 text-[0.6875rem] font-semibold tracking-[0.18em] text-[var(--text-subtle)] uppercase"
-			>
-				Step 3
-			</p>
+		<section class="flex flex-col sm:px-6 sm:py-6">
 			<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
-			<p class="m-0 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
+			<p class="m-0 mb-16 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
 				Check and correct fields before downloading your vCard.
 			</p>
 			{#if consentNotice}
-				<p class="m-0 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
+				<p class="m-0 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
 			{/if}
 			<ContactForm bind:contact />
 			<div class="flex flex-wrap items-center gap-3 pt-1">
