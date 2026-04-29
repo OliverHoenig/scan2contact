@@ -176,11 +176,11 @@
 				<p class="m-0 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
 			{/if}
 			<ContactForm bind:contact />
-			<div class="flex-ow flex items-center gap-3 pt-1">
+			<div class="mt-16 flex flex-col items-center gap-3 pt-1">
 				<VcfDownloadButton {contact} disabled={loading} />
 				<button
 					type="button"
-					class="min-h-12 w-full rounded-[var(--radius-md)] border border-[var(--border)] bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit"
+					class="min-h-12 w-full rounded-[var(--radius-md)] border border-[var(--border)] border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45 sm:w-fit"
 					onclick={restartFlow}>Scan another card</button
 				>
 			</div>
