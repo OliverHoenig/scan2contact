@@ -176,7 +176,7 @@
 				<p class="m-0 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
 			{/if}
 			<ContactForm bind:contact />
-			<div class="flex flex-wrap items-center gap-3 pt-1">
+			<div class="flex-ow flex items-center gap-3 pt-1">
 				<VcfDownloadButton {contact} disabled={loading} />
 				<button
 					type="button"
