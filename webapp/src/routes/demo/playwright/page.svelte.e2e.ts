@@ -1,6 +1,11 @@
 import { expect, test } from '@playwright/test';
 
 test('scan, edit and download vcf', async ({ page }) => {
+	// Popups after async fetch are often blocked; stub so the UI uses the second-tap + download path.
+	await page.addInitScript(() => {
+		window.open = () => null;
+	});
+
 	await page.route('/api/scan', async (route) => {
 		await route.fulfill({
 			status: 200,
@@ -51,8 +56,11 @@ test('scan, edit and download vcf', async ({ page }) => {
 
 	await page.getByLabel('Company').fill('Changed Corp');
 
+	await page.getByRole('button', { name: 'Add to contacts' }).click();
+	await expect(page.getByRole('button', { name: 'Open in Contacts' })).toBeVisible();
+
 	const downloadPromise = page.waitForEvent('download');
-	await page.getByRole('button', { name: 'Download .vcf' }).click();
+	await page.getByRole('button', { name: 'Open in Contacts' }).click();
 	const download = await downloadPromise;
 	expect(download.suggestedFilename()).toContain('.vcf');
 });
