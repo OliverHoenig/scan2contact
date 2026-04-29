@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
 
 	let { autoStart = false, fullBleed = false }: { autoStart?: boolean; fullBleed?: boolean } =
 		$props();
@@ -30,6 +30,13 @@
 
 	let supportsCamera = $state(false);
 	let cameraUnavailableReason = $state('');
+	const dispatch = createEventDispatcher<{
+		lightstate: { supported: boolean; enabled: boolean };
+	}>();
+
+	function emitLightState() {
+		dispatch('lightstate', { supported: lightSupported, enabled: lightEnabled });
+	}
 
 	function detectCameraSupport() {
 		if (typeof window === 'undefined' || typeof navigator === 'undefined') {
@@ -98,6 +105,7 @@
 		stream = null;
 		lightSupported = false;
 		lightEnabled = false;
+		emitLightState();
 		guideBoxStyle = '';
 		if (videoRef) {
 			videoRef.onloadedmetadata = null;
@@ -120,6 +128,7 @@
 		if (!lightSupported) {
 			lightEnabled = false;
 		}
+		emitLightState();
 	}
 
 	async function setLight(enabled: boolean) {
@@ -133,12 +142,13 @@
 				]
 			});
 			lightEnabled = enabled;
+			emitLightState();
 		} catch {
 			error = 'Light could not be changed on this device.';
 		}
 	}
 
-	async function toggleLight() {
+	export async function toggleLight() {
 		await setLight(!lightEnabled);
 	}
 
@@ -397,17 +407,6 @@
 					</div>
 				{/if}
 			</div>
-			{#if stream && lightSupported}
-				<div class="absolute top-3 right-3 z-[6]">
-					<button
-						type="button"
-						class="min-h-10 cursor-pointer rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-3 text-[0.8rem] font-semibold text-[var(--text)] backdrop-blur-[12px] hover:not-disabled:border-[rgba(255,255,255,0.22)] disabled:cursor-not-allowed disabled:opacity-60"
-						onclick={toggleLight}
-					>
-						{lightEnabled ? 'Light off' : 'Light on'}
-					</button>
-				</div>
-			{/if}
 			<div
 				class={`pointer-events-none absolute left-1/2 max-w-[calc(100%-1.5rem)] -translate-x-1/2 rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-[0.85rem] py-2 text-center text-[0.8125rem] leading-[1.35] text-[var(--text-muted)] backdrop-blur-[12px] ${fullBleed ? 'bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.35rem)]' : 'bottom-[0.9rem]'}`}
 				role="status"

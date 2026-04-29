@@ -25,8 +25,13 @@
 	let offline = $state(false);
 	let step = $state<'capture' | 'processing' | 'review'>('capture');
 
-	let cameraRef = $state<{ captureFrame: () => Promise<File> } | null>(null);
+	let cameraRef = $state<{
+		captureFrame: () => Promise<File>;
+		toggleLight?: () => Promise<void>;
+	} | null>(null);
 	let scanBusy = $state(false);
+	let lightSupported = $state(false);
+	let lightEnabled = $state(false);
 
 	async function handleScan() {
 		if (offline || scanBusy || loading) return;
@@ -44,6 +49,10 @@
 		} finally {
 			scanBusy = false;
 		}
+	}
+
+	async function handleToggleLight() {
+		await cameraRef?.toggleLight?.();
 	}
 
 	async function scanImage(fileOverride?: File) {
@@ -94,7 +103,6 @@
 		window.addEventListener('online', () => (offline = false));
 		window.addEventListener('offline', () => (offline = true));
 	}
-
 </script>
 
 <main
@@ -109,15 +117,48 @@
 					You are offline. OCR requires an internet connection.
 				</p>
 			{/if}
-			<div class="absolute inset-0 z-0 h-[calc(100%-70px)]">
-				<CameraCapture bind:this={cameraRef} autoStart={true} fullBleed />
+			<div class="absolute inset-0 z-0 h-[calc(100%-80px)]">
+				<CameraCapture
+					bind:this={cameraRef}
+					autoStart={true}
+					fullBleed
+					on:lightstate={(event: CustomEvent<{ supported: boolean; enabled: boolean }>) => {
+						lightSupported = event.detail.supported;
+						lightEnabled = event.detail.enabled;
+					}}
+				/>
 			</div>
 			<div
-				class="absolute right-0 bottom-0 left-0 z-[25] box-border flex flex-nowrap items-center justify-center bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] backdrop-blur-[16px]"
+				class="absolute right-0 bottom-0 left-0 z-[25] mb-6 box-border flex flex-nowrap items-center justify-center gap-3 bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] backdrop-blur-[16px]"
 			>
 				<button
 					type="button"
-					class="mb-10 min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+					class="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gray-400/80 bg-[rgba(12,12,15,0.82)] text-[var(--text)] backdrop-blur-[12px] transition-[border-color,background,color,transform] duration-200 ease-out active:scale-[0.97] disabled:opacity-45"
+					onclick={handleToggleLight}
+					disabled={!lightSupported || offline || scanBusy || loading}
+					aria-label={lightEnabled ? 'Turn light off' : 'Turn light on'}
+					title={lightEnabled ? 'Turn light off' : 'Turn light on'}
+				>
+					<svg
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						class={`h-5 w-5 ${lightEnabled ? 'text-[var(--accent)]' : ''}`}
+						aria-hidden="true"
+					>
+						<path d="M10.5 3.75h3l1.1 4.3h-5.2l1.1-4.3Z" />
+						<path
+							d="M8.75 8.05h6.5v8.9a2.15 2.15 0 0 1-2.15 2.15h-2.2a2.15 2.15 0 0 1-2.15-2.15v-8.9Z"
+						/>
+						<path d="M9.5 12.1h5" />
+					</svg>
+				</button>
+				<button
+					type="button"
+					class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
 					onclick={handleScan}
 					disabled={offline || scanBusy || loading}
 				>
