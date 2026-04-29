@@ -113,62 +113,40 @@
 </script>
 
 <main
-	class={`relative box-border min-h-dvh ${step === 'capture' ? 'fixed inset-0 z-[1] m-0 block h-dvh max-h-dvh w-full max-w-none overflow-hidden p-0' : 'mx-auto grid w-full max-w-[36rem] gap-5 p-5 pb-8 sm:max-w-[44rem] sm:gap-6 sm:px-6 sm:pt-8 sm:pb-12'}`}
+	class={`m-auto box-border flex h-full min-h-dvh max-w-[600px] flex-col ${step === 'capture' ? 'fixed inset-0 z-[1] m-0 block h-dvh max-h-dvh overflow-hidden p-0' : 'mx-auto grid gap-5 p-5 pb-8'}`}
 >
-	{#if step !== 'capture'}
-		<div
-			aria-hidden="true"
-			class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_120%_80%_at_50%_-30%,rgba(94,234,212,0.09),transparent_55%),radial-gradient(ellipse_70%_50%_at_100%_0%,rgba(99,102,241,0.06),transparent_45%),var(--bg-base)]"
-		></div>
-	{/if}
 	{#if step === 'capture'}
-		<header
-			class="pointer-events-none absolute top-0 right-0 left-0 z-20 bg-gradient-to-b from-[rgba(6,6,7,0.88)] via-[rgba(6,6,7,0.35)] to-transparent px-4 pt-[calc(0.55rem+env(safe-area-inset-top,0px))] pb-5"
-		>
-			<div class="flex items-center gap-[0.55rem]">
-				<span
-					class="h-[0.45rem] w-[0.45rem] shrink-0 rounded-full bg-[var(--accent)] shadow-[0_0_18px_var(--accent)]"
-					aria-hidden="true"
-				></span>
-				<h1
-					class="m-0 text-[0.95rem] font-semibold tracking-[0.02em] text-[var(--text)] drop-shadow-[0_1px_12px_rgba(0,0,0,0.5)]"
+		<section class="h-full overflow-hidden">
+			{#if offline}
+				<p
+					class="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"
 				>
-					Scan2Contact
-				</h1>
+					You are offline. OCR requires an internet connection.
+				</p>
+			{/if}
+			<div class="absolute inset-0 z-0 h-[calc(100%-70px)]">
+				<CameraCapture bind:this={cameraRef} autoStart={true} fullBleed />
 			</div>
-		</header>
-		{#if offline}
-			<p
-				class="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"
+			<div
+				class="absolute right-0 bottom-0 left-0 z-[25] box-border flex flex-nowrap items-center justify-center bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] backdrop-blur-[16px]"
 			>
-				You are offline. OCR requires an internet connection.
-			</p>
-		{/if}
-		<div
-			class="absolute inset-0 z-0"
-			style="--capture-bottom-toolbar: calc(2.95rem + env(safe-area-inset-bottom, 0px));"
-		>
-			<CameraCapture bind:this={cameraRef} autoStart={true} fullBleed />
-		</div>
-		<div
-			class="absolute right-0 bottom-0 left-0 z-[25] box-border flex flex-nowrap items-center justify-center bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] pb-[calc(0.65rem+env(safe-area-inset-bottom,0px))] backdrop-blur-[16px]"
-		>
-			<button
-				type="button"
-				class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
-				onclick={handleScan}
-				disabled={offline || scanBusy || loading}
-			>
-				Scan
-			</button>
-		</div>
-		{#if error}
-			<p
-				class="absolute top-[calc(env(safe-area-inset-top,0px)+3.15rem)] right-3 left-3 z-[22] m-0 rounded-[var(--radius-sm)] border border-[rgba(248,113,113,0.35)] bg-[var(--danger-bg)] px-[0.7rem] py-[0.55rem] text-[0.8125rem] leading-[1.35] text-white backdrop-blur-[8px]"
-			>
-				{error}
-			</p>
-		{/if}
+				<button
+					type="button"
+					class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+					onclick={handleScan}
+					disabled={offline || scanBusy || loading}
+				>
+					Scan
+				</button>
+			</div>
+			{#if error}
+				<p
+					class="absolute top-[calc(env(safe-area-inset-top,0px)+3.15rem)] right-3 left-3 z-[22] m-0 rounded-[var(--radius-sm)] border border-[rgba(248,113,113,0.35)] bg-[var(--danger-bg)] px-[0.7rem] py-[0.55rem] text-[0.8125rem] leading-[1.35] text-white backdrop-blur-[8px]"
+				>
+					{error}
+				</p>
+			{/if}
+		</section>
 	{:else}
 		<header class="pt-1">
 			<p

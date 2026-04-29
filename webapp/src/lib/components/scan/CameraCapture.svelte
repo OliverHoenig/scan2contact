@@ -102,7 +102,7 @@
 	}
 
 	/** Card in portrait: narrow edge left–right, long edge top–bottom (fits phone held upright). */
-	function getOverlayRect(width: number, height: number) {
+	function getOverlayRect(width: number, height: number, originX = 0, originY = 0) {
 		const maxW = width * OVERLAY_WIDTH_FRAC;
 		const maxH = height * OVERLAY_HEIGHT_FRAC;
 		let targetWidth = maxW;
@@ -111,8 +111,8 @@
 			targetHeight = maxH;
 			targetWidth = targetHeight / CARD_RATIO;
 		}
-		const x = (width - targetWidth) / 2;
-		const y = (height - targetHeight) / 2;
+		const x = originX + (width - targetWidth) / 2;
+		const y = originY + (height - targetHeight) / 2;
 		return { x, y, width: targetWidth, height: targetHeight };
 	}
 
@@ -131,24 +131,43 @@
 		return { scale, dx, dy };
 	}
 
-	function updateGuideLayout() {
-		const v = videoRef;
-		const shell = videoShellRef;
-		if (!v || !shell || v.videoWidth === 0 || v.videoHeight === 0) {
-			guideBoxStyle = '';
-			return;
-		}
+	function getVisibleVideoRect(vw: number, vh: number, cw: number, ch: number) {
+		const { scale, dx, dy } = videoCoverMapping(vw, vh, cw, ch);
+		const x = Math.max(0, -dx / scale);
+		const y = Math.max(0, -dy / scale);
+		const width = Math.min(vw, cw / scale);
+		const height = Math.min(vh, ch / scale);
+		return { x, y, width, height, scale, dx, dy };
+	}
+
+	function getGuideCropRect(v: HTMLVideoElement, shell: HTMLDivElement) {
 		const vw = v.videoWidth;
 		const vh = v.videoHeight;
 		const cr = shell.getBoundingClientRect();
 		const cw = cr.width;
 		const ch = cr.height;
-		if (cw === 0 || ch === 0) {
+		if (vw === 0 || vh === 0 || cw === 0 || ch === 0) {
+			return null;
+		}
+		const visible = getVisibleVideoRect(vw, vh, cw, ch);
+		const overlay = getOverlayRect(visible.width, visible.height, visible.x, visible.y);
+		return { overlay, visible };
+	}
+
+	function updateGuideLayout() {
+		const v = videoRef;
+		const shell = videoShellRef;
+		if (!v || !shell) {
 			guideBoxStyle = '';
 			return;
 		}
-		const { scale, dx, dy } = videoCoverMapping(vw, vh, cw, ch);
-		const r = getOverlayRect(vw, vh);
+		const guide = getGuideCropRect(v, shell);
+		if (!guide) {
+			guideBoxStyle = '';
+			return;
+		}
+		const { overlay: r, visible } = guide;
+		const { scale, dx, dy } = visible;
 		const left = dx + r.x * scale;
 		const top = dy + r.y * scale;
 		const w = r.width * scale;
@@ -189,11 +208,17 @@
 	}
 
 	async function captureBestBurstFrame(): Promise<File> {
-		if (!videoRef) {
+		const v = videoRef;
+		const shell = videoShellRef;
+		if (!v || !shell) {
 			throw new Error('No active video stream');
 		}
+		const guide = getGuideCropRect(v, shell);
+		if (!guide) {
+			throw new Error('Video layout is not ready yet');
+		}
+		const { overlay: cropRect } = guide;
 		const canvas = document.createElement('canvas');
-		const cropRect = getOverlayRect(videoRef.videoWidth, videoRef.videoHeight);
 		canvas.width = Math.round(cropRect.width);
 		canvas.height = Math.round(cropRect.height);
 		const context = canvas.getContext('2d', { willReadFrequently: true });
@@ -205,7 +230,7 @@
 		let bestSharpness = -Infinity;
 		for (let frame = 0; frame < CAPTURE_BURST_FRAMES; frame += 1) {
 			context.drawImage(
-				videoRef,
+				v,
 				Math.round(cropRect.x),
 				Math.round(cropRect.y),
 				Math.round(cropRect.width),
@@ -324,8 +349,9 @@
 		</div>
 		{#if !fullBleed}
 			<p class="guide-note">
-				Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right). Fill
-				the frame; keep the card inside the band between the dashed line and the outer border. Press
+				Hold the card <strong>upright</strong> (narrow edges top/bottom, long edges left/right).
+				Fill the frame; keep the card inside the band between the dashed line and the outer border.
+				Press
 				<strong>Scan</strong> in the app to capture and run OCR.
 			</p>
 			<div class="actions">
@@ -334,7 +360,9 @@
 			</div>
 		{/if}
 	{:else}
-		<p class:fallback-msg={fullBleed}>{cameraUnavailableReason || 'Camera API is not available in this browser.'}</p>
+		<p class:fallback-msg={fullBleed}>
+			{cameraUnavailableReason || 'Camera API is not available in this browser.'}
+		</p>
 	{/if}
 	{#if error}
 		<p class="error" class:error--bleed={fullBleed}>{error}</p>
@@ -427,13 +455,17 @@
 		-webkit-backdrop-filter: blur(12px);
 	}
 	.status-overlay.full-bleed {
-		bottom: calc(var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.35rem);
+		bottom: calc(
+			var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.35rem
+		);
 	}
 	.fallback-msg {
 		position: absolute;
 		left: 0.75rem;
 		right: 0.75rem;
-		bottom: calc(var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.5rem);
+		bottom: calc(
+			var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.5rem
+		);
 		margin: 0;
 		padding: 0.6rem;
 		border-radius: 0.5rem;
