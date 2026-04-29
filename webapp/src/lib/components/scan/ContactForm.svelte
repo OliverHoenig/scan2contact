@@ -32,23 +32,45 @@
 <style>
 	.form-grid {
 		display: grid;
-		gap: 0.75rem;
+		gap: 1rem;
 	}
 	label {
 		display: grid;
-		gap: 0.35rem;
-		font-size: 0.92rem;
-		font-weight: 600;
+		gap: 0.4rem;
+		font-size: 0.8125rem;
+		font-weight: 500;
+		color: var(--text-muted);
+		letter-spacing: 0.01em;
 	}
 	input,
 	textarea {
 		font: inherit;
-		padding: 0.65rem;
-		min-height: 2.75rem;
-		border-radius: 0.5rem;
-		border: 1px solid #d4d4d8;
+		padding: 0.7rem 0.85rem;
+		min-height: 2.85rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--border);
+		background: var(--bg-input);
+		color: var(--text);
+		transition:
+			border-color 0.2s var(--ease-out),
+			box-shadow 0.2s var(--ease-out);
+	}
+	input::placeholder,
+	textarea::placeholder {
+		color: var(--text-subtle);
+	}
+	input:hover,
+	textarea:hover {
+		border-color: var(--border-strong);
+	}
+	input:focus,
+	textarea:focus {
+		outline: none;
+		border-color: var(--border-focus);
+		box-shadow: 0 0 0 3px var(--accent-muted);
 	}
 	textarea {
 		min-height: 7rem;
+		resize: vertical;
 	}
 </style>

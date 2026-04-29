@@ -48,18 +48,39 @@
 
 <style>
 	button {
-		padding: 0.75rem 1rem;
-		border-radius: 0.6rem;
-		border: 1px solid #18181b;
-		background: #18181b;
-		color: #fff;
-		font-weight: 700;
+		padding: 0.85rem 1.35rem;
+		min-height: 3rem;
+		border-radius: var(--radius-md);
+		border: none;
+		background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
+		color: var(--accent-ink);
+		font-family: inherit;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		cursor: pointer;
+		box-shadow:
+			0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+			0 6px 28px rgba(45, 212, 191, 0.22);
+		transition:
+			transform 0.2s var(--ease-out),
+			filter 0.2s var(--ease-out);
+	}
+	button:not(:disabled):hover {
+		filter: brightness(1.06);
+	}
+	button:not(:disabled):active {
+		transform: scale(0.98);
 	}
 	button:disabled {
-		opacity: 0.5;
+		opacity: 0.45;
+		cursor: not-allowed;
+		box-shadow: none;
 	}
 	.error {
-		color: #b91c1c;
-		margin-top: 0.5rem;
+		color: var(--danger);
+		font-size: 0.875rem;
+		margin: 0.5rem 0 0;
+		line-height: 1.4;
 	}
 </style>

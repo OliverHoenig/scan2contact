@@ -15,6 +15,12 @@
 <svelte:head>
 	<link rel="icon" href={favicon} />
 	<link rel="manifest" href="/manifest.webmanifest" />
-	<meta name="theme-color" content="#18181b" />
+	<link rel="preconnect" href="https://fonts.googleapis.com" />
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+	<link
+		href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap"
+		rel="stylesheet"
+	/>
+	<meta name="theme-color" content="#060607" />
 </svelte:head>
 {@render children()}

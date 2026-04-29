@@ -357,18 +357,22 @@
 	.video-shell {
 		position: relative;
 		overflow: hidden;
-		border-radius: 0.75rem;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--border);
+		box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 	}
 	.video-shell.full-bleed {
 		flex: 1;
 		min-height: 0;
 		width: 100%;
 		border-radius: 0;
+		border: none;
+		box-shadow: none;
 	}
 	video {
 		width: 100%;
-		border-radius: 0.75rem;
-		background: #111;
+		border-radius: var(--radius-md);
+		background: var(--bg-base);
 		aspect-ratio: 3 / 4;
 		min-height: min(70vh, 34rem);
 		object-fit: cover;
@@ -391,16 +395,18 @@
 	.card-window {
 		position: absolute;
 		box-sizing: border-box;
-		border: 2px solid #f4f4f5;
-		border-radius: 0.85rem;
-		box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.34);
+		border: 2px solid rgba(94, 234, 212, 0.85);
+		border-radius: 1rem;
+		box-shadow:
+			0 0 0 9999px rgba(0, 0, 0, 0.42),
+			0 0 28px rgba(94, 234, 212, 0.2);
 		background: transparent;
 	}
 	.card-window-inner {
 		position: absolute;
 		inset: 5%;
-		border: 2px dashed #f4f4f5;
-		border-radius: 0.7rem;
+		border: 2px dashed rgba(244, 244, 245, 0.45);
+		border-radius: 0.8rem;
 	}
 	.status-overlay {
 		position: absolute;
@@ -408,15 +414,17 @@
 		bottom: 0.9rem;
 		transform: translateX(-50%);
 		max-width: calc(100% - 1.5rem);
-		padding: 0.45rem 0.7rem;
-		border-radius: 0.65rem;
-		background: rgba(17, 17, 17, 0.72);
-		color: #fafafa;
-		font-size: 0.9rem;
-		line-height: 1.25;
+		padding: 0.5rem 0.85rem;
+		border-radius: var(--radius-pill);
+		background: rgba(12, 12, 15, 0.82);
+		border: 1px solid var(--border);
+		color: var(--text-muted);
+		font-size: 0.8125rem;
+		line-height: 1.35;
 		text-align: center;
 		pointer-events: none;
-		backdrop-filter: blur(2px);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
 	}
 	.status-overlay.full-bleed {
 		bottom: calc(var(--capture-bottom-toolbar, 4.25rem) + env(safe-area-inset-bottom, 0px) + 0.35rem);
@@ -454,16 +462,31 @@
 	}
 	.actions button {
 		flex: 1 1 100%;
-		min-height: 2.9rem;
+		min-height: 3rem;
+		font-family: inherit;
+		font-weight: 600;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--border-strong);
+		background: var(--bg-surface);
+		color: var(--text);
+		cursor: pointer;
+	}
+	.actions button:hover:not(:disabled) {
+		border-color: rgba(255, 255, 255, 0.22);
 	}
 	.error {
-		color: #b91c1c;
+		color: var(--danger);
 		font-size: 0.9rem;
 	}
 	.guide-note {
 		margin: 0;
 		font-size: 0.9rem;
-		color: #3f3f46;
+		color: var(--text-muted);
+		line-height: 1.5;
+	}
+	.guide-note strong {
+		color: var(--text);
+		font-weight: 600;
 	}
 	@media (min-width: 640px) {
 		video {

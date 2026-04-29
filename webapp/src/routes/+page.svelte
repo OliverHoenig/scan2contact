@@ -115,7 +115,10 @@
 <main class="page" class:page--capture={step === 'capture'}>
 	{#if step === 'capture'}
 		<header class="capture-header">
-			<h1>Scan2Contact</h1>
+			<div class="capture-brand">
+				<span class="capture-mark" aria-hidden="true"></span>
+				<h1>Scan2Contact</h1>
+			</div>
 		</header>
 		{#if offline}
 			<p class="capture-offline warn">You are offline. OCR requires an internet connection.</p>
@@ -141,8 +144,11 @@
 		{/if}
 	{:else}
 		<header class="page-header">
-			<h1>Scan2Contact</h1>
-			<p>Point the camera at a business card, press Scan, then verify and export as .vcf.</p>
+			<p class="eyebrow">Business card → vCard</p>
+			<h1><span class="title-word">Scan</span><span class="title-word title-word--dim">2</span><span class="title-word">Contact</span></h1>
+			<p class="lede">
+				Point the camera at a card, tap Scan, then refine details and export a clean <code>.vcf</code>.
+			</p>
 		</header>
 
 		{#if offline}
@@ -152,13 +158,15 @@
 
 	{#if step === 'processing'}
 		<section class="card processing">
-			<h2>2. Processing card</h2>
+			<p class="step-label">Step 2</p>
+			<h2>Processing</h2>
 			<div class="loader" aria-hidden="true"></div>
-			<p>We are extracting text with OCR. This may take a few seconds.</p>
+			<p class="processing-copy">Extracting text with OCR. Usually a few seconds.</p>
 		</section>
 	{:else if step === 'review'}
 		<section class="card">
-			<h2>3. Review extracted contact</h2>
+			<p class="step-label">Step 3</p>
+			<h2>Review contact</h2>
 			<p class="consent">Check and correct fields before downloading your vCard.</p>
 			{#if consentNotice}
 				<p class="consent">{consentNotice}</p>
@@ -174,13 +182,25 @@
 
 <style>
 	.page {
-		width: min(100%, 34rem);
+		position: relative;
+		width: min(100%, 36rem);
 		margin: 0 auto;
-		padding: 0.875rem;
+		padding: 1.25rem 1.125rem 2rem;
 		display: grid;
-		gap: 0.875rem;
+		gap: 1.25rem;
 		min-height: 100dvh;
 		box-sizing: border-box;
+	}
+	.page:not(.page--capture)::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: -1;
+		pointer-events: none;
+		background:
+			radial-gradient(ellipse 120% 80% at 50% -30%, rgba(94, 234, 212, 0.09), transparent 55%),
+			radial-gradient(ellipse 70% 50% at 100% 0%, rgba(99, 102, 241, 0.06), transparent 45%),
+			var(--bg-base);
 	}
 	.page--capture {
 		position: fixed;
@@ -201,26 +221,45 @@
 		left: 0;
 		right: 0;
 		z-index: 20;
-		padding: calc(0.45rem + env(safe-area-inset-top, 0px)) 0.75rem 0.65rem;
-		background: linear-gradient(to bottom, rgba(0, 0, 0, 0.62), transparent);
+		padding: calc(0.55rem + env(safe-area-inset-top, 0px)) 1rem 1.25rem;
+		background: linear-gradient(to bottom, rgba(6, 6, 7, 0.88) 0%, rgba(6, 6, 7, 0.35) 55%, transparent);
 		pointer-events: none;
+	}
+	.capture-brand {
+		display: flex;
+		align-items: center;
+		gap: 0.55rem;
+	}
+	.capture-mark {
+		width: 0.45rem;
+		height: 0.45rem;
+		border-radius: var(--radius-pill);
+		background: var(--accent);
+		box-shadow: 0 0 18px var(--accent);
+		flex-shrink: 0;
 	}
 	.capture-header h1 {
 		margin: 0;
-		font-size: 1.05rem;
-		font-weight: 700;
-		color: #fafafa;
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+		font-size: 0.95rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		color: var(--text);
+		text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
 	}
 	.capture-offline {
 		position: absolute;
-		top: calc(env(safe-area-inset-top, 0px) + 2.6rem);
-		left: 0.65rem;
-		right: 0.65rem;
+		top: calc(env(safe-area-inset-top, 0px) + 3rem);
+		left: 0.85rem;
+		right: 0.85rem;
 		z-index: 21;
 		margin: 0;
-		font-size: 0.82rem;
-		padding: 0.45rem 0.55rem;
+		font-size: 0.8125rem;
+		padding: 0.55rem 0.75rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid var(--warn-border);
+		background: var(--warn-bg);
+		color: var(--warn-text);
+		line-height: 1.35;
 	}
 	.capture-scanner {
 		position: absolute;
@@ -237,99 +276,202 @@
 		flex-wrap: nowrap;
 		align-items: center;
 		justify-content: center;
-		padding: 0.4rem 0.75rem calc(0.4rem + env(safe-area-inset-bottom, 0px));
-		background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0.2));
-		backdrop-filter: blur(10px);
+		padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom, 0px));
+		background: linear-gradient(to top, rgba(6, 6, 7, 0.92) 0%, rgba(6, 6, 7, 0.55) 45%, transparent);
+		backdrop-filter: blur(16px);
+		-webkit-backdrop-filter: blur(16px);
 		box-sizing: border-box;
 	}
 	.toolbar-scan {
 		width: 100%;
 		max-width: 20rem;
-		min-height: 2.65rem;
-		padding: 0.55rem 1rem;
-		font-size: 1rem;
-		border-radius: 0.55rem;
-		border: 1px solid #fafafa;
-		background: #fafafa;
-		color: #18181b;
-		font-weight: 700;
+		min-height: 3rem;
+		padding: 0.65rem 1.25rem;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		letter-spacing: 0.03em;
+		text-transform: uppercase;
+		border-radius: var(--radius-pill);
+		border: none;
+		background: linear-gradient(145deg, var(--accent) 0%, #2dd4bf 100%);
+		color: var(--accent-ink);
+		box-shadow:
+			0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+			0 4px 24px rgba(45, 212, 191, 0.25);
+		transition:
+			transform 0.2s var(--ease-out),
+			box-shadow 0.2s var(--ease-out);
+	}
+	.toolbar-scan:not(:disabled):active {
+		transform: scale(0.98);
 	}
 	.toolbar-scan:disabled {
-		opacity: 0.45;
+		opacity: 0.4;
+		box-shadow: none;
 	}
 	.capture-error {
 		position: absolute;
-		left: 0.6rem;
-		right: 0.6rem;
-		top: calc(env(safe-area-inset-top, 0px) + 2.75rem);
+		left: 0.75rem;
+		right: 0.75rem;
+		top: calc(env(safe-area-inset-top, 0px) + 3.15rem);
 		z-index: 22;
 		margin: 0;
-		padding: 0.45rem 0.55rem;
-		border-radius: 0.45rem;
-		background: rgba(127, 29, 29, 0.92);
+		padding: 0.55rem 0.7rem;
+		border-radius: var(--radius-sm);
+		border: 1px solid rgba(248, 113, 113, 0.35);
+		background: var(--danger-bg);
+		backdrop-filter: blur(8px);
 		color: #fff;
-		font-size: 0.82rem;
-		line-height: 1.3;
+		font-size: 0.8125rem;
+		line-height: 1.35;
+	}
+	.page-header {
+		padding-top: 0.25rem;
+	}
+	.eyebrow {
+		margin: 0 0 0.5rem;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--accent);
 	}
 	.page-header h1 {
 		margin: 0;
-		font-size: clamp(1.45rem, 6vw, 1.95rem);
+		font-size: clamp(2rem, 8vw, 2.65rem);
+		font-weight: 700;
+		line-height: 1.08;
+		letter-spacing: -0.03em;
 	}
-	.page-header p {
-		margin: 0.35rem 0 0;
-		font-size: 0.98rem;
-		color: #3f3f46;
+	.title-word {
+		display: inline;
+	}
+	.title-word--dim {
+		color: var(--text-subtle);
+		font-weight: 600;
+	}
+	.lede {
+		margin: 1rem 0 0;
+		font-size: 1.0625rem;
+		font-weight: 400;
+		color: var(--text-muted);
+		max-width: 32ch;
+		line-height: 1.55;
+	}
+	.lede code {
+		font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+		font-size: 0.9em;
+		padding: 0.12em 0.35em;
+		border-radius: 0.35rem;
+		background: var(--bg-surface);
+		border: 1px solid var(--border);
+		color: var(--accent);
+	}
+	.step-label {
+		margin: 0;
+		font-size: 0.6875rem;
+		font-weight: 600;
+		letter-spacing: 0.18em;
+		text-transform: uppercase;
+		color: var(--text-subtle);
+	}
+	.card h2 {
+		margin: 0.15rem 0 0;
+		font-size: 1.35rem;
+		font-weight: 600;
+		letter-spacing: -0.02em;
 	}
 	.card {
-		padding: 0.95rem;
-		border: 1px solid #e4e4e7;
-		border-radius: 0.8rem;
+		padding: 1.35rem 1.25rem;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: linear-gradient(165deg, rgba(24, 24, 30, 0.92) 0%, rgba(12, 12, 15, 0.96) 100%);
+		box-shadow:
+			0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+			0 24px 64px rgba(0, 0, 0, 0.45);
 		display: grid;
-		gap: 0.8rem;
+		gap: 1rem;
 	}
 	.actions {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.6rem;
+		gap: 0.75rem;
+		align-items: center;
+		padding-top: 0.25rem;
 	}
 	button {
 		width: 100%;
-		padding: 0.8rem 1rem;
-		min-height: 2.9rem;
-		border-radius: 0.55rem;
-		border: 1px solid #18181b;
-		background: #18181b;
-		color: #fff;
-		font-weight: 700;
+		padding: 0.85rem 1.15rem;
+		min-height: 3rem;
+		border-radius: var(--radius-md);
+		border: 1px solid var(--border-strong, var(--border));
+		background: var(--bg-raised);
+		color: var(--text);
+		font-family: inherit;
+		font-size: 0.9375rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition:
+			background 0.2s var(--ease-out),
+			border-color 0.2s var(--ease-out),
+			color 0.2s var(--ease-out);
 	}
 	button:disabled {
-		opacity: 0.5;
+		opacity: 0.45;
+		cursor: not-allowed;
 	}
 	.ghost {
 		background: transparent;
-		color: #18181b;
+		border-color: var(--border);
+		color: var(--text-muted);
+	}
+	.ghost:hover:not(:disabled) {
+		border-color: rgba(255, 255, 255, 0.18);
+		color: var(--text);
 	}
 	.warn {
-		color: #92400e;
-		background: #fef3c7;
-		padding: 0.6rem;
-		border-radius: 0.55rem;
+		margin: 0;
+		color: var(--warn-text);
+		background: var(--warn-bg);
+		border: 1px solid var(--warn-border);
+		padding: 0.75rem 0.9rem;
+		border-radius: var(--radius-md);
+		font-size: 0.9rem;
+		line-height: 1.45;
 	}
 	.consent {
-		color: #3f3f46;
-		font-size: 0.92rem;
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 0.9375rem;
+		line-height: 1.5;
 	}
 	.processing {
 		justify-items: center;
 		text-align: center;
 	}
+	.processing .step-label,
+	.processing h2 {
+		justify-self: stretch;
+		text-align: left;
+		width: 100%;
+	}
+	.processing .loader {
+		margin: 0.5rem 0;
+	}
+	.processing-copy {
+		margin: 0;
+		color: var(--text-muted);
+		font-size: 0.9375rem;
+		max-width: 26ch;
+		line-height: 1.5;
+	}
 	.loader {
-		width: 3rem;
-		height: 3rem;
-		border-radius: 9999px;
-		border: 4px solid #e4e4e7;
-		border-top-color: #18181b;
-		animation: spin 0.9s linear infinite;
+		width: 2.75rem;
+		height: 2.75rem;
+		border-radius: var(--radius-pill);
+		border: 3px solid var(--border);
+		border-top-color: var(--accent);
+		animation: spin 0.85s linear infinite;
 	}
 	@keyframes spin {
 		to {
@@ -338,15 +480,22 @@
 	}
 	@media (min-width: 640px) {
 		.page {
-			width: min(100%, 46rem);
-			padding: 1.1rem;
-			gap: 1rem;
+			width: min(100%, 44rem);
+			padding: 2rem 1.5rem 3rem;
+			gap: 1.5rem;
 		}
 		.card {
-			padding: 1rem;
+			padding: 1.5rem 1.5rem;
 		}
 		button {
 			width: fit-content;
+		}
+		.processing {
+			text-align: center;
+		}
+		.processing .step-label,
+		.processing h2 {
+			text-align: center;
 		}
 	}
 </style>
