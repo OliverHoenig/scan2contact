@@ -95,30 +95,16 @@
 		window.addEventListener('offline', () => (offline = true));
 	}
 
-	$effect(() => {
-		if (typeof document === 'undefined') return;
-		if (step !== 'capture') return;
-		const html = document.documentElement;
-		const body = document.body;
-		const prevHtml = html.style.overflow;
-		const prevBody = body.style.overflow;
-		html.style.overflow = 'hidden';
-		body.style.overflow = 'hidden';
-		return () => {
-			html.style.overflow = prevHtml;
-			body.style.overflow = prevBody;
-		};
-	});
 </script>
 
 <main
-	class={`m-auto box-border flex h-full min-h-dvh max-w-[600px] flex-col ${step === 'capture' ? 'fixed inset-0 z-[1] m-0 block h-dvh max-h-dvh overflow-hidden p-0' : 'mx-auto grid gap-5 p-5 pb-8'}`}
+	class={`box-border ${step === 'capture' ? 'flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8'}`}
 >
 	{#if step === 'capture'}
-		<section class="h-full overflow-hidden">
+		<section class="relative h-full min-h-0 overflow-hidden">
 			{#if offline}
 				<p
-					class="absolute top-[calc(env(safe-area-inset-top,0px)+3rem)] right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"
+					class="absolute top-3 right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"
 				>
 					You are offline. OCR requires an internet connection.
 				</p>
@@ -140,7 +126,7 @@
 			</div>
 			{#if error}
 				<p
-					class="absolute top-[calc(env(safe-area-inset-top,0px)+3.15rem)] right-3 left-3 z-[22] m-0 rounded-[var(--radius-sm)] border border-[rgba(248,113,113,0.35)] bg-[var(--danger-bg)] px-[0.7rem] py-[0.55rem] text-[0.8125rem] leading-[1.35] text-white backdrop-blur-[8px]"
+					class="absolute top-3 right-3 left-3 z-[22] m-0 rounded-[var(--radius-sm)] border border-[rgba(248,113,113,0.35)] bg-[var(--danger-bg)] px-[0.7rem] py-[0.55rem] text-[0.8125rem] leading-[1.35] text-white backdrop-blur-[8px]"
 				>
 					{error}
 				</p>
