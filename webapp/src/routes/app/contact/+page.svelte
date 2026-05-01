@@ -2,6 +2,8 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import ContactForm from '$lib/components/scan/ContactForm.svelte';
+	import VcfDownloadButton from '$lib/components/scan/VcfDownloadButton.svelte';
 	import { DEFAULT_MAIL_TEMPLATES_SEED } from '$lib/mail-templates/defaults';
 	import type { Contact } from '$lib/contact';
 	import {
@@ -12,6 +14,7 @@
 		type ReviewSessionState
 	} from '$lib/scan-flow/review-session';
 
+	type ReviewStage = 'edit' | 'saved';
 	type NextCta = 'followup' | 'linkedin' | 'scan' | null;
 	const RETURN_NUDGE_WINDOW_MS = 60 * 1000;
 
@@ -24,6 +27,7 @@
 	};
 
 	let hydrated = $state(false);
+	let reviewStage = $state<ReviewStage>('edit');
 	let contact = $state<Contact | null>(null);
 	let consentNotice = $state('');
 	let savedViaSkip = $state(false);
@@ -184,6 +188,14 @@
 			const url = URL.createObjectURL(blob);
 			saveTriggeredAt = Date.now();
 			savedViaSkip = false;
+			reviewStage = 'saved';
+			saveReviewSession({
+				contact,
+				consentNotice,
+				savedViaSkip: false,
+				savedActions,
+				saveTriggeredAt
+			});
 			window.location.assign(url);
 		} catch (unknownError) {
 			vcfOpenError =
@@ -196,6 +208,7 @@
 	function triggerReturnNudge() {
 		if (typeof document === 'undefined') return;
 		if (document.visibilityState !== 'visible') return;
+		if (reviewStage !== 'saved') return;
 		if (!saveTriggeredAt) return;
 		if (Date.now() - saveTriggeredAt > RETURN_NUDGE_WINDOW_MS) return;
 		pulsingCta = nextPendingCta();
@@ -207,12 +220,27 @@
 
 	function backToEdit() {
 		vcfOpenError = '';
-		void goto(resolve('/app/details'));
+		reviewStage = 'edit';
 	}
 
 	function restartFlow() {
 		clearReviewSession();
 		void goto(resolve('/app/scan'));
+	}
+
+	function persistSavedForFollowup() {
+		saveTriggeredAt = Date.now();
+		savedViaSkip = false;
+		reviewStage = 'saved';
+	}
+
+	function afterShareShowSavedSection() {
+		reviewStage = 'saved';
+	}
+
+	function skipToFollowup() {
+		savedViaSkip = true;
+		reviewStage = 'saved';
 	}
 
 	onMount(() => {
@@ -221,15 +249,12 @@
 			void goto(resolve('/app/scan'));
 			return;
 		}
-		if (!isFollowupEligible(s)) {
-			void goto(resolve('/app/details'));
-			return;
-		}
 		contact = s.contact;
 		consentNotice = s.consentNotice;
 		savedViaSkip = s.savedViaSkip;
 		savedActions = s.savedActions;
 		saveTriggeredAt = s.saveTriggeredAt;
+		reviewStage = isFollowupEligible(s) ? 'saved' : 'edit';
 		hydrated = true;
 		storageReady = true;
 
@@ -266,202 +291,242 @@
 />
 
 {#if hydrated && contact}
-	<main class="m-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8">
-		<section class="flex flex-col sm:px-6 sm:py-6">
-			<div
-				class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
-			>
-				{#if !savedViaSkip}
-					<div class="flex items-start gap-3">
-						<span
-							class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(45,212,191,0.18)] text-[var(--accent)]"
+	<main
+		class={`m-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8 ${reviewStage === 'edit' ? 'sm:px-6 sm:py-6' : ''}`}
+	>
+		{#if reviewStage === 'edit'}
+			<section class="flex flex-col sm:px-6 sm:py-6">
+				<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
+				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
+					Check and correct fields, then save the contact to your phone — or skip straight to follow-up
+					options below.
+				</p>
+				{#if consentNotice}
+					<p class="m-0 mb-4 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
+				{/if}
+				<ContactForm bind:contact />
+				<div class="mt-12 flex flex-col items-stretch gap-2 pt-1">
+					<VcfDownloadButton
+						{contact}
+						disabled={loading}
+						onSaveTriggered={persistSavedForFollowup}
+						onAfterShare={afterShareShowSavedSection}
+					/>
+					<button
+						type="button"
+						class="mt-1 self-center text-[0.8125rem] font-medium text-[var(--text-muted)] underline underline-offset-4 transition-colors hover:text-[var(--text)]"
+						onclick={skipToFollowup}
+					>
+						Skip saving — go to follow-up options
+					</button>
+				</div>
+				<div class="mt-10 flex justify-center">
+					<button
+						type="button"
+						class="text-[0.8125rem] font-medium text-[var(--text-muted)] underline underline-offset-4 transition-colors hover:text-[var(--text)]"
+						onclick={restartFlow}
+					>
+						Scan another card
+					</button>
+				</div>
+			</section>
+		{:else}
+			<section class="flex flex-col sm:px-6 sm:py-6">
+				<div
+					class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
+				>
+					{#if !savedViaSkip}
+						<div class="flex items-start gap-3">
+							<span
+								class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(45,212,191,0.18)] text-[var(--accent)]"
+								aria-hidden="true"
+							>
+								<svg
+									class="h-4 w-4"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<path d="m5 12 5 5L20 7" />
+								</svg>
+							</span>
+							<div class="min-w-0">
+								<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">Saved</h2>
+								<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
+									The contact should now appear in your phone’s Contacts app.
+								</p>
+							</div>
+						</div>
+					{:else}
+						<div>
+							<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">What next?</h2>
+							<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
+								You haven’t saved this contact yet — pick what to do.
+							</p>
+						</div>
+					{/if}
+
+					<div class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3">
+						<p class="m-0 truncate text-[0.9375rem] font-semibold text-[var(--text)]">
+							{(`${contact.firstName ?? ''} ${contact.lastName ?? ''}`).trim() || 'Unnamed contact'}
+						</p>
+						{#if contact.title || contact.role || contact.company}
+							<p class="m-0 mt-0.5 truncate text-[0.8125rem] text-[var(--text-muted)]">
+								{[contact.title || contact.role, contact.company].filter(Boolean).join(' · ')}
+							</p>
+						{/if}
+						{#if primaryEmail(contact) || contact.phones?.[0]}
+							<p class="m-0 mt-1.5 truncate text-[0.75rem] text-[var(--text-muted)] opacity-90">
+								{[primaryEmail(contact), contact.phones?.[0]].filter(Boolean).join(' · ')}
+							</p>
+						{/if}
+					</div>
+				</div>
+
+				<p
+					class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]"
+				>
+					Next steps
+				</p>
+				<div class="flex flex-col items-stretch gap-3">
+					<button
+						type="button"
+						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
+						onclick={openFollowupModal}
+						disabled={loading || !primaryEmail(contact)}
+						title={!primaryEmail(contact) ? 'Add at least one email address (Edit details)' : undefined}
+					>
+						{#if pulsingCta === 'followup'}
+							{#key returnNudgeKey}
+								<span class="cta-pulse" aria-hidden="true"></span>
+							{/key}
+						{/if}
+						<svg
+							class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="1.75"
+							stroke-linecap="round"
+							stroke-linejoin="round"
 							aria-hidden="true"
 						>
+							<path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" />
+							<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+						</svg>
+						{savedActions.followupSent ? 'Sent — send another' : 'Send follow-up email'}
+						{#if savedActions.followupSent}
 							<svg
-								class="h-4 w-4"
+								class="h-[1.05em] w-[1.05em] shrink-0"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
 								stroke-width="2.5"
 								stroke-linecap="round"
 								stroke-linejoin="round"
+								aria-hidden="true"
 							>
 								<path d="m5 12 5 5L20 7" />
 							</svg>
-						</span>
-						<div class="min-w-0">
-							<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">Saved</h2>
-							<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
-								The contact should now appear in your phone’s Contacts app.
-							</p>
-						</div>
-					</div>
-				{:else}
-					<div>
-						<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">What next?</h2>
-						<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
-							You haven’t saved this contact yet — pick what to do.
-						</p>
-					</div>
-				{/if}
+						{/if}
+					</button>
 
-				<div class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3">
-					<p class="m-0 truncate text-[0.9375rem] font-semibold text-[var(--text)]">
-						{(`${contact.firstName ?? ''} ${contact.lastName ?? ''}`).trim() || 'Unnamed contact'}
-					</p>
-					{#if contact.title || contact.role || contact.company}
-						<p class="m-0 mt-0.5 truncate text-[0.8125rem] text-[var(--text-muted)]">
-							{[contact.title || contact.role, contact.company].filter(Boolean).join(' · ')}
-						</p>
-					{/if}
-					{#if primaryEmail(contact) || contact.phones?.[0]}
-						<p class="m-0 mt-1.5 truncate text-[0.75rem] text-[var(--text-muted)] opacity-90">
-							{[primaryEmail(contact), contact.phones?.[0]].filter(Boolean).join(' · ')}
-						</p>
-					{/if}
+					<button
+						type="button"
+						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
+						onclick={openLinkedInSearch}
+						disabled={loading || !canOpenLinkedInSearch(contact)}
+						title={!canOpenLinkedInSearch(contact)
+							? 'Add first name, last name, or company (Edit details)'
+							: undefined}
+					>
+						{#if pulsingCta === 'linkedin'}
+							{#key returnNudgeKey}
+								<span class="cta-pulse" aria-hidden="true"></span>
+							{/key}
+						{/if}
+						<svg
+							class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
+							viewBox="0 0 24 24"
+							fill="currentColor"
+							aria-hidden="true"
+						>
+							<path
+								d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"
+							/>
+						</svg>
+						{savedActions.linkedinOpened ? 'Opened on LinkedIn' : 'Connect on LinkedIn'}
+						{#if savedActions.linkedinOpened}
+							<svg
+								class="h-[1.05em] w-[1.05em] shrink-0"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="m5 12 5 5L20 7" />
+							</svg>
+						{/if}
+					</button>
 				</div>
-			</div>
 
-			<p
-				class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]"
-			>
-				Next steps
-			</p>
-			<div class="flex flex-col items-stretch gap-3">
-				<button
-					type="button"
-					class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
-					onclick={openFollowupModal}
-					disabled={loading || !primaryEmail(contact)}
-					title={!primaryEmail(contact) ? 'Add at least one email address (Edit details)' : undefined}
-				>
-					{#if pulsingCta === 'followup'}
-						{#key returnNudgeKey}
-							<span class="cta-pulse" aria-hidden="true"></span>
-						{/key}
-					{/if}
-					<svg
-						class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
-						viewBox="0 0 24 24"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="1.75"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						aria-hidden="true"
-					>
-						<path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" />
-						<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-					</svg>
-					{savedActions.followupSent ? 'Sent — send another' : 'Send follow-up email'}
-					{#if savedActions.followupSent}
-						<svg
-							class="h-[1.05em] w-[1.05em] shrink-0"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
-						>
-							<path d="m5 12 5 5L20 7" />
-						</svg>
-					{/if}
-				</button>
-
-				<button
-					type="button"
-					class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
-					onclick={openLinkedInSearch}
-					disabled={loading || !canOpenLinkedInSearch(contact)}
-					title={!canOpenLinkedInSearch(contact)
-						? 'Add first name, last name, or company (Edit details)'
-						: undefined}
-				>
-					{#if pulsingCta === 'linkedin'}
-						{#key returnNudgeKey}
-							<span class="cta-pulse" aria-hidden="true"></span>
-						{/key}
-					{/if}
-					<svg
-						class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
-						viewBox="0 0 24 24"
-						fill="currentColor"
-						aria-hidden="true"
-					>
-						<path
-							d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"
-						/>
-					</svg>
-					{savedActions.linkedinOpened ? 'Opened on LinkedIn' : 'Connect on LinkedIn'}
-					{#if savedActions.linkedinOpened}
-						<svg
-							class="h-[1.05em] w-[1.05em] shrink-0"
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2.5"
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							aria-hidden="true"
-						>
-							<path d="m5 12 5 5L20 7" />
-						</svg>
-					{/if}
-				</button>
-			</div>
-
-			{#if vcfOpenError}
-				<p class="m-0 mt-4 text-center text-[0.8125rem] leading-[1.4] text-[var(--danger)]">
-					{vcfOpenError}
-				</p>
-			{/if}
-
-			<div
-				class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.8125rem] font-medium text-[var(--text-muted)]"
-			>
-				<button
-					type="button"
-					class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-					onclick={backToEdit}
-					disabled={vcfOpening || loading}
-				>
-					Edit details
-				</button>
-				{#if savedViaSkip}
-					<button
-						type="button"
-						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-						onclick={() => void openContactInContactsApp()}
-						disabled={vcfOpening || loading}
-					>
-						{vcfOpening ? 'Preparing…' : 'Save to Contacts'}
-					</button>
-				{:else}
-					<button
-						type="button"
-						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-						onclick={() => void openContactInContactsApp()}
-						disabled={vcfOpening || loading}
-					>
-						{vcfOpening ? 'Preparing…' : 'Re-open in Contacts'}
-					</button>
+				{#if vcfOpenError}
+					<p class="m-0 mt-4 text-center text-[0.8125rem] leading-[1.4] text-[var(--danger)]">
+						{vcfOpenError}
+					</p>
 				{/if}
-				<button
-					type="button"
-					class={`relative underline underline-offset-4 transition-colors hover:text-[var(--text)] ${pulsingCta === 'scan' ? 'text-[var(--accent)]' : ''}`}
-					onclick={restartFlow}
+
+				<div
+					class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.8125rem] font-medium text-[var(--text-muted)]"
 				>
-					{#if pulsingCta === 'scan'}
-						{#key returnNudgeKey}
-							<span class="cta-pulse cta-pulse-text" aria-hidden="true"></span>
-						{/key}
+					<button
+						type="button"
+						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+						onclick={backToEdit}
+						disabled={vcfOpening || loading}
+					>
+						Edit details
+					</button>
+					{#if savedViaSkip}
+						<button
+							type="button"
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+							onclick={() => void openContactInContactsApp()}
+							disabled={vcfOpening || loading}
+						>
+							{vcfOpening ? 'Preparing…' : 'Save to Contacts'}
+						</button>
+					{:else}
+						<button
+							type="button"
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+							onclick={() => void openContactInContactsApp()}
+							disabled={vcfOpening || loading}
+						>
+							{vcfOpening ? 'Preparing…' : 'Re-open in Contacts'}
+						</button>
 					{/if}
-					Scan another card
-				</button>
-			</div>
-		</section>
+					<button
+						type="button"
+						class={`relative underline underline-offset-4 transition-colors hover:text-[var(--text)] ${pulsingCta === 'scan' ? 'text-[var(--accent)]' : ''}`}
+						onclick={restartFlow}
+					>
+						{#if pulsingCta === 'scan'}
+							{#key returnNudgeKey}
+								<span class="cta-pulse cta-pulse-text" aria-hidden="true"></span>
+							{/key}
+						{/if}
+						Scan another card
+					</button>
+				</div>
+			</section>
+		{/if}
 
 		{#if followupModalOpen}
 			<div

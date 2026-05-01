@@ -4,11 +4,15 @@
 	let {
 		contact,
 		disabled = false,
-		onSaveTriggered
+		onSaveTriggered,
+		onAfterShare
 	}: {
 		contact: Contact;
 		disabled?: boolean;
+		/** Called after vCard is ready (primary) or after share/download finishes (secondary). */
 		onSaveTriggered?: () => void;
+		/** Optional extra step after share (e.g. client-side navigate) without racing the vCard fetch. */
+		onAfterShare?: () => void;
 	} = $props();
 	let loading = $state(false);
 	let error = $state('');
@@ -81,10 +85,10 @@ async function fetchVcf(): Promise<{ blob: Blob; filename: string }> {
 
 	async function onPrimaryClick() {
 		error = '';
-		onSaveTriggered?.();
 		loading = true;
 		try {
 			const { blob } = await fetchVcf();
+			onSaveTriggered?.();
 			const url = URL.createObjectURL(blob);
 			// Open in the same browser tab so users can directly import into Contacts.
 			window.location.assign(url);
@@ -97,11 +101,12 @@ async function fetchVcf(): Promise<{ blob: Blob; filename: string }> {
 
 	async function onShareFileClick() {
 		error = '';
-		onSaveTriggered?.();
 		loading = true;
 		try {
 			const { blob, filename } = await fetchVcf();
 			await shareOrDownloadVcf(blob, filename);
+			onSaveTriggered?.();
+			onAfterShare?.();
 		} catch (unknownError) {
 			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
 		} finally {

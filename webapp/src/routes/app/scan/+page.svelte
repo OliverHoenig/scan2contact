@@ -4,12 +4,7 @@
 	import { resolve } from '$app/paths';
 	import CameraCapture from '$lib/components/scan/CameraCapture.svelte';
 	import { contactSchema } from '$lib/contact';
-	import {
-		isFollowupEligible,
-		loadReviewSession,
-		saveReviewSession,
-		type ReviewSessionState
-	} from '$lib/scan-flow/review-session';
+	import { loadReviewSession, saveReviewSession, type ReviewSessionState } from '$lib/scan-flow/review-session';
 
 	let resumeChecked = $state(false);
 	let selectedFile = $state<File | null>(null);
@@ -33,13 +28,8 @@
 	}
 
 	onMount(() => {
-		const existing = loadReviewSession();
-		if (existing) {
-			if (isFollowupEligible(existing)) {
-				void goto(resolve('/app/followup'));
-			} else {
-				void goto(resolve('/app/details'));
-			}
+		if (loadReviewSession()) {
+			void goto(resolve('/app/contact'));
 		}
 		resumeChecked = true;
 	});
@@ -97,7 +87,7 @@
 				saveTriggeredAt: null
 			};
 			saveReviewSession(next);
-			void goto(resolve('/app/details'));
+			void goto(resolve('/app/contact'));
 		} catch (unknownError) {
 			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
 			step = 'capture';
