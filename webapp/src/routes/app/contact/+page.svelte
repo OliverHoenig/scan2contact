@@ -178,6 +178,79 @@
 		window.open(url, '_blank', 'noopener,noreferrer');
 	}
 
+	const ALERT_WAIT_OTHER = 'Please wait — another action is still in progress.';
+	const ALERT_WAIT_VCF = 'Please wait — the contact card is still being prepared.';
+
+	function onFollowupCtaClick() {
+		if (loading) {
+			window.alert(ALERT_WAIT_OTHER);
+			return;
+		}
+		if (!contact || !primaryEmail(contact)) {
+			window.alert(
+				"You can't send a follow-up email yet because this contact has no email address. Add one under 'Edit details' and try again."
+			);
+			return;
+		}
+		openFollowupModal();
+	}
+
+	function onLinkedInCtaClick() {
+		if (loading) {
+			window.alert(ALERT_WAIT_OTHER);
+			return;
+		}
+		if (!contact || !canOpenLinkedInSearch(contact)) {
+			window.alert(
+				"You can't open LinkedIn search yet. Add at least a first name, last name, or company under Edit details so we can find this person."
+			);
+			return;
+		}
+		openLinkedInSearch();
+	}
+
+	function onGuideOpenContactClick() {
+		if (vcfOpening) {
+			window.alert(ALERT_WAIT_VCF);
+			return;
+		}
+		if (loading) {
+			window.alert(ALERT_WAIT_OTHER);
+			return;
+		}
+		void openContactInContactsApp();
+	}
+
+	function onEditDetailsWhileBusyClick() {
+		if (vcfOpening) {
+			window.alert(ALERT_WAIT_VCF);
+			return;
+		}
+		if (loading) {
+			window.alert(ALERT_WAIT_OTHER);
+			return;
+		}
+		backToEdit();
+	}
+
+	function onOpenMailAppClick() {
+		if (followupTemplatesLoading) {
+			window.alert('Please wait — templates are still loading.');
+			return;
+		}
+		if (followupTemplates.length === 0) {
+			window.alert(
+				'No email templates are available. Add templates under Settings → Follow-up mail templates.'
+			);
+			return;
+		}
+		if (!selectedFollowupId) {
+			window.alert('Please choose an email template first.');
+			return;
+		}
+		openMailWithTemplate();
+	}
+
 	function nextPendingCta(): NextCta {
 		if (!contact) return 'scan';
 		if (!savedActions.followupSent && !!primaryEmail(contact)) return 'followup';
@@ -425,9 +498,9 @@
 								<li class="pl-0.5">
 									<button
 										type="button"
-										class="text-left underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-										onclick={() => void openContactInContactsApp()}
-										disabled={vcfOpening || loading}
+										class="text-left underline underline-offset-4 transition-colors hover:text-[var(--text)] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
+										aria-disabled={vcfOpening || loading}
+										onclick={onGuideOpenContactClick}
 									>
 										{vcfOpening ? 'Preparing…' : 'Click here to open contact card'}
 									</button>
@@ -450,9 +523,9 @@
 				<div class="flex flex-col items-stretch gap-3">
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
-						onclick={openFollowupModal}
-						disabled={loading || !primaryEmail(contact)}
+						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
+						onclick={onFollowupCtaClick}
+						aria-disabled={loading || !primaryEmail(contact)}
 						title={!primaryEmail(contact)
 							? 'Add at least one email address (Edit details)'
 							: undefined}
@@ -496,9 +569,9 @@
 
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold whitespace-normal text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
-						onclick={openLinkedInSearch}
-						disabled={loading || !canOpenLinkedInSearch(contact)}
+						class={`relative flex min-h-12 w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold whitespace-normal text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out not-[aria-disabled=true]:hover:border-[rgba(255,255,255,0.18)] not-[aria-disabled=true]:hover:text-[var(--text)] aria-disabled:cursor-not-allowed aria-disabled:opacity-45`}
+						onclick={onLinkedInCtaClick}
+						aria-disabled={loading || !canOpenLinkedInSearch(contact)}
 						title={!canOpenLinkedInSearch(contact)
 							? 'Add first name, last name, or company (Edit details)'
 							: undefined}
@@ -549,27 +622,27 @@
 				>
 					<button
 						type="button"
-						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-						onclick={backToEdit}
-						disabled={vcfOpening || loading}
+						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
+						onclick={onEditDetailsWhileBusyClick}
+						aria-disabled={vcfOpening || loading}
 					>
 						Edit details
 					</button>
 					{#if savedViaSkip}
 						<button
 							type="button"
-							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-							onclick={() => void openContactInContactsApp()}
-							disabled={vcfOpening || loading}
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
+							onclick={onGuideOpenContactClick}
+							aria-disabled={vcfOpening || loading}
 						>
 							{vcfOpening ? 'Preparing…' : 'Save to Contacts'}
 						</button>
 					{:else}
 						<button
 							type="button"
-							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
-							onclick={() => void openContactInContactsApp()}
-							disabled={vcfOpening || loading}
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] aria-disabled:cursor-not-allowed aria-disabled:opacity-45"
+							onclick={onGuideOpenContactClick}
+							aria-disabled={vcfOpening || loading}
 						>
 							{vcfOpening ? 'Preparing…' : 'Re-open in Contacts'}
 						</button>
@@ -698,9 +771,9 @@
 						</button>
 						<button
 							type="button"
-							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] hover:brightness-[1.06] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
-							onclick={openMailWithTemplate}
-							disabled={!selectedFollowupId ||
+							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:w-auto"
+							onclick={onOpenMailAppClick}
+							aria-disabled={!selectedFollowupId ||
 								followupTemplatesLoading ||
 								followupTemplates.length === 0}
 						>
