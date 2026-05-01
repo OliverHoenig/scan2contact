@@ -13,7 +13,7 @@
 		class="flex shrink-0 flex-col items-center justify-center border-b border-[var(--border)] bg-[var(--bg-base)]/88 pt-[env(safe-area-inset-top,0px)] pr-[max(0.75rem,env(safe-area-inset-right,0px))] pb-2 pl-[max(0.75rem,env(safe-area-inset-left,0px))] backdrop-blur-[12px]"
 		aria-label="App"
 	>
-		<div class="mx-auto flex w-full max-w-6xl items-center justify-between">
+		<div class="mx-auto flex w-full max-w-[600px] items-center justify-between">
 			<button
 				type="button"
 				class="rounded-[var(--radius-sm)] px-2 py-1 text-[0.9375rem] font-medium text-[var(--text)] transition-colors hover:text-[var(--accent)]"
