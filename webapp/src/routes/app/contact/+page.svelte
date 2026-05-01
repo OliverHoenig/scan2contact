@@ -379,7 +379,7 @@
 
 {#if !hydrated}
 	<main
-		class="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-5 py-10 text-center"
+		class="flex min-h-0 flex-col items-center justify-center gap-3 text-center"
 		aria-busy="true"
 	>
 		<div
@@ -389,11 +389,9 @@
 		<p class="m-0 text-[0.9375rem] text-[var(--text-muted)]">Loading contact…</p>
 	</main>
 {:else if contact}
-	<main
-		class={`m-auto grid min-h-0 w-full max-w-[600px] min-w-0 gap-5 py-6 pr-[max(1.25rem,env(safe-area-inset-right,0px))] pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] ${reviewStage === 'edit' ? 'sm:py-6 sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))]' : ''}`}
-	>
+	<main class="flex min-h-0 w-full flex-col gap-5">
 		{#if reviewStage === 'edit'}
-			<section class="flex flex-col sm:px-6 sm:py-6">
+			<section class="flex flex-col">
 				<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
 					Check and correct fields, then save the contact to your phone — or skip straight to
@@ -427,15 +425,16 @@
 						Scan another card
 					</button>
 				</div>
+				<div class="min-h-10 w-full"></div>
 			</section>
 		{:else}
-			<section class="flex flex-col sm:px-6 sm:py-6">
+			<section class="flex flex-col">
 				<div
-					class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
+					class="rounded-lg border border-(--border) bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
 				>
 					<div>
-						<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">What next?</h2>
-						<ul class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
+						<h2 class="m-0 text-[1.15rem] font-semibold">What next?</h2>
+						<ul class="m-0 mt-0.5 text-[0.875rem]">
 							{#if savedViaSkip}
 								<li>
 									1. You skipped opening the contact card. Continue with the steps below when you
@@ -459,14 +458,14 @@
 					</div>
 
 					<details
-						class="add-contact-guide mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
+						class="add-contact-guide mt-4 rounded-md border border-(--border) bg-white/3 [&_summary::-webkit-details-marker]:hidden"
 					>
 						<summary
-							class="flex cursor-pointer list-none items-center justify-between gap-2 py-2.5 pr-3 pl-3 text-[0.875rem] font-medium text-[var(--text)] select-none"
+							class="flex cursor-pointer list-none items-center justify-between gap-2 py-2.5 pr-3 pl-3 text-[0.875rem] font-medium select-none"
 						>
 							<span>How do I add this contact?</span>
 							<svg
-								class="add-contact-guide__chevron h-4 w-4 shrink-0 text-[var(--text-muted)] transition-transform duration-200"
+								class="add-contact-guide__chevron h-4 w-4 shrink-0 transition-transform duration-200"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
@@ -671,6 +670,7 @@
 						Scan another card
 					</button>
 				</div>
+				<div class="min-h-10 w-full"></div>
 			</section>
 		{/if}
 

@@ -46,7 +46,7 @@
 	</nav>
 
 	<div
-		class="mx-auto flex min-h-0 w-full max-w-[600px] min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto"
+		class="mx-auto flex min-h-0 w-full max-w-[600px] min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto px-5 pb-8"
 	>
 		{@render children()}
 	</div>
