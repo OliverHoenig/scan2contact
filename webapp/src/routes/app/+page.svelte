@@ -134,6 +134,24 @@
 		closeFollowupModal();
 	}
 
+	function linkedinPeopleSearchKeywords(c: Contact): string {
+		const parts = [c.firstName, c.lastName, c.company]
+			.map((s) => (typeof s === 'string' ? s.trim() : ''))
+			.filter(Boolean);
+		return parts.join(' ');
+	}
+
+	function canOpenLinkedInSearch(c: Contact): boolean {
+		return linkedinPeopleSearchKeywords(c).length > 0;
+	}
+
+	function openLinkedInSearch() {
+		const keywords = linkedinPeopleSearchKeywords(contact);
+		if (!keywords) return;
+		const url = `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(keywords)}`;
+		window.open(url, '_blank', 'noopener,noreferrer');
+	}
+
 	async function handleScan() {
 		if (offline || scanBusy || loading) return;
 		if (!cameraRef) {
@@ -338,6 +356,25 @@
 						<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
 					</svg>
 					Send follow-up email
+				</button>
+				<button
+					type="button"
+					class="flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border)] border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+					onclick={openLinkedInSearch}
+					disabled={loading || !canOpenLinkedInSearch(contact)}
+					title={!canOpenLinkedInSearch(contact) ? 'Add first name, last name, or company above' : undefined}
+				>
+					<svg
+						class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
+						viewBox="0 0 24 24"
+						fill="currentColor"
+						aria-hidden="true"
+					>
+						<path
+							d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"
+						/>
+					</svg>
+					Connect on LinkedIn
 				</button>
 				<button
 					type="button"
