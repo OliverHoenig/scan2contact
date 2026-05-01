@@ -23,7 +23,7 @@
 	let error = $state('');
 	let consentNotice = $state('');
 	let offline = $state(false);
-	let step = $state<'capture' | 'processing' | 'review'>('capture');
+	let step = $state<'capture' | 'processing' | 'review'>('review');
 
 	let cameraRef = $state<{
 		captureFrame: () => Promise<File>;
@@ -32,6 +32,77 @@
 	let scanBusy = $state(false);
 	let lightSupported = $state(false);
 	let lightEnabled = $state(false);
+
+	type FollowupTemplate = { id: string; label: string; description: string; subject: string; body: string };
+
+	const followupTemplates: FollowupTemplate[] = [
+		{
+			id: 'stay-in-touch',
+			label: 'Stay in touch',
+			description: 'Short note after meeting someone new.',
+			subject: 'Nice to meet you',
+			body: 'Hi {firstName},\n\nIt was great meeting you. I would love to stay in touch.\n\nBest regards,'
+		},
+		{
+			id: 'thank-you',
+			label: 'Thank you',
+			description: 'Thanks for their time.',
+			subject: 'Thank you',
+			body: 'Hi {firstName},\n\nThank you for your time today. I enjoyed our conversation.\n\nBest regards,'
+		},
+		{
+			id: 'follow-up',
+			label: 'Follow up',
+			description: 'Suggest another conversation.',
+			subject: 'Following up',
+			body: 'Hi {firstName},\n\nFollowing up on our conversation — let me know if you would like to connect again.\n\nBest regards,'
+		},
+		{
+			id: 'connect-linkedin',
+			label: 'Connect on LinkedIn',
+			description: 'Invite to connect professionally.',
+			subject: 'Connection request',
+			body: 'Hi {firstName},\n\nIt was great meeting you. I would like to connect here on LinkedIn as well.\n\nBest regards,'
+		}
+	];
+
+	let followupModalOpen = $state(false);
+	let selectedFollowupId = $state<string | null>(null);
+
+	function primaryEmail(c: Contact): string | undefined {
+		const raw = c.emails?.find((e) => e.trim().length > 0);
+		return raw?.trim();
+	}
+
+	function personalizeTemplate(text: string): string {
+		const name = contact.firstName?.trim() || 'there';
+		return text.replaceAll('{firstName}', name);
+	}
+
+	function buildMailtoUrl(to: string, subject: string, body: string): string {
+		const q = `subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+		return `mailto:${encodeURIComponent(to)}?${q}`;
+	}
+
+	function openFollowupModal() {
+		selectedFollowupId = followupTemplates[0]?.id ?? null;
+		followupModalOpen = true;
+	}
+
+	function closeFollowupModal() {
+		followupModalOpen = false;
+	}
+
+	function openMailWithTemplate() {
+		const to = primaryEmail(contact);
+		if (!to || !selectedFollowupId) return;
+		const tpl = followupTemplates.find((t) => t.id === selectedFollowupId);
+		if (!tpl) return;
+		const subject = personalizeTemplate(tpl.subject);
+		const body = personalizeTemplate(tpl.body);
+		window.location.href = buildMailtoUrl(to, subject, body);
+		closeFollowupModal();
+	}
 
 	async function handleScan() {
 		if (offline || scanBusy || loading) return;
@@ -104,6 +175,16 @@
 		window.addEventListener('offline', () => (offline = true));
 	}
 </script>
+
+<svelte:window
+	onkeydown={(e) => {
+		if (!followupModalOpen) return;
+		if (e.key === 'Escape') {
+			e.preventDefault();
+			closeFollowupModal();
+		}
+	}}
+/>
 
 <main
 	class={`box-border ${step === 'capture' ? 'flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8'}`}
@@ -206,10 +287,127 @@
 				<VcfDownloadButton {contact} disabled={loading} />
 				<button
 					type="button"
+					class="flex min-h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border)] border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+					onclick={openFollowupModal}
+					disabled={loading || !primaryEmail(contact)}
+					title={!primaryEmail(contact) ? 'Add at least one email address above' : undefined}
+				>
+					<svg
+						class="h-[1.1em] w-[1.1em] shrink-0 opacity-90"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.75"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						aria-hidden="true"
+					>
+						<path
+							d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z"
+						/>
+						<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+					</svg>
+					Send follow-up email
+				</button>
+				<button
+					type="button"
 					class="min-h-12 w-full rounded-[var(--radius-md)] border border-[var(--border)] border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:border-[rgba(255,255,255,0.18)] hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
 					onclick={restartFlow}>Scan another card</button
 				>
 			</div>
 		</section>
+	{/if}
+
+	{#if followupModalOpen}
+		<div
+			class="fixed inset-0 z-[100] flex items-end justify-center p-0 sm:items-center sm:p-4"
+			role="presentation"
+			onclick={(e) => e.target === e.currentTarget && closeFollowupModal()}
+		>
+			<div class="absolute inset-0 bg-black/55 backdrop-blur-[6px]" aria-hidden="true"></div>
+			<div
+				class="relative z-[1] flex max-h-[min(90dvh,32rem)] w-full max-w-[440px] flex-col rounded-t-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.98)_0%,rgba(12,12,15,0.99)_100%)] shadow-[0_-8px_48px_rgba(0,0,0,0.5),inset_0_0_0_1px_rgba(255,255,255,0.05)] sm:rounded-[var(--radius-lg)]"
+				role="dialog"
+				aria-modal="true"
+				aria-labelledby="followup-dialog-title"
+				aria-describedby="followup-dialog-desc"
+			>
+				<div class="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
+					<div class="min-w-0">
+						<h3 id="followup-dialog-title" class="m-0 text-[1.05rem] font-semibold tracking-[-0.02em]">
+							Follow-up email
+						</h3>
+						<p id="followup-dialog-desc" class="m-0 mt-1 text-[0.8125rem] leading-[1.45] text-[var(--text-muted)]">
+							Pick a template. Your mail app opens with the recipient, subject, and message filled in — you
+							can edit before sending.
+						</p>
+					</div>
+					<button
+						type="button"
+						class="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] border border-white/10 bg-white/5 text-[var(--text-muted)] transition-[background,color] hover:bg-white/10 hover:text-[var(--text)]"
+						onclick={closeFollowupModal}
+						aria-label="Close"
+					>
+						<svg
+							class="h-4 w-4"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							aria-hidden="true"
+						>
+							<path d="M18 6 6 18M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+				<div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-3">
+					<p class="m-0 mb-2 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+						Templates
+					</p>
+					<div class="grid gap-2" role="listbox" aria-label="Email templates">
+						{#each followupTemplates as tpl (tpl.id)}
+							<button
+								type="button"
+								role="option"
+								aria-selected={selectedFollowupId === tpl.id}
+								class={`w-full rounded-[var(--radius-md)] border px-3.5 py-3 text-left transition-[border-color,background,box-shadow] duration-150 ${
+									selectedFollowupId === tpl.id
+										? 'border-[var(--accent)] bg-[rgba(45,212,191,0.08)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.25)]'
+										: 'border-[var(--border)] bg-white/[0.03] hover:border-[rgba(255,255,255,0.14)]'
+								}`}
+								onclick={() => (selectedFollowupId = tpl.id)}
+							>
+								<span class="block text-[0.9375rem] font-semibold text-[var(--text)]">{tpl.label}</span>
+								<span class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
+									>{tpl.description}</span
+								>
+								<span class="mt-1.5 block truncate text-[0.75rem] text-[var(--text-muted)] opacity-90"
+									>Subject: {personalizeTemplate(tpl.subject)}</span
+								>
+							</button>
+						{/each}
+					</div>
+				</div>
+				<div
+					class="flex shrink-0 flex-col-reverse gap-2 border-t border-[var(--border)] px-5 py-4 sm:flex-row sm:justify-end"
+				>
+					<button
+						type="button"
+						class="min-h-11 w-full rounded-[var(--radius-md)] border border-white/15 bg-transparent px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--text)] sm:w-auto"
+						onclick={closeFollowupModal}
+					>
+						Cancel
+					</button>
+					<button
+						type="button"
+						class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] hover:brightness-[1.06] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
+						onclick={openMailWithTemplate}
+						disabled={!selectedFollowupId}
+					>
+						Open in mail app
+					</button>
+				</div>
+			</div>
+		</div>
 	{/if}
 </main>
