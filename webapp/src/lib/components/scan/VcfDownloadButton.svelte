@@ -1,14 +1,22 @@
 <script lang="ts">
 	import type { Contact } from '$lib/contact';
 
-	let { contact, disabled = false }: { contact: Contact; disabled?: boolean } = $props();
+	let {
+		contact,
+		disabled = false,
+		onSaveTriggered
+	}: {
+		contact: Contact;
+		disabled?: boolean;
+		onSaveTriggered?: () => void;
+	} = $props();
 	let loading = $state(false);
 	let error = $state('');
-let cachedVcf = $state<{ blob: Blob; filename: string } | null>(null);
+	let cachedVcf = $state<{ blob: Blob; filename: string } | null>(null);
 	const primaryButtonClass =
 		'w-full min-h-12 cursor-pointer rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none';
 	const secondaryButtonClass =
-	'min-h-11 w-full cursor-pointer rounded-[var(--radius-md)] border border-white/20 bg-white/5 px-4 py-[0.65rem] text-[0.875rem] font-semibold text-inherit shadow-none active:enabled:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-45';
+		'min-h-9 w-full cursor-pointer rounded-[var(--radius-sm)] border-0 bg-transparent px-2 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] underline-offset-4 shadow-none transition-colors duration-150 hover:enabled:text-[var(--text)] hover:enabled:underline disabled:cursor-not-allowed disabled:opacity-45';
 	const errorClass = 'mt-2 text-[0.875rem] leading-[1.4] text-[var(--danger)]';
 
 	function triggerBlobDownload(blob: Blob, filename: string) {
@@ -73,13 +81,13 @@ async function fetchVcf(): Promise<{ blob: Blob; filename: string }> {
 
 	async function onPrimaryClick() {
 		error = '';
-
+		onSaveTriggered?.();
 		loading = true;
 		try {
-		const { blob } = await fetchVcf();
-		const url = URL.createObjectURL(blob);
-		// Open in the same browser tab so users can directly import into Contacts.
-		window.location.assign(url);
+			const { blob } = await fetchVcf();
+			const url = URL.createObjectURL(blob);
+			// Open in the same browser tab so users can directly import into Contacts.
+			window.location.assign(url);
 		} catch (unknownError) {
 			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
 		} finally {
@@ -88,16 +96,17 @@ async function fetchVcf(): Promise<{ blob: Blob; filename: string }> {
 	}
 
 	async function onShareFileClick() {
-	error = '';
-	loading = true;
-	try {
-		const { blob, filename } = await fetchVcf();
-		await shareOrDownloadVcf(blob, filename);
-	} catch (unknownError) {
-		error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
-	} finally {
-		loading = false;
-	}
+		error = '';
+		onSaveTriggered?.();
+		loading = true;
+		try {
+			const { blob, filename } = await fetchVcf();
+			await shareOrDownloadVcf(blob, filename);
+		} catch (unknownError) {
+			error = unknownError instanceof Error ? unknownError.message : 'Unknown error';
+		} finally {
+			loading = false;
+		}
 	}
 </script>
 

@@ -160,7 +160,9 @@
 				← Back
 			</button>
 		</div>
-		<h3 class="m-0 mt-3 text-[1.05rem] font-semibold tracking-[-0.02em]">Follow-up mail templates</h3>
+		<h3 class="m-0 mt-3 text-[1.05rem] font-semibold tracking-[-0.02em]">
+			Follow-up mail templates
+		</h3>
 		<p class="m-0 mt-2 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
 			These appear when you send a follow-up email after scanning a card. Use
 			<code class="rounded bg-white/10 px-1 py-0.5 text-[0.8em]">{`{firstName}`}</code>
@@ -191,7 +193,7 @@
 		{:else}
 			<button
 				type="button"
-				class="mt-4 w-full min-h-11 rounded-[var(--radius-md)] border border-dashed border-white/25 bg-white/[0.04] px-3 py-2.5 text-[0.875rem] font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:bg-white/[0.07]"
+				class="mt-4 min-h-11 w-full rounded-[var(--radius-md)] border border-dashed border-white/25 bg-white/[0.04] px-3 py-2.5 text-[0.875rem] font-semibold text-[var(--text)] transition-colors hover:border-[var(--accent)] hover:bg-white/[0.07]"
 				onclick={openNew}
 			>
 				+ New template
@@ -204,7 +206,9 @@
 							class="w-full rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] px-3.5 py-3 text-left transition-[border-color,background] hover:border-[rgba(255,255,255,0.14)]"
 							onclick={() => openEdit(row)}
 						>
-							<span class="block text-[0.9375rem] font-semibold text-[var(--text)]">{row.displayName}</span>
+							<span class="block text-[0.9375rem] font-semibold text-[var(--text)]"
+								>{row.displayName}</span
+							>
 							<span class="mt-0.5 block truncate text-[0.8125rem] text-[var(--text-muted)]"
 								>{row.subject}</span
 							>
@@ -254,7 +258,7 @@
 					placeholder="Email subject line"
 				/>
 			</div>
-			<div class="min-h-0 flex flex-1 flex-col">
+			<div class="flex min-h-0 flex-1 flex-col">
 				<label class={labelClass} for="tpl-body">Message</label>
 				<textarea
 					id="tpl-body"
