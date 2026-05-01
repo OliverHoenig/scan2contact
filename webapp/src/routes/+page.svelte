@@ -110,8 +110,8 @@
 						Built for busy professionals
 					</h2>
 					<p class="mt-3 text-[var(--text-muted)]">
-						Less admin, more relationships. Everything is tuned for the moments right after you meet
-						someone.
+						No manual retyping, no mystery pile of cards, no vague “we should connect” with nothing
+						to act on.
 					</p>
 				</div>
 				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
@@ -142,10 +142,10 @@
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Scan in one tap</h3>
+						<h3 class="mt-4 text-lg font-semibold">End the manual typing</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Use your camera at events, coffee meetings, or on the plane home. No stacks of cards
-							in your jacket pocket.
+							Stop copying name, title, email, and phone by hand. Snap the card—we extract the
+							fields so you only adjust what needs a quick fix.
 						</p>
 					</li>
 					<li
@@ -165,14 +165,14 @@
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
-									d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+									d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Clean, editable details</h3>
+						<h3 class="mt-4 text-lg font-semibold">The card can disappear—the contact won’t</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Names, titles, emails, and phones—organized so you can fix anything before it hits
-							your address book.
+							Paper gets lost in bags, hotel rooms, and airport security. Your scan becomes a
+							digital record on your device, so the lead isn’t gone when the cardstock is.
 						</p>
 					</li>
 					<li
@@ -192,14 +192,14 @@
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
-									d="M13 10V3L4 14h7v7l9-11h-7z"
+									d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Follow up while it matters</h3>
+						<h3 class="mt-4 text-lg font-semibold">A clear next step, every time</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Get from introduction to “nice to meet you” email before the next session starts—not
-							after the trade show ends.
+							Turn the handshake into something actionable: a contact ready to save, share, or use
+							for a same-day follow-up—instead of a card you’ll “deal with later.”
 						</p>
 					</li>
 				</ul>
@@ -241,9 +241,10 @@
 							class="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] text-sm font-bold text-[var(--text)] sm:mx-0"
 							>3</span
 						>
-						<h3 class="mt-4 font-semibold">Save the contact</h3>
+						<h3 class="mt-4 font-semibold">Save or share—then follow up</h3>
 						<p class="mt-2 text-sm text-[var(--text-muted)]">
-							Add to your phone and keep your pipeline moving.
+							Put the person in your address book or export a vCard so your next email or call is
+							obvious, not another open loop.
 						</p>
 					</li>
 				</ol>
@@ -257,8 +258,8 @@
 					A business card should start a relationship—not end up in a drawer.
 				</p>
 				<p class="mt-6 text-sm leading-relaxed text-[var(--text-muted)]">
-					scan2contact is for people who leave conferences with real connections, not a pile of
-					paper they will “deal with Monday.”
+					scan2contact closes the loop: capture without retyping, keep the details even when the
+					card is gone, and walk away with a contact you can actually act on.
 				</p>
 			</div>
 		</section>
@@ -274,10 +275,11 @@
 						aria-hidden="true"
 					></div>
 					<h2 class="relative text-3xl font-semibold tracking-tight sm:text-4xl">
-						Ready for your next event?
+						Ready for your next networking event?
 					</h2>
 					<p class="relative mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
-						Create an account and turn the next stack of cards into real relationships.
+						Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start the
+						same day.
 					</p>
 					<div class="relative mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
 						<a
