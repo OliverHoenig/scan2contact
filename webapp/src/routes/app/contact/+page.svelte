@@ -16,7 +16,23 @@
 
 	type ReviewStage = 'edit' | 'saved';
 	type NextCta = 'followup' | 'linkedin' | 'scan' | null;
+	type AddContactGuideMode = 'popup' | 'download';
 	const RETURN_NUDGE_WINDOW_MS = 60 * 1000;
+
+	const ADD_CONTACT_GUIDE_STEPS: Record<AddContactGuideMode, string[]> = {
+		popup: [
+			'If you get a message to open the contact card, allow it.',
+			'If a popup opens search for a button like "Add to Contacts", "Create New Contact", or similar (The exact label depends on your device. Perhaps you need to scroll down).',
+			'If you’re asked where to save it, pick the account or address book you want.',
+			'Tap "Save" or "Done" to add the contact.'
+		],
+		download: [
+			'If the file gets downloaded, open your browser’s downloads list or your Files / Downloads folder and find the .vcf (or .vcard) file.',
+			'Tap or open that file.',
+			'When your device asks, choose Contacts, People, or Add to address book to import the contact card to your address book.',
+			'If needed, confirm the Save in the contact app of your choice.'
+		]
+	};
 
 	type FollowupTemplate = {
 		id: string;
@@ -42,6 +58,7 @@
 	let vcfOpening = $state(false);
 	let returnNudgeKey = $state(0);
 	let pulsingCta = $state<NextCta>(null);
+	let addContactGuideMode = $state<AddContactGuideMode>('popup');
 
 	let followupTemplates = $state<FollowupTemplate[]>([]);
 	let followupTemplatesLoading = $state(false);
@@ -332,57 +349,97 @@
 				<div
 					class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
 				>
-					{#if !savedViaSkip}
-						<div class="flex items-start gap-3">
-							<span
-								class="mt-0.5 grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[rgba(45,212,191,0.18)] text-[var(--accent)]"
+					<div>
+						<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">What next?</h2>
+						<ul class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
+							{#if savedViaSkip}
+								<li>
+									1. You skipped opening the contact card. Continue with the steps below when you
+									need help to add it to your Contacts app.
+								</li>
+								<li>
+									2. You can trigger follow-up options below. (e.g. send an email, connect on
+									LinkedIn, etc.)
+								</li>
+							{:else}
+								<li>
+									1. The contact card was shared or opened. If you need help to add it to your
+									Contacts app, continue with the steps below.
+								</li>
+								<li>
+									2. You can trigger follow-up options below. (e.g. send an email, connect on
+									LinkedIn, etc.)
+								</li>
+							{/if}
+						</ul>
+					</div>
+
+					<details
+						class="add-contact-guide mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] [&_summary::-webkit-details-marker]:hidden"
+					>
+						<summary
+							class="flex cursor-pointer list-none items-center justify-between gap-2 py-2.5 pr-3 pl-3 text-[0.875rem] font-medium text-[var(--text)] select-none"
+						>
+							<span>How do I add this contact?</span>
+							<svg
+								class="add-contact-guide__chevron h-4 w-4 shrink-0 text-[var(--text-muted)] transition-transform duration-200"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
 								aria-hidden="true"
 							>
-								<svg
-									class="h-4 w-4"
-									viewBox="0 0 24 24"
-									fill="none"
-									stroke="currentColor"
-									stroke-width="2.5"
-									stroke-linecap="round"
-									stroke-linejoin="round"
+								<path d="m6 9 6 6 6-6" />
+							</svg>
+						</summary>
+						<div class="border-t border-[var(--border)] px-3 pt-3 pb-3">
+							<div class="mb-3 flex flex-wrap gap-1.5">
+								<button
+									type="button"
+									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'popup' ? 'border-[var(--accent)] bg-[rgba(45,212,191,0.12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
+									onclick={() => (addContactGuideMode = 'popup')}
 								>
-									<path d="m5 12 5 5L20 7" />
-								</svg>
-							</span>
-							<div class="min-w-0">
-								<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">Saved</h2>
-								<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
-									The contact should now appear in your phone’s Contacts app.
-								</p>
+									Popup
+								</button>
+								<button
+									type="button"
+									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'download' ? 'border-[var(--accent)] bg-[rgba(45,212,191,0.12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
+									onclick={() => (addContactGuideMode = 'download')}
+								>
+									Download
+								</button>
 							</div>
-						</div>
-					{:else}
-						<div>
-							<h2 class="m-0 text-[1.15rem] font-semibold tracking-[-0.02em]">What next?</h2>
-							<p class="m-0 mt-0.5 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
-								You haven’t saved this contact yet — pick what to do.
-							</p>
-						</div>
-					{/if}
 
-					<div
-						class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3"
-					>
-						<p class="m-0 truncate text-[0.9375rem] font-semibold text-[var(--text)]">
-							{`${contact.firstName ?? ''} ${contact.lastName ?? ''}`.trim() || 'Unnamed contact'}
-						</p>
-						{#if contact.title || contact.role || contact.company}
-							<p class="m-0 mt-0.5 truncate text-[0.8125rem] text-[var(--text-muted)]">
-								{[contact.title || contact.role, contact.company].filter(Boolean).join(' · ')}
+							<p class="m-0 mb-2 text-[0.8125rem] leading-[1.45] text-[var(--text-muted)]">
+								{#if addContactGuideMode === 'popup'}
+									The browser opens a contact preview or sheet (for example Safari on iOS).
+								{:else}
+									The card gets saved as a vCard file.
+								{/if}
 							</p>
-						{/if}
-						{#if primaryEmail(contact) || contact.phones?.[0]}
-							<p class="m-0 mt-1.5 truncate text-[0.75rem] text-[var(--text-muted)] opacity-90">
-								{[primaryEmail(contact), contact.phones?.[0]].filter(Boolean).join(' · ')}
-							</p>
-						{/if}
-					</div>
+							<ol
+								class="m-0 list-decimal space-y-2 pl-5 text-[0.8125rem] leading-[1.5] text-[var(--text-muted)]"
+							>
+								<li class="pl-0.5">
+									<button
+										type="button"
+										class="text-left underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+										onclick={() => void openContactInContactsApp()}
+										disabled={vcfOpening || loading}
+									>
+										{vcfOpening ? 'Preparing…' : 'Click here to open contact card'}
+									</button>
+								</li>
+								{#each ADD_CONTACT_GUIDE_STEPS[addContactGuideMode] as step, i (i)}
+									<li class="pl-0.5">{step}</li>
+								{/each}
+							</ol>
+						</div>
+					</details>
+
+					<!-- reopen contact-->
 				</div>
 
 				<p
@@ -680,5 +737,8 @@
 		.cta-pulse {
 			animation: none;
 		}
+	}
+	.add-contact-guide[open] .add-contact-guide__chevron {
+		transform: rotate(180deg);
 	}
 </style>
