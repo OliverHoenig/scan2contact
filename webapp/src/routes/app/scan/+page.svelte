@@ -99,7 +99,7 @@
 
 {#if resumeChecked}
 	<main
-		class={`box-border ${step === 'capture' ? 'flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8'}`}
+		class={`box-border ${step === 'capture' ? 'flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full min-w-0 max-w-[600px] gap-5 py-6 pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] pr-[max(1.25rem,env(safe-area-inset-right,0px))]'}`}
 	>
 		{#if step === 'capture'}
 			<section class="relative h-full min-h-0 overflow-hidden">

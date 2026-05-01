@@ -95,10 +95,7 @@
 			followupTemplates = builtinFollowupTemplates();
 		} finally {
 			followupTemplatesLoading = false;
-			if (
-				!selectedFollowupId ||
-				!followupTemplates.some((t) => t.id === selectedFollowupId)
-			) {
+			if (!selectedFollowupId || !followupTemplates.some((t) => t.id === selectedFollowupId)) {
 				selectedFollowupId = followupTemplates[0]?.id ?? null;
 			}
 		}
@@ -292,14 +289,14 @@
 
 {#if hydrated && contact}
 	<main
-		class={`m-auto grid min-h-0 w-full max-w-[600px] gap-5 px-5 py-6 pb-8 ${reviewStage === 'edit' ? 'sm:px-6 sm:py-6' : ''}`}
+		class={`m-auto grid min-h-0 w-full max-w-[600px] min-w-0 gap-5 py-6 pr-[max(1.25rem,env(safe-area-inset-right,0px))] pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] ${reviewStage === 'edit' ? 'sm:py-6 sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))]' : ''}`}
 	>
 		{#if reviewStage === 'edit'}
 			<section class="flex flex-col sm:px-6 sm:py-6">
 				<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
-					Check and correct fields, then save the contact to your phone — or skip straight to follow-up
-					options below.
+					Check and correct fields, then save the contact to your phone — or skip straight to
+					follow-up options below.
 				</p>
 				{#if consentNotice}
 					<p class="m-0 mb-4 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
@@ -369,9 +366,11 @@
 						</div>
 					{/if}
 
-					<div class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3">
+					<div
+						class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3"
+					>
 						<p class="m-0 truncate text-[0.9375rem] font-semibold text-[var(--text)]">
-							{(`${contact.firstName ?? ''} ${contact.lastName ?? ''}`).trim() || 'Unnamed contact'}
+							{`${contact.firstName ?? ''} ${contact.lastName ?? ''}`.trim() || 'Unnamed contact'}
 						</p>
 						{#if contact.title || contact.role || contact.company}
 							<p class="m-0 mt-0.5 truncate text-[0.8125rem] text-[var(--text-muted)]">
@@ -387,17 +386,19 @@
 				</div>
 
 				<p
-					class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]"
+					class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase"
 				>
 					Next steps
 				</p>
 				<div class="flex flex-col items-stretch gap-3">
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
+						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
 						onclick={openFollowupModal}
 						disabled={loading || !primaryEmail(contact)}
-						title={!primaryEmail(contact) ? 'Add at least one email address (Edit details)' : undefined}
+						title={!primaryEmail(contact)
+							? 'Add at least one email address (Edit details)'
+							: undefined}
 					>
 						{#if pulsingCta === 'followup'}
 							{#key returnNudgeKey}
@@ -417,7 +418,9 @@
 							<path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Z" />
 							<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
 						</svg>
-						{savedActions.followupSent ? 'Sent — send another' : 'Send follow-up email'}
+						<span class="min-w-0"
+							>{savedActions.followupSent ? 'Sent — send another' : 'Send follow-up email'}</span
+						>
 						{#if savedActions.followupSent}
 							<svg
 								class="h-[1.05em] w-[1.05em] shrink-0"
@@ -436,7 +439,7 @@
 
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
+						class={`relative flex min-h-12 w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold whitespace-normal text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
 						onclick={openLinkedInSearch}
 						disabled={loading || !canOpenLinkedInSearch(contact)}
 						title={!canOpenLinkedInSearch(contact)
@@ -458,7 +461,9 @@
 								d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"
 							/>
 						</svg>
-						{savedActions.linkedinOpened ? 'Opened on LinkedIn' : 'Connect on LinkedIn'}
+						<span class="min-w-0"
+							>{savedActions.linkedinOpened ? 'Opened on LinkedIn' : 'Connect on LinkedIn'}</span
+						>
 						{#if savedActions.linkedinOpened}
 							<svg
 								class="h-[1.05em] w-[1.05em] shrink-0"
@@ -580,7 +585,7 @@
 					</div>
 					<div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-3">
 						<p
-							class="m-0 mb-2 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]"
+							class="m-0 mb-2 text-[0.6875rem] font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase"
 						>
 							Templates
 						</p>
@@ -611,7 +616,8 @@
 										<span class="block text-[0.9375rem] font-semibold text-[var(--text)]"
 											>{tpl.label}</span
 										>
-										<span class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
+										<span
+											class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
 											>{tpl.description}</span
 										>
 										<span
@@ -637,7 +643,9 @@
 							type="button"
 							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] hover:brightness-[1.06] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
 							onclick={openMailWithTemplate}
-							disabled={!selectedFollowupId || followupTemplatesLoading || followupTemplates.length === 0}
+							disabled={!selectedFollowupId ||
+								followupTemplatesLoading ||
+								followupTemplates.length === 0}
 						>
 							Open in mail app
 						</button>
