@@ -64,18 +64,60 @@
 		}
 	}
 
+	function messageForGetUserMediaFailure(err: unknown): string {
+		if (err instanceof DOMException) {
+			if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+				return 'Camera permission was denied. Allow camera access for this site in your browser or device privacy settings.';
+			}
+			if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+				return 'No camera was found.';
+			}
+			if (err.name === 'OverconstrainedError' || err.name === 'ConstraintNotSatisfiedError') {
+				return 'This camera cannot use the requested resolution.';
+			}
+			if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+				return 'Camera is busy or unavailable (another app may be using it).';
+			}
+		}
+		return 'Camera access failed.';
+	}
+
 	async function startCamera() {
 		if (!supportsCamera || stream) return;
 
-		try {
-			stream = await navigator.mediaDevices.getUserMedia({
+		/** Strict mins can trigger OverconstrainedError on devices that only expose 720p (e.g. some iPhones). */
+		const attempts: MediaStreamConstraints[] = [
+			{
 				video: {
 					facingMode: { ideal: 'environment' },
 					width: { ideal: 1080, min: 720 },
 					height: { ideal: 1920, min: 1280 }
 				},
 				audio: false
-			});
+			},
+			{
+				video: { facingMode: { ideal: 'environment' } },
+				audio: false
+			},
+			{ video: true, audio: false }
+		];
+
+		let lastError: unknown;
+		for (const constraints of attempts) {
+			try {
+				stream = await navigator.mediaDevices.getUserMedia(constraints);
+				break;
+			} catch (e) {
+				lastError = e;
+			}
+		}
+
+		if (!stream) {
+			error = messageForGetUserMediaFailure(lastError);
+			return;
+		}
+
+		try {
 			const videoTrack = stream.getVideoTracks()[0];
 			if (videoTrack?.applyConstraints) {
 				try {
@@ -96,6 +138,7 @@
 				status = 'Position the card, then press Scan.';
 			}
 		} catch {
+			stopCamera();
 			error = 'Camera access failed.';
 		}
 	}
