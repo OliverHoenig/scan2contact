@@ -117,7 +117,8 @@ export const POST: RequestHandler = async ({ request }) => {
 						address: <the address>,
 						notes: <other interesting information about the person or the company on the business card that is not in the other fields>
 					}
-					Output the json schema only, no other text or markdown or anything else.
+					Output the json schema only, no other text or markdown or anything else. Do not makeup information that is not written on the business card.
+					Fields you do not know leave blank. If you do not recive a business card or contact information, return an empty object.
 					`
 				},
 				{
