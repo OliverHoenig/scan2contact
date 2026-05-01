@@ -1,7 +1,9 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import CameraCapture from '$lib/components/scan/CameraCapture.svelte';
 	import ContactForm from '$lib/components/scan/ContactForm.svelte';
 	import VcfDownloadButton from '$lib/components/scan/VcfDownloadButton.svelte';
+	import { DEFAULT_MAIL_TEMPLATES_SEED } from '$lib/mail-templates/defaults';
 	import { contactSchema, type Contact } from '$lib/contact';
 
 	const emptyContact: Contact = {
@@ -35,39 +37,66 @@
 
 	type FollowupTemplate = { id: string; label: string; description: string; subject: string; body: string };
 
-	const followupTemplates: FollowupTemplate[] = [
-		{
-			id: 'stay-in-touch',
-			label: 'Stay in touch',
-			description: 'Short note after meeting someone new.',
-			subject: 'Nice to meet you',
-			body: 'Hi {firstName},\n\nIt was great meeting you. I would love to stay in touch.\n\nBest regards,'
-		},
-		{
-			id: 'thank-you',
-			label: 'Thank you',
-			description: 'Thanks for their time.',
-			subject: 'Thank you',
-			body: 'Hi {firstName},\n\nThank you for your time today. I enjoyed our conversation.\n\nBest regards,'
-		},
-		{
-			id: 'follow-up',
-			label: 'Follow up',
-			description: 'Suggest another conversation.',
-			subject: 'Following up',
-			body: 'Hi {firstName},\n\nFollowing up on our conversation — let me know if you would like to connect again.\n\nBest regards,'
-		},
-		{
-			id: 'connect-linkedin',
-			label: 'Connect on LinkedIn',
-			description: 'Invite to connect professionally.',
-			subject: 'Connection request',
-			body: 'Hi {firstName},\n\nIt was great meeting you. I would like to connect here on LinkedIn as well.\n\nBest regards,'
-		}
-	];
+	function bodyPreview(body: string): string {
+		const line = body
+			.split('\n')
+			.map((l) => l.trim())
+			.find(Boolean);
+		const t = line ?? '';
+		return t.length > 120 ? `${t.slice(0, 117)}…` : t;
+	}
 
+	function builtinFollowupTemplates(): FollowupTemplate[] {
+		return DEFAULT_MAIL_TEMPLATES_SEED.map((t, i) => ({
+			id: `builtin-${i}`,
+			label: t.displayName,
+			description: bodyPreview(t.body),
+			subject: t.subject,
+			body: t.body
+		}));
+	}
+
+	function rowsToFollowup(
+		rows: { id: string; displayName: string; subject: string; body: string }[]
+	): FollowupTemplate[] {
+		return rows.map((r) => ({
+			id: r.id,
+			label: r.displayName,
+			description: bodyPreview(r.body),
+			subject: r.subject,
+			body: r.body
+		}));
+	}
+
+	let followupTemplates = $state<FollowupTemplate[]>(builtinFollowupTemplates());
+	let followupTemplatesLoading = $state(false);
 	let followupModalOpen = $state(false);
 	let selectedFollowupId = $state<string | null>(null);
+
+	async function loadFollowupTemplatesForModal() {
+		followupTemplatesLoading = true;
+		try {
+			const res = await fetch(resolve('/api/mail-templates'));
+			if (res.ok) {
+				const data = (await res.json()) as {
+					templates: { id: string; displayName: string; subject: string; body: string }[];
+				};
+				followupTemplates = rowsToFollowup(data.templates ?? []);
+			} else {
+				followupTemplates = builtinFollowupTemplates();
+			}
+		} catch {
+			followupTemplates = builtinFollowupTemplates();
+		} finally {
+			followupTemplatesLoading = false;
+			if (
+				!selectedFollowupId ||
+				!followupTemplates.some((t) => t.id === selectedFollowupId)
+			) {
+				selectedFollowupId = followupTemplates[0]?.id ?? null;
+			}
+		}
+	}
 
 	function primaryEmail(c: Contact): string | undefined {
 		const raw = c.emails?.find((e) => e.trim().length > 0);
@@ -85,8 +114,9 @@
 	}
 
 	function openFollowupModal() {
-		selectedFollowupId = followupTemplates[0]?.id ?? null;
+		selectedFollowupId = null;
 		followupModalOpen = true;
+		void loadFollowupTemplatesForModal();
 	}
 
 	function closeFollowupModal() {
@@ -364,29 +394,41 @@
 					<p class="m-0 mb-2 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
 						Templates
 					</p>
-					<div class="grid gap-2" role="listbox" aria-label="Email templates">
-						{#each followupTemplates as tpl (tpl.id)}
-							<button
-								type="button"
-								role="option"
-								aria-selected={selectedFollowupId === tpl.id}
-								class={`w-full rounded-[var(--radius-md)] border px-3.5 py-3 text-left transition-[border-color,background,box-shadow] duration-150 ${
-									selectedFollowupId === tpl.id
-										? 'border-[var(--accent)] bg-[rgba(45,212,191,0.08)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.25)]'
-										: 'border-[var(--border)] bg-white/[0.03] hover:border-[rgba(255,255,255,0.14)]'
-								}`}
-								onclick={() => (selectedFollowupId = tpl.id)}
-							>
-								<span class="block text-[0.9375rem] font-semibold text-[var(--text)]">{tpl.label}</span>
-								<span class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
-									>{tpl.description}</span
+					{#if followupTemplatesLoading}
+						<div class="flex justify-center py-8" role="status" aria-live="polite">
+							<div
+								class="h-9 w-9 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]"
+							></div>
+						</div>
+					{:else if followupTemplates.length === 0}
+						<p class="m-0 text-[0.875rem] text-[var(--text-muted)]">
+							No templates available. Add some in Settings → Follow-up mail templates.
+						</p>
+					{:else}
+						<div class="grid gap-2" role="listbox" aria-label="Email templates">
+							{#each followupTemplates as tpl (tpl.id)}
+								<button
+									type="button"
+									role="option"
+									aria-selected={selectedFollowupId === tpl.id}
+									class={`w-full rounded-[var(--radius-md)] border px-3.5 py-3 text-left transition-[border-color,background,box-shadow] duration-150 ${
+										selectedFollowupId === tpl.id
+											? 'border-[var(--accent)] bg-[rgba(45,212,191,0.08)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.25)]'
+											: 'border-[var(--border)] bg-white/[0.03] hover:border-[rgba(255,255,255,0.14)]'
+									}`}
+									onclick={() => (selectedFollowupId = tpl.id)}
 								>
-								<span class="mt-1.5 block truncate text-[0.75rem] text-[var(--text-muted)] opacity-90"
-									>Subject: {personalizeTemplate(tpl.subject)}</span
-								>
-							</button>
-						{/each}
-					</div>
+									<span class="block text-[0.9375rem] font-semibold text-[var(--text)]">{tpl.label}</span>
+									<span class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
+										>{tpl.description}</span
+									>
+									<span class="mt-1.5 block truncate text-[0.75rem] text-[var(--text-muted)] opacity-90"
+										>Subject: {personalizeTemplate(tpl.subject)}</span
+									>
+								</button>
+							{/each}
+						</div>
+					{/if}
 				</div>
 				<div
 					class="flex shrink-0 flex-col-reverse gap-2 border-t border-[var(--border)] px-5 py-4 sm:flex-row sm:justify-end"
@@ -402,7 +444,7 @@
 						type="button"
 						class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] hover:brightness-[1.06] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
 						onclick={openMailWithTemplate}
-						disabled={!selectedFollowupId}
+						disabled={!selectedFollowupId || followupTemplatesLoading || followupTemplates.length === 0}
 					>
 						Open in mail app
 					</button>
