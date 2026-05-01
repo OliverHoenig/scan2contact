@@ -377,7 +377,18 @@
 	}}
 />
 
-{#if hydrated && contact}
+{#if !hydrated}
+	<main
+		class="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-5 py-10 text-center"
+		aria-busy="true"
+	>
+		<div
+			class="h-9 w-9 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]"
+			aria-hidden="true"
+		></div>
+		<p class="m-0 text-[0.9375rem] text-[var(--text-muted)]">Loading contact…</p>
+	</main>
+{:else if contact}
 	<main
 		class={`m-auto grid min-h-0 w-full max-w-[600px] min-w-0 gap-5 py-6 pr-[max(1.25rem,env(safe-area-inset-right,0px))] pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] ${reviewStage === 'edit' ? 'sm:py-6 sm:pr-[max(1.5rem,env(safe-area-inset-right,0px))] sm:pl-[max(1.5rem,env(safe-area-inset-left,0px))]' : ''}`}
 	>

@@ -28,10 +28,13 @@
 	}
 
 	onMount(() => {
-		if (loadReviewSession()) {
-			void goto(resolve('/app/contact'));
+		try {
+			if (loadReviewSession()) {
+				void goto(resolve('/app/contact'));
+			}
+		} finally {
+			resumeChecked = true;
 		}
-		resumeChecked = true;
 	});
 
 	async function handleScan() {
@@ -97,12 +100,23 @@
 	}
 </script>
 
-{#if resumeChecked}
+{#if !resumeChecked}
 	<main
-		class={`box-border ${step === 'capture' ? 'flex h-full min-h-0 w-full max-w-none flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full min-w-0 max-w-[600px] gap-5 py-6 pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] pr-[max(1.25rem,env(safe-area-inset-right,0px))]'}`}
+		class="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 px-5 py-10 text-center"
+		aria-busy="true"
+	>
+		<div
+			class="h-9 w-9 animate-spin rounded-full border-2 border-[var(--border)] border-t-[var(--accent)]"
+			aria-hidden="true"
+		></div>
+		<p class="m-0 text-[0.9375rem] text-[var(--text-muted)]">Opening scanner…</p>
+	</main>
+{:else}
+	<main
+		class={`box-border ${step === 'capture' ? 'flex min-h-0 flex-1 flex-col overflow-hidden p-0' : 'm-auto grid min-h-0 w-full min-w-0 max-w-[600px] gap-5 py-6 pb-8 pl-[max(1.25rem,env(safe-area-inset-left,0px))] pr-[max(1.25rem,env(safe-area-inset-right,0px))]'}`}
 	>
 		{#if step === 'capture'}
-			<section class="relative h-full min-h-0 overflow-hidden">
+			<section class="relative min-h-0 flex-1 overflow-hidden">
 				{#if offline}
 					<p
 						class="absolute top-3 right-[0.85rem] left-[0.85rem] z-[21] m-0 rounded-[var(--radius-sm)] border border-[var(--warn-border)] bg-[var(--warn-bg)] px-3 py-[0.55rem] text-[0.8125rem] leading-[1.35] text-[var(--warn-text)]"

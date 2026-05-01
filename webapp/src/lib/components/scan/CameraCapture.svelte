@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount, tick, untrack } from 'svelte';
 
 	let { autoStart = false, fullBleed = false }: { autoStart?: boolean; fullBleed?: boolean } =
 		$props();
@@ -129,14 +129,7 @@
 				}
 			}
 			await detectLightSupport();
-			if (videoRef) {
-				videoRef.srcObject = stream;
-				videoRef.onloadedmetadata = () => updateGuideLayout();
-				videoRef.onresize = () => updateGuideLayout();
-				await videoRef.play();
-				updateGuideLayout();
-				status = 'Position the card, then press Scan.';
-			}
+			// Stream → <video> binding runs in $effect when videoRef exists (avoids getUserMedia vs bind:this race).
 		} catch {
 			stopCamera();
 			error = 'Camera access failed.';
@@ -180,9 +173,7 @@
 		if (!track?.applyConstraints) return;
 		try {
 			await track.applyConstraints({
-				advanced: [
-					{ [MEDIA_CAPTURE_LIGHT_KEY]: enabled } as unknown as MediaTrackConstraintSet
-				]
+				advanced: [{ [MEDIA_CAPTURE_LIGHT_KEY]: enabled } as unknown as MediaTrackConstraintSet]
 			});
 			lightEnabled = enabled;
 			emitLightState();
@@ -402,10 +393,31 @@
 		detectCameraSupport();
 		if (autoStart) {
 			status = 'Starting camera…';
-			void startCamera();
+			void tick().then(() => startCamera());
 		} else {
 			status = 'Press Start camera to begin.';
 		}
+	});
+
+	/** Keep deps to video + stream (+ busy for status); untrack layout/status writes to avoid effect feedback loops. */
+	$effect(() => {
+		const v = videoRef;
+		const s = stream;
+		const busy = captureBusy;
+		if (!v || !s) return;
+
+		untrack(() => {
+			if (v.srcObject !== s) {
+				v.srcObject = s;
+			}
+			v.onloadedmetadata = () => updateGuideLayout();
+			v.onresize = () => updateGuideLayout();
+			void v.play().then(() => updateGuideLayout()).catch(() => {});
+			updateGuideLayout();
+			if (!busy) {
+				status = 'Position the card, then press Scan.';
+			}
+		});
 	});
 
 	$effect(() => {
