@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Contact } from '$lib/contact';
 
-	let { contact = $bindable<Contact>() } = $props();
+	let { contact = $bindable() } = $props<{ contact: Contact }>();
 
 	function updateList(field: 'emails' | 'phones', value: string) {
 		contact[field] = value

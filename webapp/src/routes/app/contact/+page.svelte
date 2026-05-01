@@ -392,7 +392,7 @@
 	<main class="flex min-h-0 w-full flex-col gap-5">
 		{#if reviewStage === 'edit'}
 			<section class="flex flex-col">
-				<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
+				<h2 class="mt-5 text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
 					Check and correct fields, then save the contact to your phone — or skip straight to
 					follow-up options below.

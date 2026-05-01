@@ -1,3 +1,7 @@
+import {
+	appendCreatedTimestampToNotes,
+	formatContactCreatedLabel
+} from '$lib/format-contact-created';
 import { describe, expect, it } from 'vitest';
 import { generateVCard } from './generate';
 
@@ -21,5 +25,26 @@ describe('generateVCard', () => {
 		expect(output).toContain('FN:Max Mustermann');
 		expect(output).toContain('EMAIL;TYPE=INTERNET:max@example.com');
 		expect(output).toContain('END:VCARD');
+	});
+
+	it('includes full notes string in NOTE (e.g. after scan timestamp append)', () => {
+		const ms = Date.UTC(2026, 4, 2, 12, 0, 0);
+		const notes = appendCreatedTimestampToNotes('Hello', ms);
+		const output = generateVCard({
+			firstName: 'A',
+			lastName: 'B',
+			company: '',
+			role: '',
+			title: '',
+			emails: [],
+			phones: [],
+			website: '',
+			address: '',
+			notes
+		});
+		expect(output).toContain('NOTE:');
+		expect(output).toContain('Hello');
+		const label = formatContactCreatedLabel(ms).replace(/,/g, '\\,').replace(/\n/g, '\\n');
+		expect(output).toContain(label);
 	});
 });

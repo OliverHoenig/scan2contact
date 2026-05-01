@@ -4,6 +4,7 @@
 	import { resolve } from '$app/paths';
 	import CameraCapture from '$lib/components/scan/CameraCapture.svelte';
 	import { contactSchema } from '$lib/contact';
+	import { appendCreatedTimestampToNotes } from '$lib/format-contact-created';
 	import { loadReviewSession, saveReviewSession, type ReviewSessionState } from '$lib/scan-flow/review-session';
 
 	let resumeChecked = $state(false);
@@ -82,8 +83,12 @@
 			if (!parsedContact.success) {
 				throw new Error('OCR returned an invalid contact payload');
 			}
+			const data = parsedContact.data;
 			const next: ReviewSessionState = {
-				contact: parsedContact.data,
+				contact: {
+					...data,
+					notes: appendCreatedTimestampToNotes(data.notes)
+				},
 				consentNotice: payload.consentNotice || '',
 				savedViaSkip: false,
 				savedActions: { followupSent: false, linkedinOpened: false },
