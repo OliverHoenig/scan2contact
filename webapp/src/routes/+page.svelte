@@ -63,8 +63,8 @@
 				<p
 					class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
 				>
-					Scan the business card and turn it into a clean contact you can save in seconds, so you
-					can follow up while the conversation is still fresh.
+					Scan the business card and turn it into a clean contact you can save in seconds, so follow
+					ups happen while the conversation is still fresh.
 				</p>
 				<div
 					class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
@@ -89,37 +89,13 @@
 
 			<!-- Product preview card -->
 			<div class="mx-auto mt-16 max-w-2xl lg:mt-20">
-				<div
-					class="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-1 shadow-[0_24px_80px_-24px_rgba(0,0,0,0.65)]"
-				>
-					<div
-						class="absolute inset-0 bg-gradient-to-br from-[var(--accent-muted)] via-transparent to-transparent opacity-80"
-						aria-hidden="true"
-					></div>
-					<div
-						class="relative rounded-[calc(var(--radius-lg)-4px)] bg-[var(--bg-raised)] p-6 sm:p-8"
-					>
-						<div class="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-							<div>
-								<p class="text-xs font-medium tracking-wide text-[var(--text-subtle)] uppercase">
-									Live preview
-								</p>
-								<p class="mt-2 text-lg font-semibold text-[var(--text)]">Conference mode</p>
-								<p class="mt-1 max-w-sm text-sm text-[var(--text-muted)]">
-									Capture → review details → export a contact. Same flow you use after every
-									meeting.
-								</p>
-							</div>
-							<div
-								class="flex shrink-0 flex-col gap-2 rounded-[var(--radius-md)] border border-dashed border-[var(--border-strong)] bg-[var(--bg-input)] p-4 text-center sm:text-left"
-							>
-								<span class="text-2xl" aria-hidden="true">📇</span>
-								<p class="text-xs font-medium text-[var(--text-muted)]">Card scanned</p>
-								<p class="text-sm font-semibold text-[var(--accent)]">Ready to save</p>
-							</div>
-						</div>
-					</div>
-				</div>
+				<video
+					src="/videos/preview.mp4"
+					autoplay
+					muted
+					loop
+					class="h-full w-full rounded-[var(--radius-lg)] rounded-md border border-white object-cover"
+				></video>
 			</div>
 		</section>
 
