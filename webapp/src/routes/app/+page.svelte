@@ -53,7 +53,13 @@
 	let lightSupported = $state(false);
 	let lightEnabled = $state(false);
 
-	type FollowupTemplate = { id: string; label: string; description: string; subject: string; body: string };
+	type FollowupTemplate = {
+		id: string;
+		label: string;
+		description: string;
+		subject: string;
+		body: string;
+	};
 
 	function bodyPreview(body: string): string {
 		const line = body
@@ -107,10 +113,7 @@
 			followupTemplates = builtinFollowupTemplates();
 		} finally {
 			followupTemplatesLoading = false;
-			if (
-				!selectedFollowupId ||
-				!followupTemplates.some((t) => t.id === selectedFollowupId)
-			) {
+			if (!selectedFollowupId || !followupTemplates.some((t) => t.id === selectedFollowupId)) {
 				selectedFollowupId = followupTemplates[0]?.id ?? null;
 			}
 		}
@@ -511,19 +514,15 @@
 			{#if reviewStage === 'edit'}
 				<h2 class="mt-[0.15rem] text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
-					Check and correct fields, then save the contact to your phone — or skip straight to follow-up
-					options below.
+					Check and correct fields, then save the contact to your phone — or skip straight to
+					follow-up options below.
 				</p>
 				{#if consentNotice}
 					<p class="m-0 mb-4 text-sm leading-[1.5] text-[var(--text-muted)]">{consentNotice}</p>
 				{/if}
 				<ContactForm bind:contact />
 				<div class="mt-12 flex flex-col items-stretch gap-2 pt-1">
-					<VcfDownloadButton
-						{contact}
-						disabled={loading}
-						onSaveTriggered={handleSaveTriggered}
-					/>
+					<VcfDownloadButton {contact} disabled={loading} onSaveTriggered={handleSaveTriggered} />
 					<button
 						type="button"
 						class="mt-1 self-center text-[0.8125rem] font-medium text-[var(--text-muted)] underline underline-offset-4 transition-colors hover:text-[var(--text)]"
@@ -579,11 +578,13 @@
 						</div>
 					{/if}
 
-					<div class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3">
+					<div
+						class="mt-4 rounded-[var(--radius-md)] border border-[var(--border)] bg-white/[0.03] p-3"
+					>
 						<p class="m-0 truncate text-[0.9375rem] font-semibold text-[var(--text)]">
-							{(`${contact.firstName ?? ''} ${contact.lastName ?? ''}`).trim() || 'Unnamed contact'}
+							{`${contact.firstName ?? ''} ${contact.lastName ?? ''}`.trim() || 'Unnamed contact'}
 						</p>
-						{#if (contact.title || contact.role || contact.company)}
+						{#if contact.title || contact.role || contact.company}
 							<p class="m-0 mt-0.5 truncate text-[0.8125rem] text-[var(--text-muted)]">
 								{[contact.title || contact.role, contact.company].filter(Boolean).join(' · ')}
 							</p>
@@ -596,7 +597,9 @@
 					</div>
 				</div>
 
-				<p class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+				<p
+					class="m-0 mt-6 mb-3 text-[0.6875rem] font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase"
+				>
 					Next steps
 				</p>
 				<div class="flex flex-col items-stretch gap-3">
@@ -605,7 +608,9 @@
 						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out hover:enabled:brightness-[1.06] active:enabled:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
 						onclick={openFollowupModal}
 						disabled={loading || !primaryEmail(contact)}
-						title={!primaryEmail(contact) ? 'Add at least one email address (Edit details)' : undefined}
+						title={!primaryEmail(contact)
+							? 'Add at least one email address (Edit details)'
+							: undefined}
 					>
 						{#if pulsingCta === 'followup'}
 							{#key returnNudgeKey}
@@ -647,7 +652,9 @@
 						class={`relative flex min-h-12 w-full items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border border-gray-400/80 bg-transparent px-[1.15rem] py-[0.85rem] text-[0.9375rem] font-semibold text-[var(--text-muted)] transition-[background,border-color,color] duration-200 ease-out hover:enabled:border-[rgba(255,255,255,0.18)] hover:enabled:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45`}
 						onclick={openLinkedInSearch}
 						disabled={loading || !canOpenLinkedInSearch(contact)}
-						title={!canOpenLinkedInSearch(contact) ? 'Add first name, last name, or company (Edit details)' : undefined}
+						title={!canOpenLinkedInSearch(contact)
+							? 'Add first name, last name, or company (Edit details)'
+							: undefined}
 					>
 						{#if pulsingCta === 'linkedin'}
 							{#key returnNudgeKey}
@@ -688,7 +695,9 @@
 					</p>
 				{/if}
 
-				<div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.8125rem] font-medium text-[var(--text-muted)]">
+				<div
+					class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.8125rem] font-medium text-[var(--text-muted)]"
+				>
 					<button
 						type="button"
 						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
@@ -747,14 +756,22 @@
 				aria-labelledby="followup-dialog-title"
 				aria-describedby="followup-dialog-desc"
 			>
-				<div class="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
+				<div
+					class="flex shrink-0 items-start justify-between gap-3 border-b border-[var(--border)] px-5 py-4"
+				>
 					<div class="min-w-0">
-						<h3 id="followup-dialog-title" class="m-0 text-[1.05rem] font-semibold tracking-[-0.02em]">
+						<h3
+							id="followup-dialog-title"
+							class="m-0 text-[1.05rem] font-semibold tracking-[-0.02em]"
+						>
 							Follow-up email
 						</h3>
-						<p id="followup-dialog-desc" class="m-0 mt-1 text-[0.8125rem] leading-[1.45] text-[var(--text-muted)]">
-							Pick a template. Your mail app opens with the recipient, subject, and message filled in — you
-							can edit before sending.
+						<p
+							id="followup-dialog-desc"
+							class="m-0 mt-1 text-[0.8125rem] leading-[1.45] text-[var(--text-muted)]"
+						>
+							Pick a template. Your mail app opens with the recipient, subject, and message filled
+							in — you can edit before sending.
 						</p>
 					</div>
 					<button
@@ -776,7 +793,9 @@
 					</button>
 				</div>
 				<div class="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-3">
-					<p class="m-0 mb-2 text-[0.6875rem] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+					<p
+						class="m-0 mb-2 text-[0.6875rem] font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase"
+					>
 						Templates
 					</p>
 					{#if followupTemplatesLoading}
@@ -803,11 +822,14 @@
 									}`}
 									onclick={() => (selectedFollowupId = tpl.id)}
 								>
-									<span class="block text-[0.9375rem] font-semibold text-[var(--text)]">{tpl.label}</span>
+									<span class="block text-[0.9375rem] font-semibold text-[var(--text)]"
+										>{tpl.label}</span
+									>
 									<span class="mt-0.5 block text-[0.8125rem] leading-[1.4] text-[var(--text-muted)]"
 										>{tpl.description}</span
 									>
-									<span class="mt-1.5 block truncate text-[0.75rem] text-[var(--text-muted)] opacity-90"
+									<span
+										class="mt-1.5 block truncate text-[0.75rem] text-[var(--text-muted)] opacity-90"
 										>Subject: {personalizeTemplate(tpl.subject)}</span
 									>
 								</button>
@@ -829,7 +851,9 @@
 						type="button"
 						class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] hover:brightness-[1.06] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-45 sm:w-auto"
 						onclick={openMailWithTemplate}
-						disabled={!selectedFollowupId || followupTemplatesLoading || followupTemplates.length === 0}
+						disabled={!selectedFollowupId ||
+							followupTemplatesLoading ||
+							followupTemplates.length === 0}
 					>
 						Open in mail app
 					</button>

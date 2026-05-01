@@ -76,7 +76,7 @@
 						Start scanning free
 					</a>
 					<a
-						href={resolve('/app')}
+						href={resolve('/app/scan')}
 						class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border-focus)] hover:bg-[var(--bg-raised)] active:scale-[0.99]"
 					>
 						Open the app
@@ -289,7 +289,7 @@
 							Get started free
 						</a>
 						<a
-							href={resolve('/app')}
+							href={resolve('/app/scan')}
 							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] px-8 text-base font-semibold text-[var(--text)] transition hover:bg-[var(--bg-surface)] active:scale-[0.99]"
 						>
 							I already have an account
@@ -315,7 +315,7 @@
 					class="text-[var(--text-muted)] transition hover:text-[var(--accent)]">Sign up</a
 				>
 				<a
-					href={resolve('/app')}
+					href={resolve('/app/scan')}
 					class="text-[var(--text-muted)] transition hover:text-[var(--accent)]">App</a
 				>
 			</nav>
