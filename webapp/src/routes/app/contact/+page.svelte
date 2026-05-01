@@ -430,7 +430,7 @@
 		{:else}
 			<section class="flex flex-col">
 				<div
-					class="rounded-lg border border-(--border) bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
+					class="mt-5 rounded-lg border border-(--border) bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
 				>
 					<div>
 						<h2 class="m-0 text-[1.15rem] font-semibold">What next?</h2>
