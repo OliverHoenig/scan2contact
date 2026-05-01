@@ -412,7 +412,10 @@
 			}
 			v.onloadedmetadata = () => updateGuideLayout();
 			v.onresize = () => updateGuideLayout();
-			void v.play().then(() => updateGuideLayout()).catch(() => {});
+			void v
+				.play()
+				.then(() => updateGuideLayout())
+				.catch(() => {});
 			updateGuideLayout();
 			if (!busy) {
 				status = 'Position the card, then press Scan.';
