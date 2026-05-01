@@ -42,6 +42,8 @@
 	let returnNudgeKey = $state(0);
 	let pulsingCta = $state<NextCta>(null);
 	let storageReady = $state(false);
+	let vcfOpenError = $state('');
+	let vcfOpening = $state(false);
 
 	let cameraRef = $state<{
 		captureFrame: () => Promise<File>;
@@ -184,7 +186,34 @@
 	}
 
 	function backToEdit() {
+		vcfOpenError = '';
 		reviewStage = 'edit';
+	}
+
+	/** Same handoff as VcfDownloadButton primary: generate vCard and open in the system Contacts flow. */
+	async function openContactInContactsApp() {
+		vcfOpenError = '';
+		vcfOpening = true;
+		try {
+			const response = await fetch('/api/vcf', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ contact })
+			});
+			if (!response.ok) {
+				throw new Error('Failed to generate vCard');
+			}
+			const blob = await response.blob();
+			const url = URL.createObjectURL(blob);
+			// Match primary button: mark saved only once we know the file is ready (avoids wrong header if fetch fails after skip).
+			handleSaveTriggered();
+			window.location.assign(url);
+		} catch (unknownError) {
+			vcfOpenError =
+				unknownError instanceof Error ? unknownError.message : 'Could not open contact file';
+		} finally {
+			vcfOpening = false;
+		}
 	}
 
 	function nextPendingCta(): NextCta {
@@ -246,6 +275,7 @@
 			saveTriggeredAt = null;
 			savedActions = { followupSent: false, linkedinOpened: false };
 			pulsingCta = null;
+			vcfOpenError = '';
 			step = 'review';
 			clearStoredReview();
 		} catch (unknownError) {
@@ -267,6 +297,7 @@
 		saveTriggeredAt = null;
 		savedActions = { followupSent: false, linkedinOpened: false };
 		pulsingCta = null;
+		vcfOpenError = '';
 		clearStoredReview();
 	}
 
@@ -651,29 +682,38 @@
 					</button>
 				</div>
 
+				{#if vcfOpenError}
+					<p class="m-0 mt-4 text-center text-[0.8125rem] leading-[1.4] text-[var(--danger)]">
+						{vcfOpenError}
+					</p>
+				{/if}
+
 				<div class="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[0.8125rem] font-medium text-[var(--text-muted)]">
 					<button
 						type="button"
-						class="underline underline-offset-4 transition-colors hover:text-[var(--text)]"
+						class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
 						onclick={backToEdit}
+						disabled={vcfOpening || loading}
 					>
 						Edit details
 					</button>
 					{#if savedViaSkip}
 						<button
 							type="button"
-							class="underline underline-offset-4 transition-colors hover:text-[var(--text)]"
-							onclick={backToEdit}
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+							onclick={() => void openContactInContactsApp()}
+							disabled={vcfOpening || loading}
 						>
-							Save to Contacts
+							{vcfOpening ? 'Preparing…' : 'Save to Contacts'}
 						</button>
 					{:else}
 						<button
 							type="button"
-							class="underline underline-offset-4 transition-colors hover:text-[var(--text)]"
-							onclick={backToEdit}
+							class="underline underline-offset-4 transition-colors hover:text-[var(--text)] disabled:cursor-not-allowed disabled:opacity-45"
+							onclick={() => void openContactInContactsApp()}
+							disabled={vcfOpening || loading}
 						>
-							Re-open in Contacts
+							{vcfOpening ? 'Preparing…' : 'Re-open in Contacts'}
 						</button>
 					{/if}
 					<button
