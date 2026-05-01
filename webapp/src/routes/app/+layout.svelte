@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { clearReviewSession } from '$lib/scan-flow/review-session';
+	import { page } from '$app/state';
 
 	let { children } = $props();
 	let settingsOpen = $state(false);
@@ -14,22 +15,32 @@
 		aria-label="App"
 	>
 		<div class="mx-auto flex w-full max-w-[600px] items-center justify-between">
+			{#if page.url.pathname !== '/app/scan'}
+				<button
+					type="button"
+					class="flex flex-row items-center rounded-sm px-2 py-1 text-black transition-colors hover:text-[var(--accent)]"
+					onclick={() => {
+						clearReviewSession();
+						void goto(resolve('/app/scan'));
+					}}
+				>
+					<img src="/icons/chevron-left.svg" alt="Back" class="h-7 w-7" />
+					<img src="/icons/scan-text.svg" alt="Start new scan" class="h-7 w-7" />
+				</button>
+			{:else}
+				<div class="h-7 w-7"></div>
+			{/if}
+
 			<button
 				type="button"
-				class="rounded-[var(--radius-sm)] px-2 py-1 text-[0.9375rem] font-medium text-[var(--text)] transition-colors hover:text-[var(--accent)]"
-				onclick={() => {
-					clearReviewSession();
-					void goto(resolve('/app/scan'));
-				}}
-			>
-				Start new scan
-			</button>
-			<button
-				type="button"
-				class="rounded-[var(--radius-sm)] px-2 py-1 text-[0.9375rem] font-medium text-[var(--text)] transition-colors hover:text-[var(--accent)]"
+				class="rounded-sm px-2 py-1 text-[0.9375rem] font-medium text-[var(--text)] transition-colors hover:text-[var(--accent)]"
 				onclick={() => (settingsOpen = true)}
 			>
-				Settings
+				<img
+					src="/icons/user-cog.svg"
+					alt="Settings"
+					class="h-8 w-8 rounded-full border border-white p-1"
+				/>
 			</button>
 		</div>
 	</nav>
