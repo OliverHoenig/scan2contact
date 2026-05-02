@@ -673,6 +673,102 @@
 			</ol>
 		</section>
 
+		<!-- Mobile browser: camera + web, no install, optional PWA -->
+		<section
+			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-16 sm:py-20"
+			aria-labelledby="mobile-web-heading"
+		>
+			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+				<div class="mx-auto max-w-2xl text-center">
+					<h2 id="mobile-web-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
+						Built for your phone
+					</h2>
+					<p class="mt-3 text-pretty text-[var(--text-muted)] sm:text-lg">
+						scan2contact is made for mobile: you scan with your phone's camera inside the browser.
+						If your handset has a current mobile browser and a working camera, you are good to go.
+					</p>
+				</div>
+				<div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+					<div
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:p-7"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+							aria-hidden="true"
+						>
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+								/>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">Any smartphone with a browser and camera</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							iPhone or Android, Safari or Chrome: open the site, allow camera access, and capture
+							the card. The flow is tuned for small screens so you can work quickly right after a
+							handshake.
+						</p>
+					</div>
+					<div
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:p-7"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+							aria-hidden="true"
+						>
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">Nothing to download</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							On your phone there is no app store install and no separate file to fetch first. Open
+							your link, sign in, and scan. The page loads like any website, so you are not stuck
+							behind a download before you capture the lead.
+						</p>
+					</div>
+					<div
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+							aria-hidden="true"
+						>
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">Optional: add it to your home screen</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							scan2contact is a progressive web app. On your phone you can install it or add it to
+							your home screen from the browser menu, so it opens in its own window like a native
+							app. You still never had to use an app store; the shortcut is optional when you want
+							one-tap access after the first visit.
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
 		<!-- Value line -->
 		<section class="border-y border-[var(--border)] bg-[var(--bg-surface)] py-16 sm:py-20">
 			<div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
