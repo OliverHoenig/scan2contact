@@ -6,7 +6,7 @@
 	<title>scan2contact — Turn business cards into contacts in seconds</title>
 	<meta
 		name="description"
-		content="Scan business cards at events and meetings. Get clean contacts ready for your phone—built for professionals who network."
+		content="Scan business cards at events and meetings. Save contacts fast and send follow-up emails from your own templates—built for professionals who network."
 	/>
 </svelte:head>
 
@@ -61,10 +61,11 @@
 					Never lose another lead from a business card.
 				</h1>
 				<p
-					class="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
+					class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
 				>
-					Scan the business card and turn it into a clean contact you can save in seconds, so follow
-					ups happen while the conversation is still fresh.
+					Scan the business card and turn it into a clean contact you can save in seconds. Save
+					email templates once, then send a polished follow-up right after the scan while the
+					meeting is still fresh.
 				</p>
 				<div
 					class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
@@ -114,7 +115,7 @@
 						to act on.
 					</p>
 				</div>
-				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-2 lg:gap-8 xl:grid-cols-4">
 					<li
 						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
 					>
@@ -176,7 +177,7 @@
 						</p>
 					</li>
 					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)] sm:col-span-2 lg:col-span-1"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -200,6 +201,34 @@
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
 							Turn the handshake into something actionable: a contact ready to save, share, or use
 							for a same-day follow-up—instead of a card you’ll “deal with later.”
+						</p>
+					</li>
+					<li
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+						>
+							<svg
+								class="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">Follow up the moment you scan</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Keep your best intros, thank-yous, and “great to meet you” notes as templates. After a
+							scan, the contact’s details flow in and you send one tap from a message that already
+							sounds like you.
 						</p>
 					</li>
 				</ul>
@@ -241,10 +270,10 @@
 							class="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] text-sm font-bold text-[var(--text)] sm:mx-0"
 							>3</span
 						>
-						<h3 class="mt-4 font-semibold">Save or share—then follow up</h3>
+						<h3 class="mt-4 font-semibold">Save, export, or send your template</h3>
 						<p class="mt-2 text-sm text-[var(--text-muted)]">
-							Put the person in your address book or export a vCard so your next email or call is
-							obvious, not another open loop.
+							Add them to your address book, share a vCard, or fire off the follow-up email you
+							prepared in advance so the thread starts today, not when you finally unpack your bag.
 						</p>
 					</li>
 				</ol>
@@ -259,7 +288,8 @@
 				</p>
 				<p class="mt-6 text-sm leading-relaxed text-[var(--text-muted)]">
 					scan2contact closes the loop: capture without retyping, keep the details even when the
-					card is gone, and walk away with a contact you can actually act on.
+					card is gone, and use email templates to turn every scan into a real follow-up before the
+					next conversation crowds it out.
 				</p>
 			</div>
 		</section>
