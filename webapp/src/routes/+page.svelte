@@ -201,8 +201,8 @@
 						<h3 class="mt-4 text-lg font-semibold">Follow up the moment you scan</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
 							Keep your best intros, thank-yous, and “great to meet you” notes as templates. After a
-							scan, the contact’s details flow in and you send one tap from a message that already
-							sounds like you.
+							scan with one click your mail app opens with To, subject, and body already filled,
+							ready to send.
 						</p>
 					</li>
 				</ul>
