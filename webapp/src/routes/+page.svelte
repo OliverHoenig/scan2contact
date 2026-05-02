@@ -235,49 +235,442 @@
 			</div>
 		</section>
 
-		<!-- Steps -->
-		<section class="py-20 sm:py-24" aria-labelledby="steps-heading">
-			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+		<!-- Steps: four alternating text / video sections -->
+		<section class="border-t border-[var(--border)] bg-[var(--bg-raised)]/35" aria-labelledby="steps-heading">
+			<div class="mx-auto max-w-6xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-20 lg:px-8">
 				<h2
 					id="steps-heading"
-					class="text-center text-3xl font-semibold tracking-tight sm:text-4xl"
+					class="text-3xl font-semibold tracking-tight text-balance sm:text-4xl"
 				>
 					How it works
 				</h2>
-				<ol class="mx-auto mt-14 grid max-w-4xl gap-8 sm:grid-cols-3 sm:gap-6">
-					<li class="relative text-center sm:text-left">
-						<span
-							class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-[var(--accent)] text-sm font-bold text-[var(--accent-ink)] sm:mx-0"
-							>1</span
-						>
-						<h3 class="mt-4 font-semibold">Capture the card</h3>
-						<p class="mt-2 text-sm text-[var(--text-muted)]">
-							Frame the card in good light—we handle the rest.
-						</p>
-					</li>
-					<li class="relative text-center sm:text-left">
-						<span
-							class="mx-auto flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)] sm:mx-0"
-							>2</span
-						>
-						<h3 class="mt-4 font-semibold">Review & refine</h3>
-						<p class="mt-2 text-sm text-[var(--text-muted)]">
-							Quick pass to confirm spelling and roles—takes seconds.
-						</p>
-					</li>
-					<li class="relative text-center sm:text-left">
-						<span
-							class="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border-strong)] bg-[var(--bg-surface)] text-sm font-bold text-[var(--text)] sm:mx-0"
-							>3</span
-						>
-						<h3 class="mt-4 font-semibold">Save, export, or send your template</h3>
-						<p class="mt-2 text-sm text-[var(--text-muted)]">
-							Add them to your address book, share a vCard, or fire off the follow-up email you
-							prepared in advance so the thread starts today, not when you finally unpack your bag.
-						</p>
-					</li>
-				</ol>
+				<p class="mx-auto mt-3 max-w-xl text-sm text-[var(--text-muted)] sm:text-base">
+					From scan to saved contact to a follow-up you send while the conversation still matters.
+				</p>
 			</div>
+
+			<ol class="list-none">
+				<!-- 1 Scan contact: copy left, video right -->
+				<li class="border-t border-[var(--border)]">
+					<div
+						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
+					>
+						<div class="text-center lg:text-left">
+							<span
+								class="inline-flex h-9 min-w-9 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)]"
+								>1</span
+							>
+							<h3
+								class="mt-4 text-2xl font-semibold tracking-tight text-balance uppercase sm:text-3xl"
+							>
+								Scan contact
+							</h3>
+							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+								Point your camera at the card. We pull name, title, email, and phone so you skip
+								the typing and keep the momentum from the room.
+							</p>
+							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Works in your mobile browser. No new app to install.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Good light and a flat card give the cleanest fields.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Seconds per card, not minutes at the keyboard.</span>
+								</li>
+							</ul>
+						</div>
+						<div
+							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+							role="img"
+							aria-label="Video placeholder: scan contact"
+						>
+							<!-- Replace inner block with <video> when asset is ready -->
+							<div
+								class="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+							>
+								<svg
+									class="h-12 w-12 text-[var(--text-subtle)] opacity-50"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<p class="text-sm font-medium text-[var(--text-muted)]">Video: scan contact</p>
+								<p class="text-xs text-[var(--text-subtle)]">Placeholder. Add your clip here.</p>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<!-- 2 Review: video left, copy right -->
+				<li class="border-t border-[var(--border)]">
+					<div
+						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
+					>
+						<div
+							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] lg:order-1"
+							role="img"
+							aria-label="Video placeholder: review"
+						>
+							<div
+								class="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+							>
+								<svg
+									class="h-12 w-12 text-[var(--text-subtle)] opacity-50"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<p class="text-sm font-medium text-[var(--text-muted)]">Video: review</p>
+								<p class="text-xs text-[var(--text-subtle)]">Placeholder. Add your clip here.</p>
+							</div>
+						</div>
+						<div class="order-1 text-center lg:order-2 lg:text-left">
+							<span
+								class="inline-flex h-9 min-w-9 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)]"
+								>2</span
+							>
+							<h3
+								class="mt-4 text-2xl font-semibold tracking-tight text-balance uppercase sm:text-3xl"
+							>
+								Review in seconds
+							</h3>
+							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+								Most fields land correct on the first pass. Change only what looks off and you are
+								still faster than typing the whole card by hand.
+							</p>
+							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>One screen for names, titles, and company.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Tap to fix a line. Leave the rest as is.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Ten seconds of review beats five minutes of retyping.</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+
+				<!-- 3 Save as contact: copy left, video right -->
+				<li class="border-t border-[var(--border)]">
+					<div
+						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
+					>
+						<div class="text-center lg:text-left">
+							<span
+								class="inline-flex h-9 min-w-9 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)]"
+								>3</span
+							>
+							<h3
+								class="mt-4 text-2xl font-semibold tracking-tight text-balance uppercase sm:text-3xl"
+							>
+								Save as contact
+							</h3>
+							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+								Put the lead where you will actually use it. Your address book becomes the single
+								place you trust when it is time to call, text, or forward the intro.
+							</p>
+							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Save to phone contacts in one tap.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Export a vCard when someone else needs the file.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Paper gets lost. Your digital contact stays.</span>
+								</li>
+							</ul>
+						</div>
+						<div
+							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+							role="img"
+							aria-label="Video placeholder: save as contact"
+						>
+							<div
+								class="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+							>
+								<svg
+									class="h-12 w-12 text-[var(--text-subtle)] opacity-50"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<p class="text-sm font-medium text-[var(--text-muted)]">Video: save as contact</p>
+								<p class="text-xs text-[var(--text-subtle)]">Placeholder. Add your clip here.</p>
+							</div>
+						</div>
+					</div>
+				</li>
+
+				<!-- 4 Follow-up: video left, copy right -->
+				<li class="border-t border-[var(--border)]">
+					<div
+						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
+					>
+						<div
+							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] lg:order-1"
+							role="img"
+							aria-label="Video placeholder: follow-up"
+						>
+							<div
+								class="flex h-full w-full flex-col items-center justify-center gap-2 px-6 text-center"
+							>
+								<svg
+									class="h-12 w-12 text-[var(--text-subtle)] opacity-50"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									aria-hidden="true"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+									/>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="1.5"
+										d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<p class="text-sm font-medium text-[var(--text-muted)]">Video: follow-up</p>
+								<p class="text-xs text-[var(--text-subtle)]">Placeholder. Add your clip here.</p>
+							</div>
+						</div>
+						<div class="order-1 text-center lg:order-2 lg:text-left">
+							<span
+								class="inline-flex h-9 min-w-9 items-center justify-center rounded-full border-2 border-[var(--accent)] bg-[var(--accent-muted)] text-sm font-bold text-[var(--accent)]"
+								>4</span
+							>
+							<h3
+								class="mt-4 text-2xl font-semibold tracking-tight text-balance uppercase sm:text-3xl"
+							>
+								Follow-up
+							</h3>
+							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+								Send the note while the handshake still counts. Templates keep your voice consistent
+								so every new lead gets a message that sounds like you, not a blank screen.
+							</p>
+							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Merge their details from the scan. Press send.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Reuse the emails that already earn replies.</span>
+								</li>
+								<li class="flex gap-3">
+									<span
+										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
+										aria-hidden="true"
+									>
+										<svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="3"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+									</span>
+									<span>Same day follow-up wins more deals than a card in your bag.</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+			</ol>
 		</section>
 
 		<!-- Value line -->
