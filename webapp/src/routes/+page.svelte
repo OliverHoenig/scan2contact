@@ -63,9 +63,9 @@
 				<p
 					class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
 				>
-					Scan the business card and turn it into a clean contact you can save in seconds. Save
-					email templates once, then send a polished follow-up right after the scan while the
-					meeting is still fresh.
+					Scan the business card and turn it into a clean contact you can save in seconds. Then send
+					a follow-up mail with one click based on your individual mail templates while the
+					conversation is still fresh.
 				</p>
 				<div
 					class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
@@ -115,7 +115,35 @@
 						to act on.
 					</p>
 				</div>
-				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-2 lg:gap-8 xl:grid-cols-4">
+				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+					<li
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+						>
+							<svg
+								class="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">The pile that never becomes action</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Buyers, partners, suppliers, candidates: the cards stack up, then names fade and
+							follow-ups stall. Scan on the spot so every intro is a real contact while you still
+							remember why you met.
+						</p>
+					</li>
 					<li
 						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
 					>
@@ -145,62 +173,8 @@
 						</div>
 						<h3 class="mt-4 text-lg font-semibold">End the manual typing</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Stop copying name, title, email, and phone by hand. Snap the card—we extract the
-							fields so you only adjust what needs a quick fix.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">The card can disappear—the contact won’t</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Paper gets lost in bags, hotel rooms, and airport security. Your scan becomes a
-							digital record on your device, so the lead isn’t gone when the cardstock is.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">A clear next step, every time</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Turn the handshake into something actionable: a contact ready to save, share, or use
-							for a same-day follow-up—instead of a card you’ll “deal with later.”
+							Stop copying name, title, email, and phone by hand. Snap the card and scan2contact
+							extracts the contact information so you can save it directly to your phone contacts.
 						</p>
 					</li>
 					<li
@@ -236,7 +210,10 @@
 		</section>
 
 		<!-- Steps: four alternating text / video sections -->
-		<section class="border-t border-[var(--border)] bg-[var(--bg-raised)]/35" aria-labelledby="steps-heading">
+		<section
+			class="border-t border-[var(--border)] bg-[var(--bg-raised)]/35"
+			aria-labelledby="steps-heading"
+		>
 			<div class="mx-auto max-w-6xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-20 lg:px-8">
 				<h2
 					id="steps-heading"
@@ -265,11 +242,15 @@
 							>
 								Scan contact
 							</h3>
-							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
-								Point your camera at the card. We pull name, title, email, and phone so you skip
-								the typing and keep the momentum from the room.
+							<p
+								class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0"
+							>
+								Point your camera at the card. We pull name, title, email, and phone so you skip the
+								typing and keep the momentum from the room.
 							</p>
-							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+							<ul
+								class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0"
+							>
 								<li class="flex gap-3">
 									<span
 										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -403,11 +384,15 @@
 							>
 								Review in seconds
 							</h3>
-							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+							<p
+								class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0"
+							>
 								Most fields land correct on the first pass. Change only what looks off and you are
 								still faster than typing the whole card by hand.
 							</p>
-							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+							<ul
+								class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0"
+							>
 								<li class="flex gap-3">
 									<span
 										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -476,11 +461,15 @@
 							>
 								Save as contact
 							</h3>
-							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+							<p
+								class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0"
+							>
 								Put the lead where you will actually use it. Your address book becomes the single
 								place you trust when it is time to call, text, or forward the intro.
 							</p>
-							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+							<ul
+								class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0"
+							>
 								<li class="flex gap-3">
 									<span
 										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -613,11 +602,15 @@
 							>
 								Follow-up
 							</h3>
-							<p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0">
+							<p
+								class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-[var(--text-muted)] lg:mx-0"
+							>
 								Send the note while the handshake still counts. Templates keep your voice consistent
 								so every new lead gets a message that sounds like you, not a blank screen.
 							</p>
-							<ul class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0">
+							<ul
+								class="mx-auto mt-6 max-w-md space-y-3 text-left text-sm text-[var(--text)] lg:mx-0"
+							>
 								<li class="flex gap-3">
 									<span
 										class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--accent-muted)] text-[var(--accent)]"
