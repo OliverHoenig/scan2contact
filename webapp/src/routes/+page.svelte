@@ -298,6 +298,186 @@
 				</div>
 			</div>
 		</section>
+
+		<!-- FAQ -->
+		<section
+			class="border-t border-[var(--border)] bg-[var(--bg-raised)]/30 py-20 sm:py-24"
+			aria-labelledby="faq-heading"
+		>
+			<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+				<div class="text-center">
+					<h2 id="faq-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
+						Frequently asked questions
+					</h2>
+					<p class="mt-3 text-[var(--text-muted)]">
+						Quick answers for people comparing business card scanners and contact capture tools.
+					</p>
+				</div>
+				<div class="mt-12 space-y-3">
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Is there an app that scans business cards and saves them as contacts?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Yes. scan2contact is built for exactly that: you photograph the card, we pull out
+							name, title, company, email, phone, and more, and you get a clean contact you can save
+							or share without retyping every field.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							How accurate is the scan? Will I still have to fix mistakes?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Extraction is strong on typical cards, but no OCR is perfect. You get a fast review
+							screen so a 10-second check beats 5 minutes of manual entry, and you only touch what
+							actually needs it.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Is it free to try? Do I need a credit card?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							You can start scanning without a credit card. Try the flow on your own cards first;
+							when you see how much time it saves at an event, upgrading is a simple decision, not a
+							guess.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Does it work on iPhone and Android?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Yes. It runs in the browser on your phone, so you are not juggling yet another native
+							app store install just to capture a lead at a conference.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							What happens to my scans and data? Is it private?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Your contacts are yours. We built this for professionals who care about trust: you are
+							not handing business cards to a random consumer app with unclear policies. Use the
+							product, judge the experience, and rely on your account like any serious tool.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Can I save to my phone contacts or export a vCard (VCF)?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Yes. The goal is a contact you can actually use: save to your address book, share a
+							vCard with a colleague, or drop the details into your CRM without retyping from a
+							photo in your camera roll.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Why not just add people on LinkedIn or type them into Contacts?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							LinkedIn is great for staying connected, but it does not capture everything on the
+							card, like direct email, mobile number, or notes from the conversation. Typing works
+							until you have twenty cards after one evening. scan2contact is the bridge: structured
+							data in seconds, then you choose where it lives.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							What if the card is glossy, curved, or the lighting is bad?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Shoot in reasonable light and lay the card flat when you can. Small habits help any
+							camera. When a card is tricky, you still win: fixing a few characters beats typing the
+							whole thing, and you already have a digital backup if the paper disappears.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Do I need internet to scan a business card?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Scanning and extraction run through the product online, so a connection is needed for
+							the magic. For venue Wi‑Fi that drops, snap the photo when you can and finish the scan
+							when you are back on a stable network, which is still faster than a pile of cards on
+							your desk.
+						</p>
+					</details>
+					<details
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+					>
+						<summary
+							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
+						>
+							Which languages or card layouts are supported?
+						</summary>
+						<p
+							class="border-t border-[var(--border)] pt-3 pb-4 text-sm leading-relaxed text-[var(--text-muted)]"
+						>
+							Standard business-card layouts and common scripts work well. Unusual designs may need
+							an extra tap in review, which is still far less work than manual entry across a
+							multilingual stack of cards after a trip.
+						</p>
+					</details>
+				</div>
+			</div>
+		</section>
 	</main>
 
 	<footer class="border-t border-[var(--border)] py-10">
