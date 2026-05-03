@@ -74,7 +74,7 @@ export const emailPasswordSignInForm = form(
                     email,
                     password: _password,
                     rememberMe: true,
-                    callbackURL: "/",
+                    callbackURL: "/app/scan",
                 },
             });
         } catch (error) {
@@ -88,6 +88,6 @@ export const emailPasswordSignInForm = form(
             }
             invalid(issue("An unexpected error occurred during sign in."));
         }
-        redirect(303, data?.url ?? "/");
+        redirect(303, data?.url ?? "/app/scan");
     },
 );
