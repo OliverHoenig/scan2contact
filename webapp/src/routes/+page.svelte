@@ -672,7 +672,7 @@
 											/>
 										</svg>
 										<span class="leading-snug"
-											>Their cloud becomes the copy of people you meet.</span
+											>Their cloud becomes the database of people you meet.</span
 										>
 									</span>
 								</td>
@@ -722,8 +722,8 @@
 											/>
 										</svg>
 										<span class="leading-snug"
-											>Long setup and integration work, then another dashboard to learn. The same
-											contacts land in their cloud, your CRM, and your phone.</span
+											>Long setup and integration work, then another dashboard to learn and another
+											platform to manage.</span
 										>
 									</span>
 								</td>
@@ -744,8 +744,8 @@
 											/>
 										</svg>
 										<span class="leading-snug"
-											>No download. Log in and scan. Each contact stays in one place you already
-											use: your address book.</span
+											>No download needed: just login and scan. Each contact stays in the place you
+											already use: your address book.</span
 										>
 									</span>
 								</td>
