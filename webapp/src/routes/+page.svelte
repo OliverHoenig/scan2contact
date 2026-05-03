@@ -45,6 +45,26 @@
 			const pctHold = (pHold * 100).toFixed(2);
 			const pctEnd = (pSweepEnd * 100).toFixed(2);
 
+			/* Chassis glow when background band meets phone (geometric hit, not sweep lead). */
+			const pHit = Math.min(0.97, Math.max(0.02, pGeom));
+			const pGlowIn0 = Math.max(0, pHit - 0.13);
+			const pGlowIn1 = Math.max(0, pHit - 0.085);
+			const pGlowIn2 = Math.max(0, pHit - 0.045);
+			const pGlowMid = Math.min(0.985, pHit + 0.035);
+			const pGlowPeak = Math.min(0.99, pHit + 0.1);
+			const pGlowOut1 = Math.min(0.993, pGlowPeak + 0.14);
+			const pGlowOut2 = Math.min(0.996, pGlowPeak + 0.32);
+			const pGlowFade = Math.min(0.998, pGlowPeak + 0.52);
+			const pctGlowIn0 = (pGlowIn0 * 100).toFixed(2);
+			const pctGlowIn1 = (pGlowIn1 * 100).toFixed(2);
+			const pctGlowIn2 = (pGlowIn2 * 100).toFixed(2);
+			const pctGlowHit = (pHit * 100).toFixed(2);
+			const pctGlowMid = (pGlowMid * 100).toFixed(2);
+			const pctGlowPeak = (pGlowPeak * 100).toFixed(2);
+			const pctGlowOut1 = (pGlowOut1 * 100).toFixed(2);
+			const pctGlowOut2 = (pGlowOut2 * 100).toFixed(2);
+			const pctGlowFade = (pGlowFade * 100).toFixed(2);
+
 			let el = document.getElementById(styleId) as HTMLStyleElement | null;
 			if (!el) {
 				el = document.createElement('style');
@@ -54,6 +74,56 @@
 			el.textContent = `@keyframes hero-phone-sweep-sync {
   0%, ${pctHold}% { top: -14%; }
   ${pctEnd}%, 100% { top: 102%; }
+}
+@keyframes hero-phone-contact-glow {
+  0%, ${pctGlowIn0}% {
+    filter: none;
+  }
+  ${pctGlowIn1}% {
+    filter: drop-shadow(0 0 28px rgba(72, 188, 218, 0.05))
+      drop-shadow(0 0 64px rgba(48, 165, 205, 0.045))
+      drop-shadow(0 0 108px rgba(36, 145, 188, 0.038));
+  }
+  ${pctGlowIn2}% {
+    filter: drop-shadow(0 0 26px rgba(78, 192, 222, 0.08))
+      drop-shadow(0 0 60px rgba(52, 168, 208, 0.07))
+      drop-shadow(0 0 102px rgba(40, 148, 188, 0.06))
+      drop-shadow(0 0 152px rgba(30, 125, 170, 0.05));
+  }
+  ${pctGlowHit}% {
+    filter: drop-shadow(0 0 24px rgba(82, 198, 225, 0.1))
+      drop-shadow(0 0 58px rgba(58, 175, 208, 0.085))
+      drop-shadow(0 0 98px rgba(42, 152, 192, 0.075))
+      drop-shadow(0 0 148px rgba(32, 128, 168, 0.065))
+      drop-shadow(0 0 205px rgba(26, 105, 150, 0.05));
+  }
+  ${pctGlowMid}% {
+    filter: drop-shadow(0 0 26px rgba(88, 202, 230, 0.12))
+      drop-shadow(0 0 62px rgba(62, 180, 215, 0.1))
+      drop-shadow(0 0 108px rgba(46, 158, 198, 0.09))
+      drop-shadow(0 0 162px rgba(34, 132, 178, 0.075))
+      drop-shadow(0 0 228px rgba(28, 110, 158, 0.06));
+  }
+  ${pctGlowPeak}% {
+    filter: drop-shadow(0 0 28px rgba(92, 210, 235, 0.14))
+      drop-shadow(0 0 68px rgba(65, 185, 220, 0.12))
+      drop-shadow(0 0 118px rgba(48, 162, 205, 0.1))
+      drop-shadow(0 0 178px rgba(36, 138, 185, 0.085))
+      drop-shadow(0 0 248px rgba(28, 112, 162, 0.07));
+  }
+  ${pctGlowOut1}% {
+    filter: drop-shadow(0 0 26px rgba(82, 198, 225, 0.08))
+      drop-shadow(0 0 62px rgba(58, 175, 208, 0.07))
+      drop-shadow(0 0 112px rgba(42, 152, 192, 0.055))
+      drop-shadow(0 0 175px rgba(32, 128, 168, 0.045));
+  }
+  ${pctGlowOut2}% {
+    filter: drop-shadow(0 0 32px rgba(72, 188, 218, 0.04))
+      drop-shadow(0 0 88px rgba(48, 165, 205, 0.035));
+  }
+  ${pctGlowFade}%, 100% {
+    filter: none;
+  }
 }`;
 			section.style.setProperty('--hero-scan-hold', `${pHold.toFixed(4)}`);
 		}
