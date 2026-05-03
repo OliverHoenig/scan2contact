@@ -48,9 +48,15 @@
 
 	<main>
 		<!-- Hero -->
-		<section class="mx-auto max-w-6xl px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8">
+		<section
+			class="relative mx-auto max-w-6xl overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8"
+		>
 			<div
-				class="mx-auto max-w-3xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-12 sm:py-16"
+				class="ambient-scan-grid ambient-scan-grid--hero"
+				aria-hidden="true"
+			></div>
+			<div
+				class="relative z-10 mx-auto max-w-3xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-12 sm:py-16"
 			>
 				<div class="text-center">
 					<p class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm">
@@ -103,7 +109,7 @@
 			</div>
 
 			<!-- Product preview card -->
-			<div class="mx-auto mt-16 max-w-2xl lg:mt-20">
+			<div class="relative z-10 mx-auto mt-16 max-w-2xl lg:mt-20">
 				<div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)]">
 					<video
 						src="/videos/preview.mp4"
@@ -117,8 +123,12 @@
 		</section>
 
 		<!-- Benefits -->
-		<section class="border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24" aria-labelledby="benefits-heading">
-			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+		<section
+			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24"
+			aria-labelledby="benefits-heading"
+		>
+			<div class="ambient-scan-grid ambient-scan-grid--soft" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
 					<h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
 						Built for busy professionals
@@ -681,10 +691,11 @@
 
 		<!-- Mobile browser: camera + web, no install, optional PWA -->
 		<section
-			class="border-t border-[var(--border)] py-16 sm:py-20"
+			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
 			aria-labelledby="mobile-web-heading"
 		>
-			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+			<div class="ambient-scan-grid ambient-scan-grid--soft" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
 					<h2 id="mobile-web-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
 						Built for your phone
@@ -776,8 +787,11 @@
 		</section>
 
 		<!-- Value line -->
-		<section class="border-y border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20">
-			<div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
+		<section
+			class="relative overflow-hidden border-y border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
+		>
+			<div class="ambient-scan-grid ambient-scan-grid--hero" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-3xl px-4 text-center sm:px-6">
 				<p class="text-xl leading-relaxed font-medium text-[var(--text)] sm:text-2xl">
 					A business card should start a relationship—not end up in a drawer.
 				</p>
@@ -793,40 +807,43 @@
 		<section class="py-20 sm:py-28">
 			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div
-					class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-14 text-center sm:px-12 sm:py-16"
+					class="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] text-center"
 				>
-					<h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
-						Ready for your next networking event?
-					</h2>
-					<p class="mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
-						Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start the
-						same day.
-					</p>
-					<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
-						<a
-							href={resolve('/auth/signup')}
-							class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
-						>
-							Get started free
-							<svg
-								class="h-4 w-4"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								aria-hidden="true"
+					<div class="ambient-scan-grid ambient-scan-grid--cta" aria-hidden="true"></div>
+					<div class="relative z-10 px-6 py-14 sm:px-12 sm:py-16">
+						<h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+							Ready for your next networking event?
+						</h2>
+						<p class="mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
+							Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start the
+							same day.
+						</p>
+						<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
+							<a
+								href={resolve('/auth/signup')}
+								class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
 							>
-								<path d="M5 12h14M13 6l6 6-6 6" />
-							</svg>
-						</a>
-						<a
-							href={resolve('/app/scan')}
-							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
-						>
-							I already have an account
-						</a>
+								Get started free
+								<svg
+									class="h-4 w-4"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M5 12h14M13 6l6 6-6 6" />
+								</svg>
+							</a>
+							<a
+								href={resolve('/app/scan')}
+								class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
+							>
+								I already have an account
+							</a>
+						</div>
 					</div>
 				</div>
 			</div>
