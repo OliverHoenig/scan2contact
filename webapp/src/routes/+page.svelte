@@ -810,14 +810,13 @@
 			<div class="value-line-sheen" aria-hidden="true"></div>
 			<div class="value-line-aurora" aria-hidden="true"></div>
 			<div class="value-line-sweep" aria-hidden="true"></div>
-			<div class="value-line-beam" aria-hidden="true"></div>
 			<div class="ambient-scan-grid ambient-scan-grid--value" aria-hidden="true"></div>
-			<div class="relative z-10 mx-auto max-w-[1000px] px-4 text-center sm:px-6 lg:px-8">
+			<div class="relative z-10 mx-auto max-w-6xl px-4 text-center sm:px-6 lg:px-8">
 				<p class="value-line-quote">
-					A business card should start a <em>relationship</em>—not end up in a drawer.
+					A business card should start a <em>relationship</em> not end up in a drawer.
 				</p>
 				<p class="value-line-sub">
-					Scan once, keep every detail, follow up with your templates—while the moment is still
+					Scan once, keep every detail, follow up with your templates while the moment is still
 					fresh.
 				</p>
 			</div>
@@ -835,8 +834,7 @@
 							Ready for your next networking event?
 						</h2>
 						<p class="mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
-							Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start
-							the same day.
+							Create an account: no more lost business cards, no more missed opportunities.
 						</p>
 						<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
 							<a
