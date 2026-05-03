@@ -24,12 +24,12 @@
 
 {#if open}
 	<div
-		class="fixed inset-0 z-[50] flex items-start justify-center bg-black/60 px-4 pt-[calc(env(safe-area-inset-top,0px)+1.25rem)] pb-4 backdrop-blur-[2px]"
+		class="fixed inset-0 z-[50] flex items-start justify-center bg-black/65 px-4 pt-[calc(env(safe-area-inset-top,0px)+1.25rem)] pb-4 backdrop-blur-md"
 		role="presentation"
 		onclick={handleBackdropClick}
 	>
 		<div
-			class="flex max-h-[min(92dvh,40rem)] w-full max-w-[560px] flex-col rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-5 shadow-[0_24px_64px_rgba(0,0,0,0.45)]"
+			class="flex max-h-[min(92dvh,40rem)] w-full max-w-[560px] flex-col rounded-[var(--radius-lg)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 shadow-[var(--shadow-glow),0_24px_64px_rgba(0,0,0,0.5)] backdrop-blur-xl"
 			role="dialog"
 			aria-modal="true"
 			aria-label="Settings"
@@ -38,7 +38,7 @@
 				<h2 class="m-0 text-[1.25rem] font-semibold tracking-[-0.02em]">Settings</h2>
 				<button
 					type="button"
-					class="rounded-[var(--radius-sm)] border border-[var(--border)] px-2 py-1 text-sm text-[var(--text-muted)] transition-colors hover:text-[var(--text)]"
+					class="rounded-[var(--radius-sm)] border border-[var(--glass-border)] bg-white/[0.04] px-2.5 py-1.5 text-sm text-[var(--text-muted)] transition-colors hover:border-[var(--border-strong)] hover:text-[var(--text)]"
 					onclick={onClose}
 				>
 					Close

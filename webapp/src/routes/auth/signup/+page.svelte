@@ -10,7 +10,11 @@
 	<title>Sign up | scan2contact</title>
 </svelte:head>
 
-<div class="flex min-h-dvh flex-col lg:flex-row">
+<div class="relative flex min-h-dvh flex-col lg:flex-row">
+	<div
+		class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_70%_45%_at_80%_20%,var(--auth-glow),transparent_50%)]"
+		aria-hidden="true"
+	></div>
 	<!-- Form column -->
 	<div class="flex flex-1 flex-col justify-center px-4 py-10 sm:px-8 lg:py-16">
 		<div class="mx-auto w-full max-w-md">
@@ -218,7 +222,7 @@
 
 				<button
 					type="submit"
-					class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[var(--cc-accent)] px-6 text-sm font-semibold text-[var(--cc-accent-fg)] shadow-sm transition hover:brightness-105 active:scale-[0.99] disabled:opacity-60"
+					class="inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-6 text-sm font-semibold text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
 				>
 					Create account
 				</button>
@@ -242,14 +246,14 @@
 
 	<!-- Value proposition: full width on mobile, left column on lg -->
 	<aside
-		class="relative overflow-hidden border-b border-[var(--cc-border)] bg-gradient-to-br from-[var(--cc-surface-2)] via-[var(--cc-bg)] to-[#0a1612] px-6 py-10 lg:w-[min(44%,520px)] lg:shrink-0 lg:border-r lg:border-b-0 lg:px-10 lg:py-16 xl:px-14"
+		class="relative overflow-hidden border-b border-[var(--glass-border)] bg-gradient-to-br from-[var(--bg-raised)] via-[var(--bg-base)] to-[#040c18] px-6 py-10 lg:w-[min(44%,520px)] lg:shrink-0 lg:border-r lg:border-b-0 lg:px-10 lg:py-16 xl:px-14"
 	>
 		<div
-			class="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[var(--cc-heat)]/10 blur-3xl"
+			class="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-[var(--accent)]/12 blur-3xl"
 			aria-hidden="true"
 		></div>
 		<div
-			class="pointer-events-none absolute -bottom-16 left-1/4 h-48 w-48 rounded-full bg-[var(--cc-ring)]/15 blur-3xl"
+			class="pointer-events-none absolute -bottom-16 left-1/4 h-48 w-48 rounded-full bg-[var(--accent-end)]/18 blur-3xl"
 			aria-hidden="true"
 		></div>
 

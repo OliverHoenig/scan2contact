@@ -10,39 +10,35 @@
 	/>
 </svelte:head>
 
-<div class="min-h-dvh bg-[var(--bg-base)] text-[var(--text)]">
-	<!-- Background wash -->
-	<div class="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
-		<div
-			class="absolute top-[-20%] left-1/2 h-[min(70vh,520px)] w-[min(140%,900px)] -translate-x-1/2 rounded-[100%] bg-[radial-gradient(ellipse_at_center,rgba(94,234,212,0.12)_0%,transparent_65%)]"
-		></div>
-		<div
-			class="absolute right-[-10%] bottom-[-15%] h-[45vh] w-[45vh] rounded-full bg-[radial-gradient(circle,rgba(94,234,212,0.06)_0%,transparent_70%)] blur-2xl"
-		></div>
-	</div>
-
+<div class="min-h-dvh text-[var(--text)]">
 	<header
-		class="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--bg-base)]/75 backdrop-blur-xl"
+		class="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--bg-base)]"
 	>
 		<div
-			class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8"
+			class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8"
 		>
 			<a
 				href={resolve('/')}
-				class="text-lg font-semibold tracking-tight text-[var(--text)] transition hover:text-[var(--accent)]"
+				class="group flex items-center gap-2.5 text-lg font-semibold tracking-tight text-[var(--text)] transition hover:text-[var(--accent)]"
 			>
+				<span
+					class="grid h-9 w-9 shrink-0 place-items-center rounded-[var(--radius-sm)] bg-gradient-to-br from-[var(--accent)] to-[var(--accent-end)] text-sm font-bold text-[var(--accent-ink)] transition group-hover:opacity-95"
+					aria-hidden="true"
+				>
+					S
+				</span>
 				scan2contact
 			</a>
-			<nav class="flex items-center gap-2 sm:gap-3" aria-label="Primary">
+			<nav class="flex items-center gap-1.5 sm:gap-2" aria-label="Primary">
 				<a
 					href={resolve('/auth/login')}
-					class="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:bg-[var(--accent-muted)] hover:text-[var(--text)]"
+					class="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
 				>
 					Log in
 				</a>
 				<a
 					href={resolve('/auth/signup')}
-					class="inline-flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] shadow-sm transition hover:bg-[var(--accent-hover)] active:scale-[0.98]"
+					class="inline-flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.98]"
 				>
 					Get started
 				</a>
@@ -53,58 +49,75 @@
 	<main>
 		<!-- Hero -->
 		<section class="mx-auto max-w-6xl px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8">
-			<div class="mx-auto max-w-3xl text-center">
-				<p class="text-xs font-semibold tracking-[0.2em] text-[var(--accent)] uppercase sm:text-sm">
-					For people who network
-				</p>
-				<h1 class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-6xl">
-					Never lose another lead from a business card.
-				</h1>
-				<p
-					class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
-				>
-					Scan the business card and turn it into a clean contact you can save in seconds. Then send
-					a follow-up mail with one click based on your individual mail templates while the
-					conversation is still fresh.
-				</p>
-				<div
-					class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-				>
-					<a
-						href={resolve('/auth/signup')}
-						class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--accent)] px-8 text-base font-semibold text-[var(--accent-ink)] shadow-[0_0_0_1px_rgba(255,255,255,0.06)_inset] transition hover:bg-[var(--accent-hover)] active:scale-[0.99]"
+			<div
+				class="mx-auto max-w-3xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-12 sm:py-16"
+			>
+				<div class="text-center">
+					<p class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm">
+						For people who network
+					</p>
+					<h1
+						class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
 					>
-						Start scanning free
-					</a>
-					<a
-						href={resolve('/app/scan')}
-						class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-surface)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border-focus)] hover:bg-[var(--bg-raised)] active:scale-[0.99]"
+						Never lose another lead from a business card.
+					</h1>
+					<p
+						class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
 					>
-						Open the app
-					</a>
+						Scan the business card and turn it into a clean contact you can save in seconds. Then send
+						a follow-up mail with one click based on your individual mail templates while the
+						conversation is still fresh.
+					</p>
+					<div
+						class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
+					>
+						<a
+							href={resolve('/auth/signup')}
+							class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
+						>
+							Start scanning free
+							<svg
+								class="h-4 w-4 opacity-90"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M5 12h14M13 6l6 6-6 6" />
+							</svg>
+						</a>
+						<a
+							href={resolve('/app/scan')}
+							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
+						>
+							Open the app
+						</a>
+					</div>
+					<p class="mt-5 text-sm text-[var(--text-subtle)]">
+						Free to try · Works on your phone · No credit card
+					</p>
 				</div>
-				<p class="mt-4 text-sm text-[var(--text-subtle)]">
-					Free to try · Works on your phone · No credit card
-				</p>
 			</div>
 
 			<!-- Product preview card -->
 			<div class="mx-auto mt-16 max-w-2xl lg:mt-20">
-				<video
-					src="/videos/preview.mp4"
-					autoplay
-					muted
-					loop
-					class="h-full w-full rounded-[var(--radius-lg)] rounded-md border border-white object-cover"
-				></video>
+				<div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)]">
+					<video
+						src="/videos/preview.mp4"
+						autoplay
+						muted
+						loop
+						class="h-full w-full object-cover"
+					></video>
+				</div>
 			</div>
 		</section>
 
 		<!-- Benefits -->
-		<section
-			class="border-t border-[var(--border)] bg-[var(--bg-raised)]/50 py-20 sm:py-24"
-			aria-labelledby="benefits-heading"
-		>
+		<section class="border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24" aria-labelledby="benefits-heading">
 			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
 					<h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -117,7 +130,7 @@
 				</div>
 				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
 					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -145,7 +158,7 @@
 						</p>
 					</li>
 					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -178,7 +191,7 @@
 						</p>
 					</li>
 					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 transition hover:border-[var(--border-strong)]"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -211,7 +224,7 @@
 
 		<!-- Steps: four alternating text / video sections -->
 		<section
-			class="border-t border-[var(--border)] bg-[var(--bg-raised)]/35"
+			class="border-t border-[var(--border)] bg-[var(--bg-base)]"
 			aria-labelledby="steps-heading"
 		>
 			<div class="mx-auto max-w-6xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-20 lg:px-8">
@@ -302,7 +315,7 @@
 							</ul>
 						</div>
 						<div
-							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
 							role="img"
 							aria-label="Video placeholder: scan contact"
 						>
@@ -343,7 +356,7 @@
 						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
 					>
 						<div
-							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] lg:order-1"
+							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
 							role="img"
 							aria-label="Video placeholder: review"
 						>
@@ -521,7 +534,7 @@
 							</ul>
 						</div>
 						<div
-							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset]"
+							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
 							role="img"
 							aria-label="Video placeholder: save as contact"
 						>
@@ -561,7 +574,7 @@
 						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
 					>
 						<div
-							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border-2 border-[var(--border-strong)] bg-[var(--bg-surface)] shadow-[0_1px_0_rgba(255,255,255,0.04)_inset] lg:order-1"
+							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
 							role="img"
 							aria-label="Video placeholder: follow-up"
 						>
@@ -668,7 +681,7 @@
 
 		<!-- Mobile browser: camera + web, no install, optional PWA -->
 		<section
-			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-16 sm:py-20"
+			class="border-t border-[var(--border)] py-16 sm:py-20"
 			aria-labelledby="mobile-web-heading"
 		>
 			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -683,7 +696,7 @@
 				</div>
 				<div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
 					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:p-7"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:p-7"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -712,7 +725,7 @@
 						</p>
 					</div>
 					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:p-7"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:p-7"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -735,7 +748,7 @@
 						</p>
 					</div>
 					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1"
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1"
 					>
 						<div
 							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
@@ -763,7 +776,7 @@
 		</section>
 
 		<!-- Value line -->
-		<section class="border-y border-[var(--border)] bg-[var(--bg-surface)] py-16 sm:py-20">
+		<section class="border-y border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20">
 			<div class="mx-auto max-w-3xl px-4 text-center sm:px-6">
 				<p class="text-xl leading-relaxed font-medium text-[var(--text)] sm:text-2xl">
 					A business card should start a relationship—not end up in a drawer.
@@ -780,29 +793,37 @@
 		<section class="py-20 sm:py-28">
 			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div
-					class="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-gradient-to-br from-[var(--bg-surface)] to-[var(--bg-raised)] px-6 py-14 text-center sm:px-12 sm:py-16"
+					class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-14 text-center sm:px-12 sm:py-16"
 				>
-					<div
-						class="pointer-events-none absolute -top-20 -right-20 h-56 w-56 rounded-full bg-[var(--accent)]/10 blur-3xl"
-						aria-hidden="true"
-					></div>
-					<h2 class="relative text-3xl font-semibold tracking-tight sm:text-4xl">
+					<h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">
 						Ready for your next networking event?
 					</h2>
-					<p class="relative mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
+					<p class="mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
 						Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start the
 						same day.
 					</p>
-					<div class="relative mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
+					<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
 						<a
 							href={resolve('/auth/signup')}
-							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--accent)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:bg-[var(--accent-hover)] active:scale-[0.99]"
+							class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
 						>
 							Get started free
+							<svg
+								class="h-4 w-4"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								aria-hidden="true"
+							>
+								<path d="M5 12h14M13 6l6 6-6 6" />
+							</svg>
 						</a>
 						<a
 							href={resolve('/app/scan')}
-							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] px-8 text-base font-semibold text-[var(--text)] transition hover:bg-[var(--bg-surface)] active:scale-[0.99]"
+							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
 						>
 							I already have an account
 						</a>
@@ -812,10 +833,7 @@
 		</section>
 
 		<!-- FAQ -->
-		<section
-			class="border-t border-[var(--border)] bg-[var(--bg-raised)]/30 py-20 sm:py-24"
-			aria-labelledby="faq-heading"
-		>
+		<section class="border-t border-[var(--border)] bg-[var(--bg-base)] py-20 sm:py-24" aria-labelledby="faq-heading">
 			<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 				<div class="text-center">
 					<h2 id="faq-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
@@ -827,7 +845,7 @@
 				</div>
 				<div class="mt-12 space-y-3">
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -843,7 +861,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -859,7 +877,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -875,7 +893,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -890,7 +908,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -906,7 +924,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -922,7 +940,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -939,7 +957,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -955,7 +973,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -972,7 +990,7 @@
 						</p>
 					</details>
 					<details
-						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-surface)] px-5 transition open:border-[var(--border-strong)] open:shadow-sm hover:border-[var(--border-strong)]"
+						class="group rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] px-5 transition open:border-[var(--border-strong)] hover:border-[var(--border-strong)]"
 					>
 						<summary
 							class="cursor-pointer list-none py-4 pr-8 text-left text-base font-semibold text-[var(--text)] marker:content-none [&::-webkit-details-marker]:hidden"
@@ -992,7 +1010,7 @@
 		</section>
 	</main>
 
-	<footer class="border-t border-[var(--border)] py-10">
+	<footer class="border-t border-[var(--border)] bg-[var(--bg-base)] py-10">
 		<div
 			class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 sm:flex-row sm:px-6 lg:px-8"
 		>

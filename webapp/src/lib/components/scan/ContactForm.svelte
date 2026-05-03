@@ -17,7 +17,7 @@
 	const labelClass =
 		'grid gap-2 text-[0.95rem] font-medium tracking-[0.01em] text-[var(--text-muted)] sm:text-base';
 	const controlClass =
-		'min-h-12 rounded-[var(--radius-sm)] border border-gray-400/80 bg-[var(--bg-input)] px-[0.9rem] py-[0.75rem] text-base leading-6 text-[var(--text)] transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-[var(--text-subtle)] placeholder:text-[0.95rem] hover:border-gray-400 focus:border-[var(--border-focus)] focus:outline-none focus:ring-[3px] focus:ring-[var(--accent-muted)]';
+		'min-h-12 rounded-[var(--radius-sm)] border border-[var(--glass-border)] bg-[var(--bg-input)] px-[0.9rem] py-[0.75rem] text-base leading-6 text-[var(--text)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.02)] transition-[border-color,box-shadow] duration-200 ease-out placeholder:text-[var(--text-subtle)] placeholder:text-[0.95rem] hover:border-[var(--border-strong)] focus:border-[var(--border-focus)] focus:outline-none focus:ring-[3px] focus:ring-[var(--accent-muted)]';
 </script>
 
 <div class="grid gap-4">

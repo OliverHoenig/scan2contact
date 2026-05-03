@@ -391,8 +391,10 @@
 {:else if contact}
 	<main class="flex min-h-0 w-full flex-col gap-5">
 		{#if reviewStage === 'edit'}
-			<section class="flex flex-col">
-				<h2 class="mt-5 text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
+			<section
+				class="flex flex-col rounded-[var(--radius-lg)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 shadow-[var(--shadow-card)] backdrop-blur-md sm:p-6"
+			>
+				<h2 class="mt-1 text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
 					Check and correct fields, then save the contact to your phone — or skip straight to
 					follow-up options below.
@@ -430,7 +432,7 @@
 		{:else}
 			<section class="flex flex-col">
 				<div
-					class="mt-5 rounded-lg border border-(--border) bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
+					class="mt-5 rounded-lg border border-(--border) bg-[linear-gradient(165deg,rgba(14,32,52,0.92)_0%,rgba(5,13,22,0.96)_100%)] p-5 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)]"
 				>
 					<div>
 						<h2 class="m-0 text-[1.15rem] font-semibold">What next?</h2>
@@ -481,14 +483,14 @@
 							<div class="mb-3 flex flex-wrap gap-1.5">
 								<button
 									type="button"
-									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'popup' ? 'border-[var(--accent)] bg-[rgba(45,212,191,0.12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
+									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'popup' ? 'border-[var(--accent)] bg-[var(--fill-accent-12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
 									onclick={() => (addContactGuideMode = 'popup')}
 								>
 									Popup
 								</button>
 								<button
 									type="button"
-									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'download' ? 'border-[var(--accent)] bg-[rgba(45,212,191,0.12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
+									class={`rounded-[var(--radius-sm)] border px-2.5 py-1.5 text-[0.8125rem] font-medium transition-colors ${addContactGuideMode === 'download' ? 'border-[var(--accent)] bg-[var(--fill-accent-12)] text-[var(--text)]' : 'border-[var(--border)] bg-transparent text-[var(--text-muted)] hover:border-[rgba(255,255,255,0.14)] hover:text-[var(--text)]'}`}
 									onclick={() => (addContactGuideMode = 'download')}
 								>
 									Download
@@ -533,7 +535,7 @@
 				<div class="flex flex-col items-stretch gap-3">
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
+						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
 						onclick={onFollowupCtaClick}
 						aria-disabled={loading || !primaryEmail(contact)}
 						title={!primaryEmail(contact)
@@ -749,7 +751,7 @@
 										aria-selected={selectedFollowupId === tpl.id}
 										class={`w-full rounded-[var(--radius-md)] border px-3.5 py-3 text-left transition-[border-color,background,box-shadow] duration-150 ${
 											selectedFollowupId === tpl.id
-												? 'border-[var(--accent)] bg-[rgba(45,212,191,0.08)] shadow-[inset_0_0_0_1px_rgba(45,212,191,0.25)]'
+												? 'border-[var(--accent)] bg-[var(--fill-accent-8)] shadow-[var(--ring-accent-inner)]'
 												: 'border-[var(--border)] bg-white/[0.03] hover:border-[rgba(255,255,255,0.14)]'
 										}`}
 										onclick={() => (selectedFollowupId = tpl.id)}
@@ -782,7 +784,7 @@
 						</button>
 						<button
 							type="button"
-							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:w-auto"
+							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:w-auto"
 							onclick={onOpenMailAppClick}
 							aria-disabled={!selectedFollowupId ||
 								followupTemplatesLoading ||
@@ -803,7 +805,7 @@
 		inset: 0;
 		border-radius: inherit;
 		pointer-events: none;
-		box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.55);
+		box-shadow: 0 0 0 0 var(--accent-pulse);
 		animation: cta-pulse-ring 1.2s ease-out 1;
 	}
 	.cta-pulse-text {
@@ -811,10 +813,10 @@
 	}
 	@keyframes cta-pulse-ring {
 		0% {
-			box-shadow: 0 0 0 0 rgba(45, 212, 191, 0.55);
+			box-shadow: 0 0 0 0 var(--accent-pulse);
 		}
 		100% {
-			box-shadow: 0 0 0 14px rgba(45, 212, 191, 0);
+			box-shadow: 0 0 0 14px rgba(0, 237, 255, 0);
 		}
 	}
 	@media (prefers-reduced-motion: reduce) {

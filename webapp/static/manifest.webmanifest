@@ -4,8 +4,8 @@
 	"description": "Scan business cards and export .vcf contacts.",
 	"start_url": "/",
 	"display": "standalone",
-	"background_color": "#060607",
-	"theme_color": "#060607",
+	"background_color": "#050d14",
+	"theme_color": "#050d14",
 	"icons": [
 		{
 			"src": "/favicon.svg",

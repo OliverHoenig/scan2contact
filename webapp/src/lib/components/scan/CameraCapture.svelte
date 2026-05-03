@@ -456,7 +456,7 @@
 			<div class="pointer-events-none absolute inset-0">
 				{#if guideBoxStyle}
 					<div
-						class="absolute box-border rounded-2xl border-2 border-[rgba(94,234,212,0.85)] bg-transparent shadow-[0_0_0_9999px_rgba(0,0,0,0.42),0_0_28px_rgba(94,234,212,0.2)]"
+						class="absolute box-border rounded-2xl border-2 border-[var(--accent)]/90 bg-transparent shadow-[0_0_0_9999px_rgba(0,0,0,0.42),0_0_36px_var(--accent-glow)]"
 						style={guideBoxStyle}
 					>
 						<div

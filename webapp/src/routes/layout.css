@@ -2,31 +2,72 @@
 
 :root {
 	color-scheme: dark;
-	--bg-base: #060607;
-	--bg-raised: #0c0c0f;
-	--bg-surface: #121218;
-	--bg-input: #0a0a0d;
-	--border: rgba(255, 255, 255, 0.07);
-	--border-strong: rgba(255, 255, 255, 0.14);
-	--border-focus: rgba(94, 234, 212, 0.45);
-	--text: #f4f4f5;
-	--text-muted: #a1a1aa;
-	--text-subtle: #71717a;
-	--accent: #5eead4;
-	--accent-hover: #6ff5df;
-	--accent-muted: rgba(94, 234, 212, 0.14);
-	--accent-ink: #042f2e;
+	/* Deep navy UI (blue-black, not neutral charcoal) */
+	--bg-base: #050d14;
+	--bg-raised: #0a1628;
+	--bg-surface: rgba(10, 24, 44, 0.78);
+	--bg-input: #071018;
+	--border: rgba(140, 200, 255, 0.1);
+	--border-strong: rgba(170, 220, 255, 0.16);
+	--border-focus: rgba(0, 230, 255, 0.5);
+	--text: #ffffff;
+	--text-muted: #b8c9dc;
+	--text-subtle: #7c8fa3;
+	/* Electric cyan / aqua blue accent (reference: #00f2ff family) */
+	--accent: #00e5ff;
+	--accent-hover: #5aebff;
+	--accent-muted: rgba(0, 229, 255, 0.14);
+	--accent-ink: #001419;
+	--accent-end: #0077c8;
+	--accent-glow: rgba(0, 237, 255, 0.42);
+	--accent-pulse: rgba(0, 237, 255, 0.55);
 	--danger: #fca5a5;
 	--danger-bg: rgba(127, 29, 29, 0.45);
 	--warn-bg: rgba(234, 179, 8, 0.12);
 	--warn-border: rgba(250, 204, 21, 0.22);
 	--warn-text: #fde047;
-	--font-sans: 'Outfit', system-ui, -apple-system, sans-serif;
-	--radius-sm: 0.65rem;
-	--radius-md: 1rem;
-	--radius-lg: 1.25rem;
+	--font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+	--radius-sm: 0.75rem;
+	--radius-md: 1.125rem;
+	--radius-lg: 1.5rem;
 	--radius-pill: 624.9375rem;
 	--ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+	/* Glass: cool blue tint */
+	--glass-bg: rgba(12, 30, 52, 0.52);
+	--glass-border: rgba(120, 200, 255, 0.14);
+	--shadow-glow: 0 0 90px -18px var(--accent-glow);
+	--shadow-card: 0 0 52px -22px rgba(0, 200, 255, 0.2);
+	/* Page atmosphere */
+	--hero-glow-1: rgba(0, 220, 255, 0.11);
+	--hero-glow-2: rgba(0, 120, 210, 0.09);
+	--auth-glow: rgba(0, 210, 255, 0.08);
+	/* Shared component shadows & fills (avoid hardcoded teal RGB in Svelte) */
+	--shadow-btn-primary: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 6px 28px rgba(0, 234, 255, 0.22);
+	--shadow-btn-primary-sm: inset 0 0 0 1px rgba(255, 255, 255, 0.12), 0 4px 24px rgba(0, 234, 255, 0.2);
+	--shadow-glass-cta: 0 8px 40px -12px rgba(0, 0, 0, 0.55), 0 0 48px -16px rgba(0, 234, 255, 0.18);
+	--border-accent-soft: rgba(0, 234, 255, 0.35);
+	--fill-accent-12: rgba(0, 234, 255, 0.12);
+	--fill-accent-8: rgba(0, 234, 255, 0.08);
+	--ring-accent-inner: inset 0 0 0 1px rgba(0, 234, 255, 0.25);
+	--fill-section-tint: rgba(0, 234, 255, 0.06);
+	--gradient-video-frame: linear-gradient(
+		135deg,
+		rgba(0, 234, 255, 0.38),
+		rgba(255, 255, 255, 0.08),
+		rgba(0, 180, 255, 0.22)
+	);
+
+	/* Auth pages (alias to main tokens; were previously undefined) */
+	--cc-fg: var(--text);
+	--cc-muted: var(--text-muted);
+	--cc-bg: var(--bg-input);
+	--cc-surface: rgba(255, 255, 255, 0.04);
+	--cc-surface-2: var(--bg-raised);
+	--cc-border: var(--border);
+	--cc-ring: var(--accent);
+	--cc-accent: var(--accent);
+	--cc-accent-fg: var(--accent-ink);
+	--cc-heat: var(--accent);
 }
 
 *,
@@ -37,11 +78,28 @@
 
 html {
 	font-family: var(--font-sans);
-	background: var(--bg-base);
+	background-color: var(--bg-base);
+	background-image:
+		radial-gradient(ellipse 100% 70% at 50% -25%, rgba(0, 200, 255, 0.1), transparent 55%),
+		radial-gradient(ellipse 50% 45% at 100% 90%, rgba(0, 100, 190, 0.08), transparent 50%);
 	color: var(--text);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	overflow-x: hidden;
+}
+
+html::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	z-index: -1;
+	pointer-events: none;
+	opacity: 0.4;
+	background-image:
+		linear-gradient(rgba(120, 190, 255, 0.045) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(120, 190, 255, 0.045) 1px, transparent 1px);
+	background-size: 56px 56px;
+	mask-image: radial-gradient(ellipse 85% 65% at 50% 15%, black, transparent 72%);
 }
 
 body {

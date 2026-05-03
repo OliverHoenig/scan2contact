@@ -18,7 +18,7 @@
 	let error = $state('');
 	let cachedVcf = $state<{ blob: Blob; filename: string } | null>(null);
 	const primaryButtonClass =
-		'w-full min-h-12 cursor-pointer rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,#2dd4bf_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_6px_28px_rgba(45,212,191,0.22)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none';
+		'w-full min-h-12 cursor-pointer rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none';
 	const secondaryButtonClass =
 		'min-h-9 w-full cursor-pointer rounded-[var(--radius-sm)] border-0 bg-transparent px-2 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] underline-offset-4 shadow-none transition-colors duration-150 not-[aria-disabled=true]:hover:text-[var(--text)] not-[aria-disabled=true]:hover:underline aria-disabled:cursor-not-allowed aria-disabled:opacity-45';
 	const errorClass = 'mt-2 text-[0.875rem] leading-[1.4] text-[var(--danger)]';

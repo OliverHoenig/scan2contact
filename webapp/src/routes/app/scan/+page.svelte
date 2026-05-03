@@ -141,11 +141,11 @@
 					/>
 				</div>
 				<div
-					class="absolute right-0 bottom-0 left-0 z-[25] mb-6 box-border flex flex-nowrap items-center justify-center gap-3 bg-gradient-to-t from-[rgba(6,6,7,0.92)] via-[rgba(6,6,7,0.55)] to-transparent px-4 py-[0.65rem] backdrop-blur-[16px]"
+					class="absolute right-0 bottom-0 left-0 z-[25] mb-6 box-border flex flex-nowrap items-center justify-center gap-3 bg-gradient-to-t from-[rgba(5,5,7,0.94)] via-[rgba(5,5,7,0.55)] to-transparent px-4 py-[0.65rem] backdrop-blur-[16px]"
 				>
 					<button
 						type="button"
-						class="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-gray-400/80 bg-[rgba(12,12,15,0.82)] text-[var(--text)] backdrop-blur-[12px] transition-[border-color,background,color,transform] duration-200 ease-out active:scale-[0.97] disabled:opacity-45"
+						class="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-[var(--glass-border)] bg-[var(--glass-bg)] text-[var(--text)] shadow-[0_0_24px_-8px_rgba(0,0,0,0.5)] backdrop-blur-[12px] transition-[border-color,background,color,transform] duration-200 ease-out active:scale-[0.97] disabled:opacity-45"
 						onclick={handleToggleLight}
 						disabled={!lightSupported || offline || scanBusy || loading}
 						aria-label={lightEnabled ? 'Turn light off' : 'Turn light on'}
@@ -170,7 +170,7 @@
 					</button>
 					<button
 						type="button"
-						class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[#2dd4bf] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_4px_24px_rgba(45,212,191,0.25)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+						class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[var(--accent-end)] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[var(--shadow-btn-primary-sm)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
 						onclick={handleScan}
 						disabled={offline || scanBusy || loading}
 					>
@@ -189,7 +189,7 @@
 
 		{#if step === 'processing'}
 			<section
-				class="grid justify-items-center gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(24,24,30,0.92)_0%,rgba(12,12,15,0.96)_100%)] px-5 py-[1.35rem] text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
+				class="grid justify-items-center gap-4 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[linear-gradient(165deg,rgba(14,32,52,0.92)_0%,rgba(5,13,22,0.96)_100%)] px-5 py-[1.35rem] text-center shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04),0_24px_64px_rgba(0,0,0,0.45)] sm:px-6 sm:py-6"
 			>
 				<h2
 					class="mt-[0.15rem] w-full justify-self-stretch text-left text-[1.35rem] font-semibold tracking-[-0.02em] sm:text-center"

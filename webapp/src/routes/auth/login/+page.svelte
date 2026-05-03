@@ -7,7 +7,13 @@
 	<title>Login | scan2contact</title>
 </svelte:head>
 
-<div class="mx-auto min-h-dvh w-full max-w-md px-4 pt-8 pb-12 sm:pt-12">
+<div
+	class="relative mx-auto min-h-dvh w-full max-w-md px-4 pt-8 pb-12 sm:pt-12"
+>
+	<div
+		class="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,var(--auth-glow),transparent_55%)]"
+		aria-hidden="true"
+	></div>
 	<header class="mt-8">
 		<p class="text-sm font-semibold tracking-wide text-[var(--cc-muted)]">
 			Login with your account
@@ -19,7 +25,9 @@
 	</header>
 
 	<form class="mt-8 space-y-5" {...emailPasswordSignInForm}>
-		<div class="rounded-2xl border border-[var(--cc-border)] bg-[var(--cc-surface)] p-5 shadow-sm">
+		<div
+			class="rounded-[var(--radius-lg)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 shadow-[var(--shadow-card)] backdrop-blur-md"
+		>
 			<label for="email-password" class="mt-4 block text-sm font-medium text-[var(--cc-muted)]"
 				>Email</label
 			>
@@ -54,7 +62,7 @@
 
 		<button
 			type="submit"
-			class="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-[var(--cc-accent)] px-6 text-sm font-semibold text-[var(--cc-accent-fg)] shadow-sm transition hover:brightness-105 active:scale-[0.99] disabled:opacity-60"
+			class="inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-6 text-sm font-semibold text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
 		>
 			Login
 		</button>
