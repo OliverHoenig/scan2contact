@@ -29,7 +29,7 @@
 		download: [
 			'If the file gets downloaded, open your browser’s downloads list or your Files / Downloads folder and find the .vcf (or .vcard) file.',
 			'Tap or open that file.',
-			'When your device asks, choose Contacts, People, or Add to address book to import the contact card to your address book.',
+			'When your device asks, choose "Contacts", "People", or "Add to address book" to import the contact card to your address book.',
 			'If needed, confirm the Save in the contact app of your choice.'
 		]
 	};
