@@ -20,7 +20,7 @@
 	const primaryButtonClass =
 		'btn-accent-primary btn-accent-primary--r-md w-full min-h-12 cursor-pointer px-[1.35rem] py-[0.85rem] text-[0.9375rem] font-semibold tracking-[0.02em] text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none';
 	const secondaryButtonClass =
-		'min-h-9 w-full cursor-pointer rounded-[var(--radius-sm)] border-0 bg-transparent px-2 py-1.5 text-[0.8125rem] font-medium text-[var(--text-muted)] underline-offset-4 shadow-none transition-colors duration-150 not-[aria-disabled=true]:hover:text-[var(--text)] not-[aria-disabled=true]:hover:underline aria-disabled:cursor-not-allowed aria-disabled:opacity-45';
+		'inline-flex w-full min-h-12 cursor-pointer items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition not-[aria-disabled=true]:hover:border-[var(--border)] not-[aria-disabled=true]:hover:bg-[var(--bg-input)] not-[aria-disabled=true]:active:scale-[0.99] aria-disabled:cursor-not-allowed aria-disabled:opacity-45';
 	const errorClass = 'mt-2 text-[0.875rem] leading-[1.4] text-[var(--danger)]';
 
 	function triggerBlobDownload(blob: Blob, filename: string) {
