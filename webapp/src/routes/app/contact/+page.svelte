@@ -392,7 +392,7 @@
 	<main class="flex min-h-0 w-full flex-col gap-5">
 		{#if reviewStage === 'edit'}
 			<section
-				class="flex flex-col rounded-[var(--radius-lg)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 shadow-[var(--shadow-card)] backdrop-blur-md sm:p-6"
+				class="mt-5 flex flex-col rounded-[var(--radius-lg)] border border-[var(--glass-border)] bg-[var(--glass-bg)] p-5 shadow-[var(--shadow-card)] backdrop-blur-md sm:p-6"
 			>
 				<h2 class="mt-1 text-[1.35rem] font-semibold tracking-[-0.02em]">Review contact</h2>
 				<p class="m-0 mb-10 text-[0.9375rem] leading-[1.5] text-[var(--text-muted)]">
@@ -429,6 +429,7 @@
 				</div>
 				<div class="min-h-10 w-full"></div>
 			</section>
+			<div class="min-h-10 w-full"></div>
 		{:else}
 			<section class="flex flex-col">
 				<div
