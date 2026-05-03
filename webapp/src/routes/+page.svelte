@@ -134,124 +134,6 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- Product preview card -->
-			<div class="relative z-10 mx-auto mt-16 max-w-2xl lg:mt-20">
-				<div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)]">
-					<video src="/videos/preview.mp4" autoplay muted loop class="h-full w-full object-cover"
-					></video>
-				</div>
-			</div>
-		</section>
-
-		<!-- Benefits -->
-		<section
-			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24"
-			aria-labelledby="benefits-heading"
-		>
-			<div class="ambient-scan-grid ambient-scan-grid--soft" aria-hidden="true"></div>
-			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-				<div class="mx-auto max-w-2xl text-center">
-					<h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
-						Built for busy professionals
-					</h2>
-					<p class="mt-3 text-[var(--text-muted)]">
-						No manual retyping, no mystery pile of cards, no vague “we should connect” with nothing
-						to act on.
-					</p>
-				</div>
-				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">The pile that never becomes action</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Buyers, partners, suppliers, candidates: the cards stack up, then names fade and
-							follow-ups stall. Scan on the spot so every intro is a real contact while you still
-							remember why you met.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-								/>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">End the manual typing</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Stop copying name, title, email, and phone by hand. Snap the card and scan2contact
-							extracts the contact information so you can save it directly to your phone contacts.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">Follow up the moment you scan</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Keep your best intros, thank-yous, and “great to meet you” notes as templates. After a
-							scan with one click your mail app opens with To, subject, and body already filled,
-							ready to send.
-						</p>
-					</li>
-				</ul>
-			</div>
 		</section>
 
 		<!-- Steps: four alternating text / video sections -->
@@ -711,7 +593,119 @@
 			</ol>
 		</section>
 
+		<!-- Benefits -->
+		<section
+			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24"
+			aria-labelledby="benefits-heading"
+		>
+			<div class="ambient-scan-grid ambient-scan-grid--soft" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+				<div class="mx-auto max-w-2xl text-center">
+					<h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
+						Built for busy professionals
+					</h2>
+					<p class="mt-3 text-[var(--text-muted)]">
+						No manual retyping, no mystery pile of cards, no vague “we should connect” with nothing
+						to act on.
+					</p>
+				</div>
+				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+					<li
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+						>
+							<svg
+								class="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">The pile that never becomes action</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Buyers, partners, suppliers, candidates: the cards stack up, then names fade and
+							follow-ups stall. Scan on the spot so every intro is a real contact while you still
+							remember why you met.
+						</p>
+					</li>
+					<li
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+						>
+							<svg
+								class="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+								/>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">End the manual typing</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Stop copying name, title, email, and phone by hand. Snap the card and scan2contact
+							extracts the contact information so you can save it directly to your phone contacts.
+						</p>
+					</li>
+					<li
+						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
+					>
+						<div
+							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
+						>
+							<svg
+								class="h-5 w-5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								aria-hidden="true"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold">Follow up the moment you scan</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Keep your best intros, thank-yous, and “great to meet you” notes as templates. After a
+							scan with one click your mail app opens with To, subject, and body already filled,
+							ready to send.
+						</p>
+					</li>
+				</ul>
+			</div>
+		</section>
+
 		<!-- Mobile browser: camera + web, no install, optional PWA -->
+
+		<!--
 		<section
 			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
 			aria-labelledby="mobile-web-heading"
@@ -806,21 +800,25 @@
 					</div>
 				</div>
 			</div>
-		</section>
+		</section> -->
 
-		<!-- Value line -->
+		<!-- Value line: full-bleed band (no card — contrasts with boxed sections around it) -->
 		<section
-			class="relative overflow-hidden border-y border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
+			class="value-line-section relative overflow-hidden py-24 sm:py-32"
+			aria-label="Product value"
 		>
-			<div class="ambient-scan-grid ambient-scan-grid--hero" aria-hidden="true"></div>
-			<div class="relative z-10 mx-auto max-w-3xl px-4 text-center sm:px-6">
-				<p class="text-xl leading-relaxed font-medium text-[var(--text)] sm:text-2xl">
-					A business card should start a relationship—not end up in a drawer.
+			<div class="value-line-sheen" aria-hidden="true"></div>
+			<div class="value-line-aurora" aria-hidden="true"></div>
+			<div class="value-line-sweep" aria-hidden="true"></div>
+			<div class="value-line-beam" aria-hidden="true"></div>
+			<div class="ambient-scan-grid ambient-scan-grid--value" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-[1000px] px-4 text-center sm:px-6 lg:px-8">
+				<p class="value-line-quote">
+					A business card should start a <em>relationship</em>—not end up in a drawer.
 				</p>
-				<p class="mt-6 text-sm leading-relaxed text-[var(--text-muted)]">
-					scan2contact closes the loop: capture without retyping, keep the details even when the
-					card is gone, and use email templates to turn every scan into a real follow-up before the
-					next conversation crowds it out.
+				<p class="value-line-sub">
+					Scan once, keep every detail, follow up with your templates—while the moment is still
+					fresh.
 				</p>
 			</div>
 		</section>
