@@ -355,101 +355,24 @@
 			</div>
 		</section>
 
-		<!-- Conversion: outcome-led value props -->
-		<section
-			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-16 sm:py-20"
-			aria-labelledby="outcomes-heading"
-		>
-			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-				<div class="mx-auto max-w-2xl text-center">
-					<h2
-						id="outcomes-heading"
-						class="lp-section-head-accent text-3xl font-semibold tracking-tight sm:text-4xl"
-					>
-						Built for the moment after the handshake
-					</h2>
-					<p class="mt-5 text-pretty text-[var(--text-muted)] sm:text-lg">
-						When the room is loud and your calendar is full, the best tool is the one you actually
-						use: fast capture, a quick sanity check, then the contact lives where you already work.
-					</p>
-				</div>
-				<div class="mt-12 grid gap-5 sm:grid-cols-3">
-					<div class="lp-premium-card p-6 sm:p-7">
-						<div class="lp-premium-card__icon" aria-hidden="true">
-							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M13 10V3L4 14h7v7l9-11h-7z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold tracking-tight">Speed without sloppiness</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Capture structured fields in seconds so you stay present in the conversation. Leave
-							the long-form typing for when you are back at your desk.
-						</p>
-					</div>
-					<div class="lp-premium-card p-6 sm:p-7">
-						<div class="lp-premium-card__icon" aria-hidden="true">
-							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold tracking-tight">Trust you can explain</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							No mystery cloud Rolodex: your contacts land in your address book, with EU hosting and
-							a product posture serious buyers expect from a professional tool.
-						</p>
-					</div>
-					<div class="lp-premium-card p-6 sm:p-7">
-						<div class="lp-premium-card__icon" aria-hidden="true">
-							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold tracking-tight">
-							Follow-up that sounds like you
-						</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Send the note while the detail is fresh. Templates keep tone consistent so every lead
-							gets a thoughtful message, not a blank compose window.
-						</p>
-					</div>
-				</div>
-				<div class="mt-14">
-					<p
-						class="text-center text-xs font-semibold tracking-[0.2em] text-[var(--text-subtle)] uppercase"
-					>
-						Where teams use it
-					</p>
-					<div class="lp-pill-row mt-5">
-						<span class="lp-pill">Trade events</span>
-						<span class="lp-pill">Executive meetings</span>
-						<span class="lp-pill">Field sales</span>
-						<span class="lp-pill">Consulting</span>
-						<span class="lp-pill">Partner programs</span>
-					</div>
-				</div>
-			</div>
-		</section>
-
 		<!-- Steps: four alternating text / video sections -->
 		<section
 			class="border-t border-[var(--border)] bg-[var(--bg-base)]"
 			aria-labelledby="steps-heading"
 		>
+			<div class="mt-16">
+				<p
+					class="text-center text-xs font-semibold tracking-[0.2em] text-[var(--text-subtle)] uppercase"
+				>
+					Ideal for people who network
+				</p>
+				<div class="lp-pill-row mt-5">
+					<span class="lp-pill">Trade events</span>
+					<span class="lp-pill">Networking events</span>
+					<span class="lp-pill">Field sales</span>
+					<span class="lp-pill">Conferences</span>
+				</div>
+			</div>
 			<div class="mx-auto max-w-6xl px-4 pt-16 pb-4 text-center sm:px-6 sm:pt-20 lg:px-8">
 				<h2
 					id="steps-heading"
@@ -1265,82 +1188,76 @@
 			</div>
 		</section>
 
-		<!-- Mobile browser: camera + web, no install, optional PWA -->
+		<!-- Conversion: outcome-led value props -->
 		<section
-			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
-			aria-labelledby="mobile-web-heading"
+			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-16 sm:py-20"
+			aria-labelledby="outcomes-heading"
 		>
-			<div class="ambient-scan-grid ambient-scan-grid--soft" aria-hidden="true"></div>
-			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
-					<h2 id="mobile-web-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
-						Built for your phone
+					<h2
+						id="outcomes-heading"
+						class="lp-section-head-accent text-3xl font-semibold tracking-tight sm:text-4xl"
+					>
+						Built for the moment after the handshake
 					</h2>
-					<p class="mt-3 text-pretty text-[var(--text-muted)] sm:text-lg">
-						scan2contact is made for mobile: you scan with your phone's camera inside the browser.
-						If your handset has a current mobile browser and a working camera, you are good to go.
+					<p class="mt-5 text-pretty text-[var(--text-muted)] sm:text-lg">
+						When the room is loud and your calendar is full, the best tool is the one you actually
+						use: fast capture, a quick sanity check, then the contact lives where you already work.
 					</p>
 				</div>
-				<div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					<div class="lp-premium-card p-6 text-left sm:p-7">
+				<div class="mt-12 grid gap-5 sm:grid-cols-3">
+					<div class="lp-premium-card p-6 sm:p-7">
 						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
-									d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-								/>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+									d="M13 10V3L4 14h7v7l9-11h-7z"
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Any smartphone with a browser and camera</h3>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">Speed without sloppiness</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							iPhone or Android, Safari or Chrome: open the site, allow camera access, and capture
-							the card. The flow is tuned for small screens so you can work quickly right after a
-							handshake.
+							Capture structured fields in seconds so you stay present in the conversation. Leave
+							the long-form typing for when you are back at your desk.
 						</p>
 					</div>
-					<div class="lp-premium-card p-6 text-left sm:p-7">
+					<div class="lp-premium-card p-6 sm:p-7">
 						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
-									d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"
+									d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Nothing to download</h3>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">Trust you can explain</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							On your phone there is no app store install and no separate file to fetch first. Open
-							your link, sign in, and scan. The page loads like any website, so you are not stuck
-							behind a download before you capture the lead.
+							No mystery cloud Rolodex: your contacts land in your address book, with EU hosting and
+							a product posture serious buyers expect from a professional tool.
 						</p>
 					</div>
-					<div class="lp-premium-card p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1">
+					<div class="lp-premium-card p-6 sm:p-7">
 						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
 									stroke-linejoin="round"
 									stroke-width="2"
-									d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
 								/>
 							</svg>
 						</div>
-						<h3 class="mt-4 text-lg font-semibold">Optional: add it to your home screen</h3>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">
+							Follow-up that sounds like you
+						</h3>
 						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							scan2contact is a progressive web app. On your phone you can install it or add it to
-							your home screen from the browser menu, so it opens in its own window like a native
-							app. You still never had to use an app store; the shortcut is optional when you want
-							one-tap access after the first visit.
+							Send the note while the detail is fresh. Templates keep tone consistent so every lead
+							gets a thoughtful message, not a blank compose window.
 						</p>
 					</div>
 				</div>
