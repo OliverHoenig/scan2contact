@@ -5,7 +5,7 @@
 	import { clearReviewSession } from '$lib/scan-flow/review-session';
 	import { page } from '$app/state';
 
-	let { children } = $props();
+	let { data, children } = $props();
 	let settingsOpen = $state(false);
 </script>
 
@@ -52,4 +52,8 @@
 	</div>
 </div>
 
-<SettingsModal open={settingsOpen} onClose={() => (settingsOpen = false)} />
+<SettingsModal
+	open={settingsOpen}
+	userEmail={data.user.email}
+	onClose={() => (settingsOpen = false)}
+/>
