@@ -61,7 +61,7 @@
 			<div class="ambient-scan-grid ambient-scan-grid--value" aria-hidden="true"></div>
 			<div class="relative z-10 mx-auto max-w-6xl py-12 sm:py-14 lg:py-16">
 				<div
-					class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(220px,17.5rem)] lg:gap-14 xl:gap-16"
+					class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(260px,24rem)] lg:gap-14 xl:gap-16"
 				>
 					<div class="text-center lg:text-left">
 						<p
@@ -109,35 +109,195 @@
 								Open the app
 							</a>
 						</div>
-						<p class="mt-5 text-sm text-[var(--text-subtle)]">Free to try</p>
+						<p class="mt-5 text-sm text-[var(--text-subtle)]">
+							Free to try · No credit card required
+						</p>
 					</div>
 
 					<div class="hero-scan-demo flex flex-col items-center" aria-hidden="true">
-						<div class="hero-scan-phone">
-							<span class="hero-scan-phone__power" aria-hidden="true"></span>
-							<div class="hero-scan-phone__ledge">
-								<div class="hero-scan-phone__notch"></div>
+						<div class="hero-visual">
+							<div class="hero-visual__ambient">
+								<span class="hero-visual__blob hero-visual__blob--a"></span>
+								<span class="hero-visual__blob hero-visual__blob--b"></span>
 							</div>
-							<div class="hero-scan-phone__screen">
-								<div class="hero-scan-frame">
-									<div class="hero-scan-card-mock">
-										<p class="hero-scan-card-mock__kind">Business card</p>
-										<p class="hero-scan-card-mock__name">Alex Morgan</p>
-										<p class="hero-scan-card-mock__role">Partnerships · Acme Studio</p>
-										<div class="hero-scan-card-mock__divider"></div>
-										<p class="hero-scan-card-mock__detail">alex@acme.co</p>
-										<p class="hero-scan-card-mock__detail hero-scan-card-mock__detail--muted">
-											+1 (415) 555‑0142
-										</p>
-									</div>
-									<div class="hero-scan-fx">
-										<div class="hero-scan-fx-idle-grid"></div>
-										<div class="hero-scan-fx-sweep"></div>
+							<div class="hero-visual__orbit"></div>
+							<div class="hero-visual__sheen"></div>
+
+							<div class="hero-visual__chip hero-visual__chip--tl">
+								<svg
+									class="hero-visual__chip-ic"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+									/>
+								</svg>
+								<span>Extract fields</span>
+							</div>
+							<div class="hero-visual__chip hero-visual__chip--tr">
+								<svg
+									class="hero-visual__chip-ic"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M12 4v16m8-8H4"
+									/>
+								</svg>
+								<span>Save to Contacts</span>
+							</div>
+							<div class="hero-visual__chip hero-visual__chip--bl">
+								<svg
+									class="hero-visual__chip-ic"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										stroke-linecap="round"
+										stroke-linejoin="round"
+										stroke-width="2"
+										d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+									/>
+								</svg>
+								<span>Follow-up ready</span>
+							</div>
+
+							<div class="hero-visual__device">
+								<div class="hero-scan-phone-stage">
+									<div class="hero-scan-phone">
+										<span class="hero-scan-phone__power" aria-hidden="true"></span>
+										<div class="hero-scan-phone__ledge">
+											<div class="hero-scan-phone__notch"></div>
+										</div>
+										<div class="hero-scan-phone__screen">
+											<div class="hero-scan-frame">
+												<div class="hero-scan-card-mock">
+													<p class="hero-scan-card-mock__kind">Business card</p>
+													<p class="hero-scan-card-mock__name">Alex Morgan</p>
+													<p class="hero-scan-card-mock__role">Partnerships · Acme Studio</p>
+													<div class="hero-scan-card-mock__divider"></div>
+													<p class="hero-scan-card-mock__detail">alex@acme.co</p>
+													<p class="hero-scan-card-mock__detail hero-scan-card-mock__detail--muted">
+														+1 (415) 555‑0142
+													</p>
+												</div>
+												<div class="hero-scan-fx">
+													<div class="hero-scan-fx-idle-grid"></div>
+													<div class="hero-scan-fx-sweep"></div>
+												</div>
+											</div>
+										</div>
 									</div>
 								</div>
 							</div>
+
+							<div class="hero-visual__rail">
+								<span class="hero-visual__rail-step hero-visual__rail-step--on"
+									>Scan and save in seconds · high quality</span
+								>
+							</div>
 						</div>
 						<p class="hero-scan-label">Works on your phone</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<!-- Conversion: outcome-led value props -->
+		<section
+			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-16 sm:py-20"
+			aria-labelledby="outcomes-heading"
+		>
+			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+				<div class="mx-auto max-w-2xl text-center">
+					<h2
+						id="outcomes-heading"
+						class="lp-section-head-accent text-3xl font-semibold tracking-tight sm:text-4xl"
+					>
+						Built for the moment after the handshake
+					</h2>
+					<p class="mt-5 text-pretty text-[var(--text-muted)] sm:text-lg">
+						When the room is loud and your calendar is full, the best tool is the one you actually
+						use: fast capture, a quick sanity check, then the contact lives where you already work.
+					</p>
+				</div>
+				<div class="mt-12 grid gap-5 sm:grid-cols-3">
+					<div class="lp-premium-card p-6 sm:p-7">
+						<div class="lp-premium-card__icon" aria-hidden="true">
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M13 10V3L4 14h7v7l9-11h-7z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">Speed without sloppiness</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Capture structured fields in seconds so you stay present in the conversation. Leave
+							the long-form typing for when you are back at your desk.
+						</p>
+					</div>
+					<div class="lp-premium-card p-6 sm:p-7">
+						<div class="lp-premium-card__icon" aria-hidden="true">
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">Trust you can explain</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							No mystery cloud Rolodex: your contacts land in your address book, with EU hosting and
+							a product posture serious buyers expect from a professional tool.
+						</p>
+					</div>
+					<div class="lp-premium-card p-6 sm:p-7">
+						<div class="lp-premium-card__icon" aria-hidden="true">
+							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+								/>
+							</svg>
+						</div>
+						<h3 class="mt-4 text-lg font-semibold tracking-tight">
+							Follow-up that sounds like you
+						</h3>
+						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
+							Send the note while the detail is fresh. Templates keep tone consistent so every lead
+							gets a thoughtful message, not a blank compose window.
+						</p>
+					</div>
+				</div>
+				<div class="mt-14">
+					<p
+						class="text-center text-xs font-semibold tracking-[0.2em] text-[var(--text-subtle)] uppercase"
+					>
+						Where teams use it
+					</p>
+					<div class="lp-pill-row mt-5">
+						<span class="lp-pill">Trade events</span>
+						<span class="lp-pill">Executive meetings</span>
+						<span class="lp-pill">Field sales</span>
+						<span class="lp-pill">Consulting</span>
+						<span class="lp-pill">Partner programs</span>
 					</div>
 				</div>
 			</div>
@@ -236,7 +396,7 @@
 							</ul>
 						</div>
 						<div
-							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
+							class="lp-video-frame--pulse aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
 							role="img"
 							aria-label="Video placeholder: scan contact"
 						>
@@ -277,7 +437,7 @@
 						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
 					>
 						<div
-							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
+							class="lp-video-frame--pulse order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
 							role="img"
 							aria-label="Video placeholder: review"
 						>
@@ -455,7 +615,7 @@
 							</ul>
 						</div>
 						<div
-							class="aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
+							class="lp-video-frame--pulse aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)]"
 							role="img"
 							aria-label="Video placeholder: save as contact"
 						>
@@ -495,7 +655,7 @@
 						class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:gap-12 sm:px-6 sm:py-16 lg:grid-cols-2 lg:gap-16 lg:px-8"
 					>
 						<div
-							class="order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
+							class="lp-video-frame--pulse order-2 aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] lg:order-1"
 							role="img"
 							aria-label="Video placeholder: follow-up"
 						>
@@ -909,29 +1069,54 @@
 						</tbody>
 					</table>
 				</div>
-				<div class="mt-25">
-					<h2 class="sm:text-4x text-center text-3xl font-semibold tracking-tight">
+
+				<div class="lp-metric-grid mt-16 sm:mt-20">
+					<div class="lp-metric">
+						<p class="lp-metric__value">~30s</p>
+						<p class="lp-metric__label">
+							Typical path from scan to a clean, review-ready contact—still faster than retyping the
+							whole card.
+						</p>
+					</div>
+					<div class="lp-metric">
+						<p class="lp-metric__value">1 tap</p>
+						<p class="lp-metric__label">
+							Save to your native address book or share a vCard. No export maze, no duplicate cloud
+							contact list.
+						</p>
+					</div>
+					<div class="lp-metric">
+						<p class="lp-metric__value">0 lock-in</p>
+						<p class="lp-metric__label">
+							The job is card to contact. You keep working in the tools you already trust, without
+							another platform to babysit.
+						</p>
+					</div>
+				</div>
+
+				<div class="mt-20 sm:mt-24">
+					<h2 class="text-center text-3xl font-semibold tracking-tight sm:text-4xl">
 						Secure and private
 					</h2>
 					<p class="mt-3 text-center text-pretty text-[var(--text-muted)] sm:text-lg">
 						Your scanned contact data is never stored on our servers. We only process the data you
 						send to us.
 					</p>
-					<div class="mt-10 flex flex-row items-center justify-center gap-10">
+					<div class="mt-10 flex flex-row flex-wrap items-center justify-center gap-10 sm:gap-14">
 						<img
 							src="/badges/badge_dsgvo-konform.svg"
 							alt="DSGVO compliant"
-							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
 						/>
 						<img
 							src="/badges/badge_based-in-germany.svg"
 							alt="Based in Germany"
-							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
 						/>
 						<img
 							src="/badges/badge_hosted-in-eu.svg"
 							alt="Hosted in EU"
-							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
 						/>
 					</div>
 				</div>
@@ -939,8 +1124,6 @@
 		</section>
 
 		<!-- Mobile browser: camera + web, no install, optional PWA -->
-
-		<!--
 		<section
 			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-16 sm:py-20"
 			aria-labelledby="mobile-web-heading"
@@ -957,13 +1140,8 @@
 					</p>
 				</div>
 				<div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:p-7"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-							aria-hidden="true"
-						>
+					<div class="lp-premium-card p-6 text-left sm:p-7">
+						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
@@ -986,13 +1164,8 @@
 							handshake.
 						</p>
 					</div>
-					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:p-7"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-							aria-hidden="true"
-						>
+					<div class="lp-premium-card p-6 text-left sm:p-7">
+						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
@@ -1009,13 +1182,8 @@
 							behind a download before you capture the lead.
 						</p>
 					</div>
-					<div
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-							aria-hidden="true"
-						>
+					<div class="lp-premium-card p-6 text-left sm:col-span-2 sm:p-7 lg:col-span-1">
+						<div class="lp-premium-card__icon" aria-hidden="true">
 							<svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 								<path
 									stroke-linecap="round"
@@ -1035,7 +1203,7 @@
 					</div>
 				</div>
 			</div>
-		</section> -->
+		</section>
 
 		<!-- Value line: full-bleed band (no card; contrasts with boxed sections around it) -->
 		<section
@@ -1060,7 +1228,7 @@
 		<section class="py-20 sm:py-28">
 			<div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div
-					class="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] text-center"
+					class="lp-cta-premium relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-raised)] text-center"
 				>
 					<div class="ambient-scan-grid ambient-scan-grid--cta" aria-hidden="true"></div>
 					<div class="relative z-10 px-6 py-14 sm:px-12 sm:py-16">
