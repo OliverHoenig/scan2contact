@@ -3,10 +3,10 @@
 </script>
 
 <svelte:head>
-	<title>scan2contact — Turn business cards into contacts in seconds</title>
+	<title>scan2contact: Turn business cards into contacts in seconds</title>
 	<meta
 		name="description"
-		content="Scan business cards at events and meetings. Save contacts fast and send follow-up emails from your own templates—built for professionals who network."
+		content="Scan business cards at events and meetings. Save contacts fast and send follow-up emails from your own templates. Built for professionals who network."
 	/>
 </svelte:head>
 
@@ -599,7 +599,7 @@
 			</ol>
 		</section>
 
-		<!-- Benefits -->
+		<!-- Benefits: comparison vs typical tools -->
 		<section
 			class="relative overflow-hidden border-t border-[var(--border)] bg-[var(--bg-raised)] py-20 sm:py-24"
 			aria-labelledby="benefits-heading"
@@ -608,104 +608,252 @@
 			<div class="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 				<div class="mx-auto max-w-2xl text-center">
 					<h2 id="benefits-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">
-						Built for busy professionals
+						How scan2contact delivers more by doing less
 					</h2>
-					<p class="mt-3 text-[var(--text-muted)]">
-						No manual retyping, no mystery pile of cards, no vague “we should connect” with nothing
-						to act on.
+					<p class="mt-3 text-pretty text-[var(--text-muted)] sm:text-base">
+						Save them in <em>your</em> phone while you still remember who they are. scan2contact does
+						that one job, not a cloud copy of your contacts or another bloated platform to run.
 					</p>
 				</div>
-				<ul class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">The pile that never becomes action</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Buyers, partners, suppliers, candidates: the cards stack up, then names fade and
-							follow-ups stall. Scan on the spot so every intro is a real contact while you still
-							remember why you met.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-								/>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">End the manual typing</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Stop copying name, title, email, and phone by hand. Snap the card and scan2contact
-							extracts the contact information so you can save it directly to your phone contacts.
-						</p>
-					</li>
-					<li
-						class="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] p-6 transition hover:border-[var(--border-strong)]"
-					>
-						<div
-							class="flex h-11 w-11 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)]"
-						>
-							<svg
-								class="h-5 w-5"
-								fill="none"
-								viewBox="0 0 24 24"
-								stroke="currentColor"
-								aria-hidden="true"
-							>
-								<path
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									stroke-width="2"
-									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-								/>
-							</svg>
-						</div>
-						<h3 class="mt-4 text-lg font-semibold">Follow up the moment you scan</h3>
-						<p class="mt-2 text-sm leading-relaxed text-[var(--text-muted)]">
-							Keep your best intros, thank-yous, and “great to meet you” notes as templates. After a
-							scan with one click your mail app opens with To, subject, and body already filled,
-							ready to send.
-						</p>
-					</li>
-				</ul>
+
+				<div
+					class="mt-12 overflow-x-auto rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg-base)] shadow-[0_1px_0_rgba(0,0,0,0.04)]"
+				>
+					<table class="w-full min-w-[46rem] border-collapse text-left text-sm">
+						<caption class="sr-only">
+							Comparison of scan2contact with typical business card scanners and CRM-oriented tools
+						</caption>
+						<thead>
+							<tr class="border-b border-[var(--border)]">
+								<th
+									scope="col"
+									class="w-[min(34%,17rem)] px-4 py-4 text-xs font-semibold tracking-wide text-[var(--text-subtle)] uppercase sm:px-6"
+								>
+									You compare on
+								</th>
+								<th
+									scope="col"
+									class="px-4 py-4 font-semibold text-[var(--text-muted)] sm:px-6 sm:text-base"
+								>
+									Most tools
+								</th>
+								<th
+									scope="col"
+									class="bg-[var(--accent-muted)] px-4 py-4 font-semibold text-[var(--accent)] sm:px-6 sm:text-base"
+								>
+									scan2contact
+								</th>
+							</tr>
+						</thead>
+						<tbody class="text-[var(--text)]">
+							<tr class="border-b border-[var(--border)]">
+								<th
+									scope="row"
+									class="px-4 py-4 align-top text-sm font-semibold sm:px-6 sm:text-base"
+								>
+									Where do contacts get saved?
+								</th>
+								<td class="px-4 py-4 align-top text-[var(--text-muted)] sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-subtle)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Their cloud becomes the copy of people you meet.</span
+										>
+									</span>
+								</td>
+								<td class="bg-[var(--accent-muted)]/60 px-4 py-4 align-top sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Saved where your contacts should be saved: just in your address book.</span
+										>
+									</span>
+								</td>
+							</tr>
+							<tr class="border-b border-[var(--border)]">
+								<th
+									scope="row"
+									class="px-4 py-4 align-top text-sm font-semibold sm:px-6 sm:text-base"
+								>
+									How hard is the setup?
+								</th>
+								<td class="px-4 py-4 align-top text-[var(--text-muted)] sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-subtle)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Long setup and integration work, then another dashboard to learn. The same
+											contacts land in their cloud, your CRM, and your phone.</span
+										>
+									</span>
+								</td>
+								<td class="bg-[var(--accent-muted)]/60 px-4 py-4 align-top sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>No download. Log in and scan. Each contact stays in one place you already
+											use: your address book.</span
+										>
+									</span>
+								</td>
+							</tr>
+							<tr class="border-b border-[var(--border)]">
+								<th
+									scope="row"
+									class="px-4 py-4 align-top text-sm font-semibold sm:px-6 sm:text-base"
+								>
+									Am I buying a scanner or a whole platform?
+								</th>
+								<td class="px-4 py-4 align-top text-[var(--text-muted)] sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-subtle)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Often a bloated suite: CRM, pipelines, and extra modules around the same
+											scan. You pay for software that tries to do everything.</span
+										>
+									</span>
+								</td>
+								<td class="bg-[var(--accent-muted)]/60 px-4 py-4 align-top sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>One narrow job: card to contact. Not a suite and not a pile of features you
+											never asked for.</span
+										>
+									</span>
+								</td>
+							</tr>
+							<tr>
+								<th
+									scope="row"
+									class="px-4 py-4 align-top text-sm font-semibold sm:px-6 sm:text-base"
+								>
+									Will I still use this in a month?
+								</th>
+								<td class="px-4 py-4 align-top text-[var(--text-muted)] sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-subtle)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Powerful on demo day, forgotten by next week because its too complex to use.</span
+										>
+									</span>
+								</td>
+								<td class="bg-[var(--accent-muted)]/60 px-4 py-4 align-top sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>So light you reach for it intuitively. It stays in your pocket, not in your
+											way.</span
+										>
+									</span>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</section>
 
@@ -808,7 +956,7 @@
 			</div>
 		</section> -->
 
-		<!-- Value line: full-bleed band (no card — contrasts with boxed sections around it) -->
+		<!-- Value line: full-bleed band (no card; contrasts with boxed sections around it) -->
 		<section
 			class="value-line-section relative overflow-hidden py-24 sm:py-32"
 			aria-label="Product value"
