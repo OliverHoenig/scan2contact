@@ -130,7 +130,7 @@
 								</div>
 							</div>
 						</div>
-						<p class="hero-scan-label w-full items-center text-center">Works on your phone</p>
+						<p class="hero-scan-label">Works on your phone</p>
 					</div>
 				</div>
 			</div>
