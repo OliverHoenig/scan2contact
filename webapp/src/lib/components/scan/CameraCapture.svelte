@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { createEventDispatcher, onDestroy, onMount, tick, untrack } from 'svelte';
+	import { createEventDispatcher, onDestroy, onMount, tick, untrack, type Snippet } from 'svelte';
 
-	let { autoStart = false, fullBleed = false }: { autoStart?: boolean; fullBleed?: boolean } =
-		$props();
+	let {
+		autoStart = false,
+		fullBleed = false,
+		overlay
+	}: { autoStart?: boolean; fullBleed?: boolean; overlay?: Snippet } = $props();
 
 	let videoRef = $state<HTMLVideoElement | null>(null);
 	let videoShellRef = $state<HTMLDivElement | null>(null);
@@ -448,12 +451,20 @@
 			bind:this={videoShellRef}
 		>
 			<video
-				class={`pointer-events-none w-full bg-[var(--bg-base)] object-cover ${fullBleed ? 'absolute inset-0 [aspect-ratio:unset] h-full min-h-0 rounded-none' : '[aspect-ratio:3/4] min-h-[min(70vh,34rem)] rounded-[var(--radius-md)] sm:[aspect-ratio:4/3] sm:min-h-[22rem]'}`}
+				class={`pointer-events-none z-0 w-full bg-[var(--bg-base)] object-cover ${fullBleed ? 'absolute inset-0 [aspect-ratio:unset] h-full min-h-0 rounded-none' : '[aspect-ratio:3/4] min-h-[min(70vh,34rem)] rounded-[var(--radius-md)] sm:[aspect-ratio:4/3] sm:min-h-[22rem]'}`}
 				bind:this={videoRef}
 				playsinline
 				muted
 			></video>
-			<div class="pointer-events-none absolute inset-0">
+			{#if overlay}
+				<div
+					class="pointer-events-none absolute inset-0 z-[1] overflow-hidden"
+					aria-hidden="true"
+				>
+					{@render overlay()}
+				</div>
+			{/if}
+			<div class="pointer-events-none absolute inset-0 z-[2]">
 				{#if guideBoxStyle}
 					<div
 						class="absolute box-border rounded-2xl border-2 border-[var(--accent)]/90 bg-transparent shadow-[0_0_0_9999px_rgba(0,0,0,0.42),0_0_36px_var(--accent-glow)]"
@@ -466,7 +477,7 @@
 				{/if}
 			</div>
 			<div
-				class={`pointer-events-none absolute left-1/2 max-w-[calc(100%-1.5rem)] -translate-x-1/2 rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-[0.85rem] py-2 text-center text-[0.8125rem] leading-[1.35] text-[var(--text-muted)] backdrop-blur-[12px] ${fullBleed ? 'bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.35rem)]' : 'bottom-[0.9rem]'}`}
+				class={`pointer-events-none absolute z-[10] left-1/2 max-w-[calc(100%-1.5rem)] -translate-x-1/2 rounded-[var(--radius-pill)] border border-[var(--border)] bg-[rgba(12,12,15,0.82)] px-[0.85rem] py-2 text-center text-[0.8125rem] leading-[1.35] text-[var(--text-muted)] backdrop-blur-[12px] ${fullBleed ? 'bottom-[calc(var(--capture-bottom-toolbar,4.25rem)+env(safe-area-inset-bottom,0px)+0.35rem)]' : 'bottom-[0.9rem]'}`}
 				role="status"
 				aria-live="polite"
 			>

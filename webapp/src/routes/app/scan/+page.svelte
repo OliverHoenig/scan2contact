@@ -21,6 +21,8 @@
 	let scanBusy = $state(false);
 	let lightSupported = $state(false);
 	let lightEnabled = $state(false);
+	/** Increments on each Scan tap to replay the short capture FX (keyed remount). */
+	let scanBurstKey = $state(0);
 
 	if (typeof window !== 'undefined') {
 		offline = !window.navigator.onLine;
@@ -44,6 +46,7 @@
 			error = 'Camera is still loading — try again in a moment.';
 			return;
 		}
+		scanBurstKey += 1;
 		scanBusy = true;
 		error = '';
 		try {
@@ -129,7 +132,7 @@
 						You are offline. OCR requires an internet connection.
 					</p>
 				{/if}
-				<div class="absolute inset-0 z-0 h-[calc(100%-80px)]">
+				<div class="absolute inset-x-0 top-0 z-0 h-[calc(100%-80px)] min-h-0">
 					<CameraCapture
 						bind:this={cameraRef}
 						autoStart={true}
@@ -138,7 +141,23 @@
 							lightSupported = event.detail.supported;
 							lightEnabled = event.detail.enabled;
 						}}
-					/>
+					>
+						{#snippet overlay()}
+							<!-- Between video and hint: FX behind status label + frame -->
+							<div class="scan-fx pointer-events-none absolute inset-0 overflow-hidden">
+								<div class="scan-fx-idle-grid"></div>
+								<div class="scan-fx-sweep"></div>
+								{#if scanBurstKey > 0}
+									{#key scanBurstKey}
+										<div class="scan-fx-capture">
+											<div class="scan-fx-capture-flash"></div>
+											<div class="scan-fx-capture-line"></div>
+										</div>
+									{/key}
+								{/if}
+							</div>
+						{/snippet}
+					</CameraCapture>
 				</div>
 				<div
 					class="absolute right-0 bottom-0 left-0 z-[25] mb-6 box-border flex flex-nowrap items-center justify-center gap-3 bg-gradient-to-t from-[rgba(5,5,7,0.94)] via-[rgba(5,5,7,0.55)] to-transparent px-4 py-[0.65rem] backdrop-blur-[16px]"
@@ -207,3 +226,261 @@
 		{/if}
 	</main>
 {/if}
+
+<style>
+	/*
+	 * Sweep uses `top` (percent of the camera box), not translateY — translateY(%) is relative
+	 * to the band’s own height, so it never crossed the full preview before.
+	 */
+	.scan-fx {
+		inset: 0;
+	}
+
+	/* Continuous top → bottom; loop jumps back to start (no idle bar stuck mid/off-screen) */
+	@keyframes scan-fx-sweep-y {
+		0% {
+			top: -14%;
+		}
+		100% {
+			top: 100%;
+		}
+	}
+
+	/* Irregular horizontal drift + blur (laser-ish; not perfectly periodic) */
+	@keyframes scan-fx-sweep-aura {
+		0%,
+		100% {
+			filter: blur(9px);
+			opacity: 0.48;
+			transform: translateY(-50%) translateX(-7%);
+		}
+		17% {
+			filter: blur(15px);
+			opacity: 0.64;
+			transform: translateY(-50%) translateX(5%);
+		}
+		34% {
+			filter: blur(21px);
+			opacity: 0.76;
+			transform: translateY(-50%) translateX(-3%);
+		}
+		52% {
+			filter: blur(17px);
+			opacity: 0.68;
+			transform: translateY(-50%) translateX(8%);
+		}
+		71% {
+			filter: blur(12px);
+			opacity: 0.56;
+			transform: translateY(-50%) translateX(-5%);
+		}
+		88% {
+			filter: blur(19px);
+			opacity: 0.72;
+			transform: translateY(-50%) translateX(3%);
+		}
+	}
+
+	/* Horizontal “laser” sweep: wide gradient, position jumps in uneven steps */
+	@keyframes scan-fx-laser-x {
+		0%,
+		100% {
+			background-position: 22% 50%;
+		}
+		13% {
+			background-position: 68% 50%;
+		}
+		27% {
+			background-position: 38% 50%;
+		}
+		41% {
+			background-position: 91% 50%;
+		}
+		55% {
+			background-position: 15% 50%;
+		}
+		69% {
+			background-position: 77% 50%;
+		}
+		84% {
+			background-position: 44% 50%;
+		}
+	}
+
+	@keyframes scan-fx-grid-pulse {
+		0%,
+		100% {
+			opacity: 0.07;
+		}
+		50% {
+			opacity: 0.11;
+		}
+	}
+
+	@keyframes scan-fx-capture-flash-kf {
+		0% {
+			opacity: 0;
+		}
+		14% {
+			opacity: 1;
+		}
+		100% {
+			opacity: 0;
+		}
+	}
+
+	@keyframes scan-fx-capture-line-kf {
+		0% {
+			top: -16%;
+			opacity: 0;
+		}
+		15% {
+			opacity: 1;
+		}
+		100% {
+			top: 100%;
+			opacity: 0;
+		}
+	}
+
+	.scan-fx-idle-grid {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(0, 234, 255, 0.42) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(0, 234, 255, 0.34) 1px, transparent 1px);
+		background-size: 32px 32px;
+		animation: scan-fx-grid-pulse 7s ease-in-out infinite;
+		-webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+		mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+	}
+
+	/* One crisp line + ::before soft halo (no extra gradient “wings” top/bottom) */
+	.scan-fx-sweep {
+		position: absolute;
+		left: -8%;
+		width: 116%;
+		height: 14%;
+		top: -14%;
+		background: transparent;
+		animation: scan-fx-sweep-y 2.75s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+		will-change: top;
+	}
+
+	.scan-fx-sweep::before {
+		content: '';
+		position: absolute;
+		left: -4%;
+		right: -4%;
+		top: 50%;
+		height: 220%;
+		transform: translateY(-50%);
+		border-radius: 999px;
+		background: radial-gradient(
+			ellipse 100% 48% at 50% 50%,
+			rgba(0, 245, 255, 0.28) 0%,
+			rgba(0, 220, 255, 0.09) 45%,
+			transparent 72%
+		);
+		filter: blur(12px);
+		opacity: 0.62;
+		animation: scan-fx-sweep-aura 5.5s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+		pointer-events: none;
+		will-change: transform, filter, opacity;
+	}
+
+	.scan-fx-sweep::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: 2px;
+		transform: translateY(-50%);
+		border-radius: 999px;
+		background: linear-gradient(
+			90deg,
+			rgba(0, 160, 255, 0) 0%,
+			rgba(0, 210, 255, 0.14) 34%,
+			rgba(220, 240, 255, 0.32) 45%,
+			rgba(0, 245, 255, 0.98) 50%,
+			rgba(190, 210, 255, 0.22) 55%,
+			rgba(0, 200, 255, 0.12) 66%,
+			rgba(0, 160, 255, 0) 100%
+		);
+		background-size: 280% 100%;
+		background-position: 22% 50%;
+		background-repeat: no-repeat;
+		box-shadow: 0 0 14px rgba(0, 234, 255, 0.42);
+		animation: scan-fx-laser-x 5.5s cubic-bezier(0.45, 0.06, 0.55, 0.94) infinite;
+		will-change: background-position;
+	}
+
+	.scan-fx-capture {
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		overflow: hidden;
+	}
+
+	.scan-fx-capture-flash {
+		position: absolute;
+		inset: 0;
+		background:
+			radial-gradient(ellipse 88% 58% at 50% 42%, rgba(0, 234, 255, 0.38), transparent 70%),
+			linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 55%);
+		mix-blend-mode: screen;
+		animation: scan-fx-capture-flash-kf 0.36s ease-out forwards;
+	}
+
+	.scan-fx-capture-line {
+		position: absolute;
+		left: -10%;
+		width: 120%;
+		height: 14%;
+		top: -16%;
+		background: transparent;
+		animation: scan-fx-capture-line-kf 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+		will-change: top, opacity;
+	}
+
+	.scan-fx-capture-line::before {
+		content: '';
+		position: absolute;
+		left: -3%;
+		right: -3%;
+		top: 50%;
+		height: 200%;
+		transform: translateY(-50%);
+		border-radius: 999px;
+		background: radial-gradient(
+			ellipse 100% 45% at 50% 50%,
+			rgba(0, 245, 255, 0.35) 0%,
+			rgba(0, 220, 255, 0.12) 48%,
+			transparent 70%
+		);
+		filter: blur(16px);
+		opacity: 0.75;
+		pointer-events: none;
+	}
+
+	.scan-fx-capture-line::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: 2px;
+		transform: translateY(-50%);
+		border-radius: 999px;
+		background: linear-gradient(
+			90deg,
+			transparent,
+			rgba(255, 255, 255, 0.5) 44%,
+			rgba(0, 234, 255, 0.95) 50%,
+			rgba(255, 255, 255, 0.5) 56%,
+			transparent
+		);
+		box-shadow: 0 0 28px rgba(0, 234, 255, 0.48);
+	}
+</style>
