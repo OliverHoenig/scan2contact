@@ -611,8 +611,9 @@
 						How scan2contact delivers more by doing less
 					</h2>
 					<p class="mt-3 text-pretty text-[var(--text-muted)] sm:text-base">
-						Save them in <em>your</em> phone while you still remember who they are. scan2contact does
-						that one job, not a cloud copy of your contacts or another bloated platform to run.
+						scan2contact does that one job: save contacts in your address book from scanned business
+						cards. It's not a cloud copy of your contacts or another bloated platform you need to
+						run.
 					</p>
 				</div>
 
@@ -800,6 +801,58 @@
 									</span>
 								</td>
 							</tr>
+							<tr class="border-b border-[var(--border)]">
+								<th
+									scope="row"
+									class="px-4 py-4 align-top text-sm font-semibold sm:px-6 sm:text-base"
+								>
+									Pricing
+								</th>
+								<td class="px-4 py-4 align-top text-[var(--text-muted)] sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--text-subtle)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Hidden fees, seat bundles, and plans that charge you for features you will
+											never use.</span
+										>
+									</span>
+								</td>
+								<td class="bg-[var(--accent-muted)]/60 px-4 py-4 align-top sm:px-6">
+									<span class="flex gap-2.5">
+										<svg
+											class="mt-0.5 h-4 w-4 shrink-0 text-[var(--accent)]"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+											aria-hidden="true"
+										>
+											<path
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												stroke-width="2"
+												d="M5 13l4 4L19 7"
+											/>
+										</svg>
+										<span class="leading-snug"
+											>Straightforward model: no hidden costs. Pay for what you use, not a bloated
+											tier you do not need.</span
+										>
+									</span>
+								</td>
+							</tr>
 							<tr>
 								<th
 									scope="row"
@@ -824,7 +877,8 @@
 											/>
 										</svg>
 										<span class="leading-snug"
-											>Powerful on demo day, forgotten by next week because its too complex to use.</span
+											>Powerful on demo day, forgotten by next week because it is too complex to
+											use.</span
 										>
 									</span>
 								</td>
