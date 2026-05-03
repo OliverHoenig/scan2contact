@@ -66,7 +66,7 @@
 						<p
 							class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm"
 						>
-							Businesscard scanner app
+							The easiest Businesscard scanner app
 						</p>
 						<h1
 							class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
