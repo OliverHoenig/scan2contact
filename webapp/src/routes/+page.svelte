@@ -29,6 +29,12 @@
 			</a>
 			<nav class="flex items-center gap-1.5 sm:gap-2" aria-label="Primary">
 				<a
+					href={resolve('/support')}
+					class="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
+				>
+					Support
+				</a>
+				<a
 					href={resolve('/auth/login')}
 					class="rounded-[var(--radius-sm)] px-3 py-2 text-sm font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-raised)] hover:text-[var(--text)]"
 				>
@@ -1064,6 +1070,10 @@
 				<a
 					href={resolve('/app/scan')}
 					class="text-[var(--text-muted)] transition hover:text-[var(--accent)]">App</a
+				>
+				<a
+					href={resolve('/support')}
+					class="text-[var(--text-muted)] transition hover:text-[var(--accent)]">Support</a
 				>
 			</nav>
 		</div>
