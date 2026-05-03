@@ -109,7 +109,7 @@
 								Open the app
 							</a>
 						</div>
-						<p class="mt-5 text-sm text-[var(--text-subtle)]">Free to try · No credit card</p>
+						<p class="mt-5 text-sm text-[var(--text-subtle)]">Free to try</p>
 					</div>
 
 					<div class="hero-scan-demo flex flex-col items-center" aria-hidden="true">
