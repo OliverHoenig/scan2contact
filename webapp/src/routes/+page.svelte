@@ -1,5 +1,76 @@
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
+
+	/** In-phone sweep: tuned start vs background band + slightly faster sweep (same cycle length as bg). */
+	function heroSyncScan(section: HTMLElement) {
+		if (!browser) return;
+
+		const styleId = 'hero-scan-sync-keyframes';
+		let ro: ResizeObserver | undefined;
+
+		/** Wall-clock lead before geometric phone-top contact (lower = start later; 0 = on geometry). */
+		const PHONE_START_LEAD_S = 0.2;
+		/** Share of post-hold timeline used for the vertical sweep (<1 = faster sweep, pause at bottom until loop). */
+		const PHONE_SWEEP_TIME_FRAC = 0.6;
+
+		function removeKf() {
+			document.getElementById(styleId)?.remove();
+			section.style.removeProperty('--hero-scan-hold');
+		}
+
+		function paint() {
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				removeKf();
+				return;
+			}
+
+			const phone = section.querySelector('.hero-scan-phone') as HTMLElement | null;
+			if (!phone) return;
+
+			const sr = section.getBoundingClientRect();
+			const H = Math.max(sr.height, 1);
+			const phoneTopRel = phone.getBoundingClientRect().top - sr.top;
+
+			const sweepS =
+				parseFloat(getComputedStyle(section).getPropertyValue('--scan-line-sweep-duration')) || 4.1;
+
+			/*
+				.value-line-sweep: top animates -14% → 102% of section height (116% range).
+				Top edge of band in px: (-0.14 + 1.16 * p) * H. Match phone top, then start PHONE_START_LEAD_S earlier.
+			*/
+			const pGeom = (phoneTopRel / H + 0.14) / 1.16;
+			const pHold = Math.min(0.96, Math.max(0, pGeom - PHONE_START_LEAD_S / sweepS));
+			const pSweepEnd = pHold + (1 - pHold) * PHONE_SWEEP_TIME_FRAC;
+			const pctHold = (pHold * 100).toFixed(2);
+			const pctEnd = (pSweepEnd * 100).toFixed(2);
+
+			let el = document.getElementById(styleId) as HTMLStyleElement | null;
+			if (!el) {
+				el = document.createElement('style');
+				el.id = styleId;
+				document.head.appendChild(el);
+			}
+			el.textContent = `@keyframes hero-phone-sweep-sync {
+  0%, ${pctHold}% { top: -14%; }
+  ${pctEnd}%, 100% { top: 102%; }
+}`;
+			section.style.setProperty('--hero-scan-hold', `${pHold.toFixed(4)}`);
+		}
+
+		paint();
+		ro = new ResizeObserver(paint);
+		ro.observe(section);
+		const phone = section.querySelector('.hero-scan-phone');
+		if (phone) ro.observe(phone);
+
+		return {
+			destroy() {
+				ro?.disconnect();
+				removeKf();
+			}
+		};
+	}
 </script>
 
 <svelte:head>
@@ -54,6 +125,7 @@
 		<!-- Hero (same ambient treatment as value line; content grid unchanged) -->
 		<section
 			class="value-line-section value-line-section--hero relative overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8"
+			use:heroSyncScan
 		>
 			<div class="value-line-sheen" aria-hidden="true"></div>
 			<div class="value-line-aurora" aria-hidden="true"></div>

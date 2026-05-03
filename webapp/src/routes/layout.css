@@ -197,6 +197,9 @@
 }
 
 .value-line-section {
+	/* One cycle for bg + in-device scan line (hero); nested .hero-scan-fx-sweep inherits */
+	--scan-line-sweep-duration: 4.1s;
+	--scan-line-aura-duration: 6.8s;
 	position: relative;
 	isolation: isolate;
 	background:
@@ -244,6 +247,43 @@
 	display: none;
 }
 
+/*
+	Hero: linear vertical sweep = constant px/s; phone uses hero-phone-sweep-sync (keyframes injected in +page.svelte).
+	Fallback if script has not run yet:
+*/
+@keyframes hero-phone-sweep-sync {
+	0% {
+		top: -14%;
+	}
+	100% {
+		top: 102%;
+	}
+}
+
+/* Same period as phone; linear matches constant-speed scan line */
+.value-line-section--hero .value-line-sweep {
+	animation-timing-function: linear;
+}
+
+.value-line-section--hero .hero-scan-fx-sweep {
+	animation: hero-phone-sweep-sync var(--scan-line-sweep-duration, 4.1s) linear infinite;
+}
+
+/*
+	Aura + laser: hold until --hero-scan-hold (set by heroSyncScan), then same rhythm as before.
+	First-iteration delay only matches perfectly; shimmer is subtle.
+*/
+.value-line-section--hero .hero-scan-fx-sweep::before {
+	animation: hero-scan-sweep-aura var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.42, 0.02, 0.58, 0.98)
+		infinite;
+	animation-delay: calc(var(--hero-scan-hold, 0) * var(--scan-line-sweep-duration, 4.1s));
+}
+
+.value-line-section--hero .hero-scan-fx-sweep::after {
+	animation: hero-scan-laser-x var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.45, 0.06, 0.55, 0.94) infinite;
+	animation-delay: calc(var(--hero-scan-hold, 0) * var(--scan-line-sweep-duration, 4.1s));
+}
+
 .value-line-sheen {
 	position: absolute;
 	inset: -25% -15%;
@@ -285,7 +325,8 @@
 	pointer-events: none;
 	z-index: 0;
 	background: transparent;
-	animation: value-line-sweep-y 4.1s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	animation: value-line-sweep-y var(--scan-line-sweep-duration, 4.1s) cubic-bezier(0.42, 0.02, 0.58, 0.98)
+		infinite;
 	will-change: top;
 }
 
@@ -306,7 +347,8 @@
 	);
 	filter: blur(14px);
 	opacity: 0.5;
-	animation: hero-scan-sweep-aura 6.8s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	animation: hero-scan-sweep-aura var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.42, 0.02, 0.58, 0.98)
+		infinite;
 	pointer-events: none;
 	will-change: transform, filter, opacity;
 }
@@ -334,7 +376,8 @@
 	background-position: 22% 50%;
 	background-repeat: no-repeat;
 	box-shadow: 0 0 12px rgba(0, 234, 255, 0.24);
-	animation: hero-scan-laser-x 6.8s cubic-bezier(0.45, 0.06, 0.55, 0.94) infinite;
+	animation: hero-scan-laser-x var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.45, 0.06, 0.55, 0.94)
+		infinite;
 	pointer-events: none;
 	will-change: background-position;
 }
@@ -422,15 +465,6 @@ body {
 }
 
 /* Landing hero: scan-line preview (same language as app scanner; calmer opacity & timing) */
-@keyframes hero-scan-sweep-y {
-	0% {
-		top: -14%;
-	}
-	100% {
-		top: 100%;
-	}
-}
-
 @keyframes hero-scan-sweep-aura {
 	0%,
 	100% {
@@ -1088,7 +1122,9 @@ body {
 	height: 12%;
 	top: -14%;
 	background: transparent;
-	animation: hero-scan-sweep-y 3.35s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	/* Same keyframe + duration as .value-line-sweep → shared phase / tempo */
+	animation: value-line-sweep-y var(--scan-line-sweep-duration, 4.1s) cubic-bezier(0.42, 0.02, 0.58, 0.98)
+		infinite;
 	will-change: top;
 }
 
@@ -1109,7 +1145,8 @@ body {
 	);
 	filter: blur(10px);
 	opacity: 0.48;
-	animation: hero-scan-sweep-aura 6.7s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	animation: hero-scan-sweep-aura var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.42, 0.02, 0.58, 0.98)
+		infinite;
 	pointer-events: none;
 	will-change: transform, filter, opacity;
 }
@@ -1137,7 +1174,8 @@ body {
 	background-position: 22% 50%;
 	background-repeat: no-repeat;
 	box-shadow: 0 0 9px rgba(0, 234, 255, 0.26);
-	animation: hero-scan-laser-x 6.7s cubic-bezier(0.45, 0.06, 0.55, 0.94) infinite;
+	animation: hero-scan-laser-x var(--scan-line-aura-duration, 6.8s) cubic-bezier(0.45, 0.06, 0.55, 0.94)
+		infinite;
 	will-change: background-position;
 }
 
