@@ -60,7 +60,7 @@
 						<p
 							class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm"
 						>
-							For people who network
+							Businesscard scanner app
 						</p>
 						<h1
 							class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
@@ -816,8 +816,7 @@
 					A business card should start a <em>relationship</em> not end up in a drawer.
 				</p>
 				<p class="value-line-sub">
-					Scan once, keep every detail, follow up with your templates while the moment is still
-					fresh.
+					Scan once, keep every detail, follow up while the moment is still fresh.
 				</p>
 			</div>
 		</section>
