@@ -189,7 +189,7 @@
 					</button>
 					<button
 						type="button"
-						class="min-h-12 w-full max-w-80 rounded-full border-0 bg-gradient-to-br from-[var(--accent)] to-[var(--accent-end)] px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[var(--shadow-btn-primary-sm)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
+						class="btn-accent-primary btn-accent-primary--grad-br btn-accent-primary--r-pill min-h-12 w-full max-w-80 px-5 py-[0.65rem] text-[0.9375rem] font-semibold tracking-[0.03em] text-[var(--accent-ink)] uppercase shadow-[var(--shadow-btn-primary-sm)] transition-[transform,box-shadow] duration-200 ease-out active:scale-[0.98] disabled:opacity-40 disabled:shadow-none"
 						onclick={handleScan}
 						disabled={offline || scanBusy || loading}
 					>

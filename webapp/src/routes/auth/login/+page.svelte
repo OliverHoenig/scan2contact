@@ -62,7 +62,7 @@
 
 		<button
 			type="submit"
-			class="inline-flex min-h-12 w-full items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-6 text-sm font-semibold text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
+			class="btn-accent-primary btn-accent-primary--r-md inline-flex min-h-12 w-full items-center justify-center px-6 text-sm font-semibold text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition hover:brightness-110 active:scale-[0.99] disabled:opacity-60"
 		>
 			Login
 		</button>

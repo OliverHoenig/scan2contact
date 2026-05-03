@@ -535,7 +535,7 @@
 				<div class="flex flex-col items-stretch gap-3">
 					<button
 						type="button"
-						class={`relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
+						class={`btn-accent-primary btn-accent-primary--r-md relative flex min-h-12 w-full max-w-full min-w-0 items-center justify-center gap-2 overflow-hidden px-[1.35rem] py-[0.85rem] text-center text-[0.9375rem] font-semibold tracking-[0.02em] whitespace-normal text-[var(--accent-ink)] shadow-[var(--shadow-btn-primary)] transition-[transform,filter] duration-200 ease-out not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 aria-disabled:shadow-none ${savedActions.followupSent ? 'opacity-90' : ''}`}
 						onclick={onFollowupCtaClick}
 						aria-disabled={loading || !primaryEmail(contact)}
 						title={!primaryEmail(contact)
@@ -784,7 +784,7 @@
 						</button>
 						<button
 							type="button"
-							class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] transition-[filter,transform] not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:w-auto"
+							class="btn-accent-primary btn-accent-primary--r-md min-h-11 w-full px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] transition-[filter,transform] not-[aria-disabled=true]:hover:brightness-[1.06] not-[aria-disabled=true]:active:scale-[0.98] aria-disabled:cursor-not-allowed aria-disabled:opacity-45 sm:w-auto"
 							onclick={onOpenMailAppClick}
 							aria-disabled={!selectedFollowupId ||
 								followupTemplatesLoading ||

@@ -36,7 +36,7 @@
 				</a>
 				<a
 					href={resolve('/auth/signup')}
-					class="inline-flex min-h-10 items-center justify-center rounded-[var(--radius-sm)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.98]"
+					class="btn-accent-primary btn-accent-primary--r-sm inline-flex min-h-10 items-center justify-center px-4 py-2 text-sm font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.98]"
 				>
 					Get started
 				</a>
@@ -97,7 +97,7 @@
 							</a>
 							<a
 								href={resolve('/app/scan')}
-								class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
+								class="btn-accent-primary btn-accent-primary--r-md inline-flex min-h-12 items-center justify-center px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
 							>
 								Open the app
 							</a>
@@ -857,7 +857,7 @@
 							</a>
 							<a
 								href={resolve('/app/scan')}
-								class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
+								class="btn-accent-primary btn-accent-primary--r-md inline-flex min-h-12 items-center justify-center px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
 							>
 								I already have an account
 							</a>

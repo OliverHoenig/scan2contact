@@ -175,7 +175,7 @@
 			</p>
 			<a
 				href={resolve('/auth/login')}
-				class="mt-3 inline-flex min-h-10 items-center justify-center rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 text-[0.875rem] font-semibold text-[var(--accent-ink)] no-underline"
+				class="btn-accent-primary btn-accent-primary--r-md mt-3 inline-flex min-h-10 items-center justify-center px-4 text-[0.875rem] font-semibold text-[var(--accent-ink)] no-underline"
 			>
 				Sign in
 			</a>
@@ -297,7 +297,7 @@
 				</button>
 				<button
 					type="button"
-					class="min-h-11 w-full rounded-[var(--radius-md)] border-0 bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12)] disabled:opacity-45 sm:w-auto"
+					class="btn-accent-primary btn-accent-primary--r-md min-h-11 w-full px-4 py-2.5 text-[0.875rem] font-semibold text-[var(--accent-ink)] disabled:opacity-45 sm:w-auto"
 					onclick={save}
 					disabled={saving}
 				>
