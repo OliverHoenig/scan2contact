@@ -909,6 +909,32 @@
 						</tbody>
 					</table>
 				</div>
+				<div class="mt-25">
+					<h2 class="sm:text-4x text-center text-3xl font-semibold tracking-tight">
+						Secure and private
+					</h2>
+					<p class="mt-3 text-center text-pretty text-[var(--text-muted)] sm:text-lg">
+						Your scanned contact data is never stored on our servers. We only process the data you
+						send to us.
+					</p>
+					<div class="mt-10 flex flex-row items-center justify-center gap-10">
+						<img
+							src="/badges/badge_dsgvo-konform.svg"
+							alt="DSGVO compliant"
+							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+						/>
+						<img
+							src="/badges/badge_based-in-germany.svg"
+							alt="Based in Germany"
+							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+						/>
+						<img
+							src="/badges/badge_hosted-in-eu.svg"
+							alt="Hosted in EU"
+							class="h-20 w-20 object-cover sm:h-25 sm:w-25"
+						/>
+					</div>
+				</div>
 			</div>
 		</section>
 
