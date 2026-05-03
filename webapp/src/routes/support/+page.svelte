@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { tick } from 'svelte';
 	import { resolve } from '$app/paths';
 
 	type Topic = {
@@ -158,9 +159,24 @@
 		});
 	});
 
+	function faqCountForTopic(topicId: string): number {
+		return faqs.filter((f) => f.topicId === topicId).length;
+	}
+
 	function clearFilters() {
 		query = '';
 		activeTopic = null;
+	}
+
+	async function onTopicCardClick(topicId: string) {
+		const turningOff = activeTopic === topicId;
+		if (turningOff) {
+			activeTopic = null;
+			return;
+		}
+		activeTopic = topicId;
+		await tick();
+		document.getElementById('help-articles')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
 </script>
 
@@ -210,6 +226,64 @@
 				</a>
 			</nav>
 		</div>
+		{#if activeTopic || normalizedQuery}
+			<div
+				class="border-t border-[var(--border)] bg-[var(--bg-raised)]/95 px-4 py-3 sm:px-6 lg:px-8"
+				aria-label="Active help filters"
+			>
+				<div
+					class="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+				>
+					<div class="min-w-0 text-sm leading-snug">
+						<p class="font-semibold text-[var(--text)]">You’re viewing a narrowed list.</p>
+						<p class="mt-1 text-[var(--text-muted)]">
+							{#if activeTopic}
+								{@const t = topics.find((x) => x.id === activeTopic)}
+								<span>
+									Topic
+									<span class="font-medium text-[var(--accent)]"> {t?.title}</span>
+									<span class="text-[var(--text-subtle)]">
+										— {filteredFaqs.length} answer{filteredFaqs.length === 1 ? '' : 's'} below</span
+									>
+								</span>
+							{/if}
+							{#if activeTopic && normalizedQuery}
+								<span class="text-[var(--text-subtle)]" aria-hidden="true"> · </span>
+							{/if}
+							{#if normalizedQuery}
+								<span>
+									Matching
+									<span class="font-medium text-[var(--text)]"> “{query.trim()}”</span>
+									<span class="text-[var(--text-subtle)]">
+										— {filteredFaqs.length} result{filteredFaqs.length === 1 ? '' : 's'}</span
+									>
+								</span>
+							{/if}
+						</p>
+					</div>
+					<div class="flex shrink-0 flex-wrap items-center gap-2">
+						<button
+							type="button"
+							class="inline-flex min-h-9 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border)] bg-[var(--bg-base)] px-3 text-sm font-medium text-[var(--text)] transition hover:border-[var(--border-strong)]"
+							onclick={() =>
+								document.getElementById('help-articles')?.scrollIntoView({
+									behavior: 'smooth',
+									block: 'start'
+								})}
+						>
+							Jump to answers
+						</button>
+						<button
+							type="button"
+							class="inline-flex min-h-9 items-center justify-center rounded-[var(--radius-sm)] border border-transparent px-3 text-sm font-medium text-[var(--accent)] underline underline-offset-4 transition hover:brightness-110"
+							onclick={clearFilters}
+						>
+							Show all help
+						</button>
+					</div>
+				</div>
+			</div>
+		{/if}
 	</header>
 
 	<main id="main">
@@ -260,6 +334,17 @@
 							autocomplete="off"
 							placeholder="e.g. camera permission, vCard, template…"
 							bind:value={query}
+							onkeydown={(e) => {
+								if (e.key === 'Enter' && query.trim()) {
+									e.preventDefault();
+									queueMicrotask(() =>
+										document.getElementById('help-articles')?.scrollIntoView({
+											behavior: 'smooth',
+											block: 'start'
+										})
+									);
+								}
+							}}
 							class="min-h-12 w-full bg-transparent px-3 py-3 text-[var(--text)] placeholder:text-[var(--text-subtle)] focus:outline-none"
 						/>
 					</div>
@@ -289,8 +374,17 @@
 					Browse by topic
 				</h2>
 				<p class="mt-2 max-w-2xl text-sm text-[var(--text-muted)] sm:text-base">
-					Pick the area that matches your question—each section lists answers you can try before
-					writing in.
+					<strong class="font-semibold text-[var(--text)]">Tap a topic</strong> to jump straight to
+					the matching answers <strong class="font-semibold text-[var(--text)]">further down this page</strong>.
+					The list under “Answers” updates so you only see what fits. Tap the same topic again to show
+					everything.
+				</p>
+				<p
+					id="topic-cards-hint"
+					class="mt-3 max-w-2xl text-xs text-[var(--text-subtle)] sm:text-sm"
+				>
+					Tip: after you choose a topic, use the bar under the site header to jump back to the
+					articles or clear your selection.
 				</p>
 
 				{#if filteredTopics.length === 0}
@@ -314,10 +408,10 @@
 									topic.id
 										? 'border-[var(--accent)] ring-2 ring-[var(--accent-muted)]'
 										: ''}"
-									onclick={() => {
-										activeTopic = activeTopic === topic.id ? null : topic.id;
-									}}
+									onclick={() => onTopicCardClick(topic.id)}
 									aria-pressed={activeTopic === topic.id}
+									aria-describedby="topic-cards-hint"
+									aria-label={`${activeTopic === topic.id ? 'Clear topic and show all answers. ' : ''}Show ${faqCountForTopic(topic.id)} answer${faqCountForTopic(topic.id) === 1 ? '' : 's'} about ${topic.title}. Scrolls to the Answers section.`}
 								>
 									<span
 										class="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] bg-[var(--accent-muted)] text-[var(--accent)] transition group-hover:brightness-110"
@@ -391,22 +485,38 @@
 											</svg>
 										{/if}
 									</span>
-									<span class="font-semibold text-[var(--text)]">{topic.title}</span>
+									<div class="flex flex-wrap items-center gap-2">
+										<span class="font-semibold text-[var(--text)]">{topic.title}</span>
+										<span
+											class="rounded-full border border-[var(--border)] bg-[var(--bg-raised)] px-2 py-0.5 text-xs font-medium text-[var(--text-muted)]"
+										>
+											{faqCountForTopic(topic.id)} article{faqCountForTopic(topic.id) === 1
+												? ''
+												: 's'}
+										</span>
+									</div>
 									<span class="mt-1 text-sm leading-relaxed text-[var(--text-muted)]"
 										>{topic.blurb}</span
 									>
 									<span
-										class="mt-4 inline-flex items-center gap-1 text-sm font-medium text-[var(--accent)]"
+										class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-[var(--accent)]"
 									>
-										{activeTopic === topic.id ? 'Show all topics' : 'Filter articles'}
-										<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-											<path
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M19 9l-7 7-7-7"
-											/>
-										</svg>
+										{#if activeTopic === topic.id}
+											<span class="text-[var(--text-muted)]">Selected</span>
+											<span class="text-[var(--text)]">· Tap to show all topics again</span>
+										{:else}
+											<span>Jump to {faqCountForTopic(topic.id)} answer{faqCountForTopic(topic.id) === 1
+												? ''
+												: 's'} below</span>
+											<svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path
+													stroke-linecap="round"
+													stroke-linejoin="round"
+													stroke-width="2"
+													d="M19 14l-7 7m0 0l-7-7m7 7V3"
+												/>
+											</svg>
+										{/if}
 									</span>
 								</button>
 							</li>
@@ -417,27 +527,86 @@
 		</section>
 
 		<!-- FAQ -->
-		<section class="bg-[var(--bg-base)] px-4 py-14 sm:px-6 lg:px-8" aria-labelledby="faq-heading">
+		<section
+			id="help-articles"
+			class="scroll-mt-36 bg-[var(--bg-base)] px-4 py-14 sm:scroll-mt-40 sm:px-6 lg:px-8"
+			aria-labelledby="faq-heading"
+		>
 			<div class="mx-auto max-w-6xl">
 				<h2 id="faq-heading" class="text-xl font-semibold tracking-tight sm:text-2xl">
-					Articles
+					Answers
 				</h2>
-				<p class="mt-2 text-sm text-[var(--text-muted)] sm:text-base">
-					{#if activeTopic}
-						Showing
-						<strong class="font-semibold text-[var(--text)]"
-							>{topics.find((t) => t.id === activeTopic)?.title}</strong
+
+				{#if activeTopic || normalizedQuery}
+					<div
+						class="mt-5 rounded-[var(--radius-lg)] border border-[var(--accent)]/35 bg-[var(--accent-muted)] px-4 py-4 sm:px-5 sm:py-4"
+						role="status"
+						aria-label="Active filters on this answer list"
+					>
+						<div
+							class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6"
 						>
-						only.
-						<button
-							type="button"
-							class="ml-1 font-medium text-[var(--accent)] underline underline-offset-4 hover:brightness-110"
-							onclick={() => (activeTopic = null)}
-						>
-							Show all
-						</button>
+							<div class="min-w-0">
+								<p class="text-sm font-semibold text-[var(--text)]">
+									You’re viewing a filtered list
+								</p>
+								<p class="mt-1.5 text-sm leading-relaxed text-[var(--text-muted)]">
+									Only answers that match your choices are shown. Clear filters to see all
+									{faqs.length} answers again.
+								</p>
+								<ul class="mt-3 list-none space-y-1.5 text-sm text-[var(--text-muted)]">
+									{#if activeTopic}
+										{@const t = topics.find((x) => x.id === activeTopic)}
+										<li class="flex flex-wrap items-baseline gap-x-1.5">
+											<span class="font-medium text-[var(--text)]">Topic:</span>
+											<span class="font-medium text-[var(--accent)]">{t?.title}</span>
+											<span class="text-[var(--text-subtle)]"
+												>({filteredFaqs.length} shown)</span
+											>
+										</li>
+									{/if}
+									{#if normalizedQuery}
+										<li class="flex flex-wrap items-baseline gap-x-1.5">
+											<span class="font-medium text-[var(--text)]">Search:</span>
+											<span class="rounded border border-[var(--border)] bg-[var(--bg-base)] px-1.5 py-0.5 font-medium text-[var(--text)]"
+												>“{query.trim()}”</span
+											>
+											<span class="text-[var(--text-subtle)]"
+												>({filteredFaqs.length} match{filteredFaqs.length === 1 ? '' : 'es'})</span
+											>
+										</li>
+									{/if}
+								</ul>
+							</div>
+							<div class="flex shrink-0 flex-col gap-2 sm:items-end">
+								<button
+									type="button"
+									class="inline-flex min-h-10 w-full items-center justify-center rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-4 text-sm font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] sm:w-auto"
+									onclick={clearFilters}
+								>
+									Show all answers
+								</button>
+								{#if activeTopic}
+									<button
+										type="button"
+										class="text-center text-sm font-medium text-[var(--accent)] underline underline-offset-4 transition hover:brightness-110 sm:text-right"
+										onclick={() => (activeTopic = null)}
+									>
+										Remove topic only
+									</button>
+								{/if}
+							</div>
+						</div>
+					</div>
+				{/if}
+
+				<p class="mt-4 text-sm text-[var(--text-muted)] sm:text-base">
+					{#if activeTopic || normalizedQuery}
+						<strong class="font-semibold text-[var(--text)]">{filteredFaqs.length}</strong>
+						matching answer{filteredFaqs.length === 1 ? '' : 's'} below.
 					{:else}
-						All topics—use search or the cards above to narrow down.
+						<strong class="font-semibold text-[var(--text)]">{faqs.length}</strong> answers in total.
+						Pick a topic above or search to shorten this list.
 					{/if}
 				</p>
 
