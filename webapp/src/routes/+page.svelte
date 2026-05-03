@@ -51,14 +51,15 @@
 	</header>
 
 	<main>
-		<!-- Hero -->
+		<!-- Hero (same ambient treatment as value line; content grid unchanged) -->
 		<section
-			class="relative mx-auto max-w-6xl overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8"
+			class="value-line-section value-line-section--hero relative overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8"
 		>
-			<div class="ambient-scan-grid ambient-scan-grid--hero" aria-hidden="true"></div>
-			<div
-				class="relative z-10 mx-auto max-w-6xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16"
-			>
+			<div class="value-line-sheen" aria-hidden="true"></div>
+			<div class="value-line-aurora" aria-hidden="true"></div>
+			<div class="value-line-sweep" aria-hidden="true"></div>
+			<div class="ambient-scan-grid ambient-scan-grid--value" aria-hidden="true"></div>
+			<div class="relative z-10 mx-auto max-w-6xl py-12 sm:py-14 lg:py-16">
 				<div
 					class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(220px,17.5rem)] lg:gap-14 xl:gap-16"
 				>

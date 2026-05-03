@@ -235,6 +235,15 @@
 	opacity: 0.85;
 }
 
+/* Hero: full-bleed band under header — no second top rule */
+.value-line-section--hero {
+	border-top: none;
+}
+
+.value-line-section--hero::after {
+	display: none;
+}
+
 .value-line-sheen {
 	position: absolute;
 	inset: -25% -15%;
