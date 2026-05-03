@@ -11,9 +11,7 @@
 </svelte:head>
 
 <div class="min-h-dvh text-[var(--text)]">
-	<header
-		class="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--bg-base)]"
-	>
+	<header class="sticky top-0 z-20 border-b border-[var(--border)] bg-[var(--bg-base)]">
 		<div
 			class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 lg:px-8"
 		>
@@ -51,72 +49,96 @@
 		<section
 			class="relative mx-auto max-w-6xl overflow-hidden px-4 pt-14 pb-20 sm:px-6 sm:pt-20 sm:pb-28 lg:px-8"
 		>
+			<div class="ambient-scan-grid ambient-scan-grid--hero" aria-hidden="true"></div>
 			<div
-				class="ambient-scan-grid ambient-scan-grid--hero"
-				aria-hidden="true"
-			></div>
-			<div
-				class="relative z-10 mx-auto max-w-3xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-12 sm:py-16"
+				class="relative z-10 mx-auto max-w-6xl rounded-[2rem] border border-[var(--border)] bg-[var(--bg-raised)] px-6 py-12 sm:px-10 sm:py-14 lg:px-14 lg:py-16"
 			>
-				<div class="text-center">
-					<p class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm">
-						For people who network
-					</p>
-					<h1
-						class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
-					>
-						Never lose another lead from a business card.
-					</h1>
-					<p
-						class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl"
-					>
-						Scan the business card and turn it into a clean contact you can save in seconds. Then send
-						a follow-up mail with one click based on your individual mail templates while the
-						conversation is still fresh.
-					</p>
-					<div
-						class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center"
-					>
-						<a
-							href={resolve('/auth/signup')}
-							class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
+				<div
+					class="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(220px,17.5rem)] lg:gap-14 xl:gap-16"
+				>
+					<div class="text-center lg:text-left">
+						<p
+							class="text-xs font-semibold tracking-[0.22em] text-[var(--accent)] uppercase sm:text-sm"
 						>
-							Start scanning free
-							<svg
-								class="h-4 w-4 opacity-90"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								aria-hidden="true"
+							For people who network
+						</p>
+						<h1
+							class="mt-4 text-4xl font-semibold tracking-tight text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.1]"
+						>
+							Never lose another lead from a business card.
+						</h1>
+						<p
+							class="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-pretty text-[var(--text-muted)] sm:text-xl lg:mx-0"
+						>
+							Scan the business card and turn it into a clean contact you can save in seconds. Then
+							send a follow-up mail with one click based on your individual mail templates while the
+							conversation is still fresh.
+						</p>
+						<div
+							class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center lg:justify-start"
+						>
+							<a
+								href={resolve('/auth/signup')}
+								class="inline-flex min-h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--border-strong)] bg-[var(--bg-base)] px-8 text-base font-semibold text-[var(--text)] transition hover:border-[var(--border)] hover:bg-[var(--bg-input)] active:scale-[0.99]"
 							>
-								<path d="M5 12h14M13 6l6 6-6 6" />
-							</svg>
-						</a>
-						<a
-							href={resolve('/app/scan')}
-							class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
-						>
-							Open the app
-						</a>
+								Start scanning free
+								<svg
+									class="h-4 w-4 opacity-90"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									aria-hidden="true"
+								>
+									<path d="M5 12h14M13 6l6 6-6 6" />
+								</svg>
+							</a>
+							<a
+								href={resolve('/app/scan')}
+								class="inline-flex min-h-12 items-center justify-center rounded-[var(--radius-md)] border border-transparent bg-[linear-gradient(145deg,var(--accent)_0%,var(--accent-end)_100%)] px-8 text-base font-semibold text-[var(--accent-ink)] transition hover:brightness-110 active:scale-[0.99]"
+							>
+								Open the app
+							</a>
+						</div>
+						<p class="mt-5 text-sm text-[var(--text-subtle)]">Free to try · No credit card</p>
 					</div>
-					<p class="mt-5 text-sm text-[var(--text-subtle)]">
-						Free to try · Works on your phone · No credit card
-					</p>
+
+					<div class="hero-scan-demo flex flex-col items-center" aria-hidden="true">
+						<div class="hero-scan-phone">
+							<span class="hero-scan-phone__power" aria-hidden="true"></span>
+							<div class="hero-scan-phone__ledge">
+								<div class="hero-scan-phone__notch"></div>
+							</div>
+							<div class="hero-scan-phone__screen">
+								<div class="hero-scan-frame">
+									<div class="hero-scan-card-mock">
+										<p class="hero-scan-card-mock__kind">Business card</p>
+										<p class="hero-scan-card-mock__name">Alex Morgan</p>
+										<p class="hero-scan-card-mock__role">Partnerships · Acme Studio</p>
+										<div class="hero-scan-card-mock__divider"></div>
+										<p class="hero-scan-card-mock__detail">alex@acme.co</p>
+										<p class="hero-scan-card-mock__detail hero-scan-card-mock__detail--muted">
+											+1 (415) 555‑0142
+										</p>
+									</div>
+									<div class="hero-scan-fx">
+										<div class="hero-scan-fx-idle-grid"></div>
+										<div class="hero-scan-fx-sweep"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<p class="hero-scan-label w-full items-center text-center">Works on your phone</p>
+					</div>
 				</div>
 			</div>
 
 			<!-- Product preview card -->
 			<div class="relative z-10 mx-auto mt-16 max-w-2xl lg:mt-20">
 				<div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)]">
-					<video
-						src="/videos/preview.mp4"
-						autoplay
-						muted
-						loop
-						class="h-full w-full object-cover"
+					<video src="/videos/preview.mp4" autoplay muted loop class="h-full w-full object-cover"
 					></video>
 				</div>
 			</div>
@@ -815,8 +837,8 @@
 							Ready for your next networking event?
 						</h2>
 						<p class="mx-auto mt-4 max-w-lg text-[var(--text-muted)]">
-							Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start the
-							same day.
+							Create an account—fewer spreadsheets, fewer lost cards, and follow-ups you can start
+							the same day.
 						</p>
 						<div class="mt-10 flex flex-col items-stretch justify-center gap-3 sm:flex-row">
 							<a
@@ -850,7 +872,10 @@
 		</section>
 
 		<!-- FAQ -->
-		<section class="border-t border-[var(--border)] bg-[var(--bg-base)] py-20 sm:py-24" aria-labelledby="faq-heading">
+		<section
+			class="border-t border-[var(--border)] bg-[var(--bg-base)] py-20 sm:py-24"
+			aria-labelledby="faq-heading"
+		>
 			<div class="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
 				<div class="text-center">
 					<h2 id="faq-heading" class="text-3xl font-semibold tracking-tight sm:text-4xl">

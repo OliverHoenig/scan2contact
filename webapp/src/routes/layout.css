@@ -157,3 +157,381 @@ body {
 	outline: 2px solid var(--accent);
 	outline-offset: 2px;
 }
+
+/* Landing hero: scan-line preview (same language as app scanner; calmer opacity & timing) */
+@keyframes hero-scan-sweep-y {
+	0% {
+		top: -14%;
+	}
+	100% {
+		top: 100%;
+	}
+}
+
+@keyframes hero-scan-sweep-aura {
+	0%,
+	100% {
+		filter: blur(8px);
+		opacity: 0.26;
+		transform: translateY(-50%) translateX(-6%);
+	}
+	17% {
+		filter: blur(12px);
+		opacity: 0.34;
+		transform: translateY(-50%) translateX(4%);
+	}
+	34% {
+		filter: blur(16px);
+		opacity: 0.4;
+		transform: translateY(-50%) translateX(-2%);
+	}
+	52% {
+		filter: blur(13px);
+		opacity: 0.36;
+		transform: translateY(-50%) translateX(6%);
+	}
+	71% {
+		filter: blur(9px);
+		opacity: 0.3;
+		transform: translateY(-50%) translateX(-4%);
+	}
+	88% {
+		filter: blur(14px);
+		opacity: 0.38;
+		transform: translateY(-50%) translateX(2%);
+	}
+}
+
+@keyframes hero-scan-laser-x {
+	0%,
+	100% {
+		background-position: 22% 50%;
+	}
+	13% {
+		background-position: 68% 50%;
+	}
+	27% {
+		background-position: 38% 50%;
+	}
+	41% {
+		background-position: 91% 50%;
+	}
+	55% {
+		background-position: 15% 50%;
+	}
+	69% {
+		background-position: 77% 50%;
+	}
+	84% {
+		background-position: 44% 50%;
+	}
+}
+
+@keyframes hero-scan-grid-pulse {
+	0%,
+	100% {
+		opacity: 0.04;
+	}
+	50% {
+		opacity: 0.075;
+	}
+}
+
+.hero-scan-demo {
+	width: 100%;
+	max-width: 17rem;
+	margin-inline: auto;
+}
+
+@media (min-width: 1024px) {
+	.hero-scan-demo {
+		margin-inline: 0;
+		margin-left: auto;
+		max-width: 17rem;
+	}
+}
+
+/* Phone chassis: makes clear the scene is “camera on your handset” */
+.hero-scan-phone {
+	position: relative;
+	width: min(100%, 13.35rem);
+	margin-inline: auto;
+	border-radius: 2.35rem;
+	padding: 0.4rem 0.45rem 0.48rem;
+	background:
+		linear-gradient(180deg, rgba(255, 255, 255, 0.09) 0%, transparent 14%),
+		linear-gradient(145deg, #3d4756 0%, #1e252f 42%, #252d3a 100%);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.11),
+		0 0 0 1px rgba(0, 0, 0, 0.45),
+		0 24px 52px -20px rgba(0, 0, 0, 0.72);
+}
+
+.hero-scan-phone::before,
+.hero-scan-phone::after {
+	content: '';
+	position: absolute;
+	width: 3px;
+	border-radius: 0 3px 3px 0;
+	background: linear-gradient(180deg, #5c6674, #3a424d);
+	box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.35);
+	pointer-events: none;
+}
+
+.hero-scan-phone::before {
+	left: 0;
+	top: 22%;
+	height: 14%;
+	border-radius: 0 3px 3px 0;
+}
+
+.hero-scan-phone::after {
+	left: 0;
+	top: 40%;
+	height: 10%;
+	border-radius: 0 3px 3px 0;
+}
+
+.hero-scan-phone__power {
+	position: absolute;
+	right: 0;
+	top: 26%;
+	width: 3px;
+	height: 12%;
+	border-radius: 3px 0 0 3px;
+	background: linear-gradient(180deg, #5c6674, #3a424d);
+	box-shadow: inset 1px 0 0 rgba(0, 0, 0, 0.35);
+	pointer-events: none;
+}
+
+.hero-scan-phone__ledge {
+	display: flex;
+	justify-content: center;
+	padding: 0.15rem 0 0.35rem;
+}
+
+.hero-scan-phone__notch {
+	width: 5rem;
+	height: 1.08rem;
+	border-radius: 999px;
+	background: linear-gradient(180deg, #0a0e14 0%, #05080c 100%);
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.06),
+		0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.hero-scan-phone__screen {
+	border-radius: 1.85rem;
+	overflow: hidden;
+	background: #03070c;
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.hero-scan-frame {
+	position: relative;
+	width: 100%;
+	/* ~modern phone portrait — slightly wider than 9:20 for readability */
+	aspect-ratio: 10 / 21;
+	height: auto;
+	border-radius: 1.85rem;
+	background:
+		radial-gradient(ellipse 95% 85% at 50% 115%, rgba(0, 100, 180, 0.22), transparent 55%),
+		var(--bg-raised);
+	overflow: hidden;
+}
+
+.hero-scan-card-mock {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	/* ISO ID-1 in portrait (short edge horizontal, long edge vertical — “hochkant”) */
+	width: min(94%, 9.45rem);
+	aspect-ratio: 54 / 86;
+	height: auto;
+	transform: translate(-50%, -50%) rotate(-2.5deg);
+	transform-origin: center center;
+	border-radius: 0.45rem;
+	border: 1px solid rgba(15, 40, 65, 0.14);
+	background:
+		linear-gradient(145deg, rgba(255, 255, 255, 0.55) 0%, transparent 38%),
+		linear-gradient(168deg, #fafcff 0%, #e8f0f8 38%, #d4e0ed 100%);
+	box-shadow:
+		0 1px 0 rgba(255, 255, 255, 0.85) inset,
+		0 2px 0 rgba(255, 255, 255, 0.35) inset,
+		0 18px 36px -12px rgba(0, 18, 40, 0.45),
+		0 0 0 1px rgba(0, 30, 55, 0.06);
+	padding: 0.65rem 0.54rem 0.58rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.12rem;
+	pointer-events: none;
+	z-index: 0;
+}
+
+.hero-scan-card-mock__kind {
+	margin: 0;
+	font-size: 0.46875rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+	color: rgba(12, 36, 62, 0.42);
+	line-height: 1.2;
+}
+
+.hero-scan-card-mock__name {
+	margin: 0.12rem 0 0;
+	font-size: 0.78125rem;
+	font-weight: 700;
+	letter-spacing: -0.02em;
+	color: #0f2438;
+	line-height: 1.12;
+}
+
+.hero-scan-card-mock__role {
+	margin: 0;
+	font-size: 0.53125rem;
+	font-weight: 600;
+	color: rgba(15, 40, 65, 0.55);
+	line-height: 1.22;
+}
+
+.hero-scan-card-mock__divider {
+	margin: 0.2rem 0 0.1rem;
+	height: 1px;
+	background: linear-gradient(
+		90deg,
+		rgba(15, 40, 65, 0.18),
+		rgba(15, 40, 65, 0.06) 50%,
+		transparent
+	);
+}
+
+.hero-scan-card-mock__detail {
+	margin: 0;
+	font-size: 0.5rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: rgba(15, 40, 65, 0.72);
+	line-height: 1.28;
+	word-break: break-word;
+}
+
+.hero-scan-card-mock__detail--muted {
+	font-weight: 500;
+	color: rgba(15, 40, 65, 0.5);
+}
+
+.hero-scan-fx {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	overflow: hidden;
+	border-radius: inherit;
+	z-index: 1;
+}
+
+.hero-scan-fx-idle-grid {
+	position: absolute;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(0, 234, 255, 0.32) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(0, 234, 255, 0.24) 1px, transparent 1px);
+	background-size: 22px 22px;
+	animation: hero-scan-grid-pulse 6.5s ease-in-out infinite;
+	-webkit-mask-image: radial-gradient(ellipse 88% 78% at 50% 48%, #000 0%, transparent 92%);
+	mask-image: radial-gradient(ellipse 88% 78% at 50% 48%, #000 0%, transparent 92%);
+}
+
+.hero-scan-fx-sweep {
+	position: absolute;
+	left: -8%;
+	width: 116%;
+	height: 12%;
+	top: -14%;
+	background: transparent;
+	animation: hero-scan-sweep-y 3.35s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	will-change: top;
+}
+
+.hero-scan-fx-sweep::before {
+	content: '';
+	position: absolute;
+	left: -4%;
+	right: -4%;
+	top: 50%;
+	height: 200%;
+	transform: translateY(-50%);
+	border-radius: 999px;
+	background: radial-gradient(
+		ellipse 100% 48% at 50% 50%,
+		rgba(0, 245, 255, 0.16) 0%,
+		rgba(0, 220, 255, 0.05) 45%,
+		transparent 72%
+	);
+	filter: blur(10px);
+	opacity: 0.48;
+	animation: hero-scan-sweep-aura 6.7s cubic-bezier(0.42, 0.02, 0.58, 0.98) infinite;
+	pointer-events: none;
+	will-change: transform, filter, opacity;
+}
+
+.hero-scan-fx-sweep::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 50%;
+	height: 2px;
+	transform: translateY(-50%);
+	border-radius: 999px;
+	background: linear-gradient(
+		90deg,
+		rgba(0, 160, 255, 0) 0%,
+		rgba(0, 210, 255, 0.09) 34%,
+		rgba(220, 240, 255, 0.18) 45%,
+		rgba(0, 245, 255, 0.82) 50%,
+		rgba(190, 210, 255, 0.14) 55%,
+		rgba(0, 200, 255, 0.07) 66%,
+		rgba(0, 160, 255, 0) 100%
+	);
+	background-size: 280% 100%;
+	background-position: 22% 50%;
+	background-repeat: no-repeat;
+	box-shadow: 0 0 9px rgba(0, 234, 255, 0.26);
+	animation: hero-scan-laser-x 6.7s cubic-bezier(0.45, 0.06, 0.55, 0.94) infinite;
+	will-change: background-position;
+}
+
+.hero-scan-label {
+	margin-top: 0.625rem;
+	text-align: center;
+	font-size: 0.6875rem;
+	font-weight: 600;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--text-subtle);
+}
+
+@media (min-width: 1024px) {
+	.hero-scan-label {
+		text-align: right;
+		padding-right: 0.125rem;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.hero-scan-fx-idle-grid,
+	.hero-scan-fx-sweep,
+	.hero-scan-fx-sweep::before,
+	.hero-scan-fx-sweep::after {
+		animation: none;
+	}
+
+	.hero-scan-fx-sweep {
+		top: 40%;
+	}
+
+	.hero-scan-fx-sweep::before {
+		opacity: 0.28;
+	}
+}
