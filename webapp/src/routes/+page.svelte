@@ -2,12 +2,15 @@
 	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
 
+	const MQ_MOBILE_GLOW = '(max-width: 639px)';
+
 	/** In-phone sweep: tuned start vs background band + slightly faster sweep (same cycle length as bg). */
 	function heroSyncScan(section: HTMLElement) {
 		if (!browser) return;
 
 		const styleId = 'hero-scan-sync-keyframes';
 		let ro: ResizeObserver | undefined;
+		let rafId = 0;
 
 		/** Wall-clock lead before geometric phone-top contact (lower = start later; 0 = on geometry). */
 		const PHONE_START_LEAD_S = 0.2;
@@ -19,63 +22,28 @@
 			section.style.removeProperty('--hero-scan-hold');
 		}
 
-		function paint() {
-			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-				removeKf();
-				return;
-			}
-
-			const phone = section.querySelector('.hero-scan-phone') as HTMLElement | null;
-			if (!phone) return;
-
-			const sr = section.getBoundingClientRect();
-			const H = Math.max(sr.height, 1);
-			const phoneTopRel = phone.getBoundingClientRect().top - sr.top;
-
-			const sweepS =
-				parseFloat(getComputedStyle(section).getPropertyValue('--scan-line-sweep-duration')) || 4.1;
-
-			/*
-				.value-line-sweep: top animates -14% → 102% of section height (116% range).
-				Top edge of band in px: (-0.14 + 1.16 * p) * H. Match phone top, then start PHONE_START_LEAD_S earlier.
-			*/
-			const pGeom = (phoneTopRel / H + 0.14) / 1.16;
-			const pHold = Math.min(0.96, Math.max(0, pGeom - PHONE_START_LEAD_S / sweepS));
-			const pSweepEnd = pHold + (1 - pHold) * PHONE_SWEEP_TIME_FRAC;
-			const pctHold = (pHold * 100).toFixed(2);
-			const pctEnd = (pSweepEnd * 100).toFixed(2);
-
-			/* Chassis glow when background band meets phone (geometric hit, not sweep lead). */
-			const pHit = Math.min(0.97, Math.max(0.02, pGeom));
-			const pGlowIn0 = Math.max(0, pHit - 0.13);
-			const pGlowIn1 = Math.max(0, pHit - 0.085);
-			const pGlowIn2 = Math.max(0, pHit - 0.045);
-			const pGlowMid = Math.min(0.985, pHit + 0.035);
-			const pGlowPeak = Math.min(0.99, pHit + 0.1);
-			const pGlowOut1 = Math.min(0.993, pGlowPeak + 0.14);
-			const pGlowOut2 = Math.min(0.996, pGlowPeak + 0.32);
-			const pGlowFade = Math.min(0.998, pGlowPeak + 0.52);
-			const pctGlowIn0 = (pGlowIn0 * 100).toFixed(2);
-			const pctGlowIn1 = (pGlowIn1 * 100).toFixed(2);
-			const pctGlowIn2 = (pGlowIn2 * 100).toFixed(2);
-			const pctGlowHit = (pHit * 100).toFixed(2);
-			const pctGlowMid = (pGlowMid * 100).toFixed(2);
-			const pctGlowPeak = (pGlowPeak * 100).toFixed(2);
-			const pctGlowOut1 = (pGlowOut1 * 100).toFixed(2);
-			const pctGlowOut2 = (pGlowOut2 * 100).toFixed(2);
-			const pctGlowFade = (pGlowFade * 100).toFixed(2);
-
+		function injectKeyframes(sweep: string, glow: string) {
 			let el = document.getElementById(styleId) as HTMLStyleElement | null;
 			if (!el) {
 				el = document.createElement('style');
 				el.id = styleId;
 				document.head.appendChild(el);
 			}
-			el.textContent = `@keyframes hero-phone-sweep-sync {
-  0%, ${pctHold}% { top: -14%; }
-  ${pctEnd}%, 100% { top: 102%; }
-}
-@keyframes hero-phone-contact-glow {
+			el.textContent = `${sweep}\n${glow}`;
+		}
+
+		function buildGlowKeyframesDesktop(
+			pctGlowIn0: string,
+			pctGlowIn1: string,
+			pctGlowIn2: string,
+			pctGlowHit: string,
+			pctGlowMid: string,
+			pctGlowPeak: string,
+			pctGlowOut1: string,
+			pctGlowOut2: string,
+			pctGlowFade: string
+		): string {
+			return `@keyframes hero-phone-contact-glow {
   0%, ${pctGlowIn0}% {
     filter: none;
   }
@@ -125,17 +93,105 @@
     filter: none;
   }
 }`;
+		}
+
+		function paint() {
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				removeKf();
+				return;
+			}
+
+			const phone = section.querySelector('.hero-scan-phone') as HTMLElement | null;
+			if (!phone) return;
+
+			const sr = section.getBoundingClientRect();
+			const H = Math.max(sr.height, 1);
+			const phoneTopRel = phone.getBoundingClientRect().top - sr.top;
+
+			const sweepS =
+				parseFloat(getComputedStyle(section).getPropertyValue('--scan-line-sweep-duration')) || 4.1;
+
+			/*
+				.value-line-sweep: top animates -14% → 102% of section height (116% range).
+				Top edge of band in px: (-0.14 + 1.16 * p) * H. Match phone top, then start PHONE_START_LEAD_S earlier.
+			*/
+			const pGeom = (phoneTopRel / H + 0.14) / 1.16;
+			const pHold = Math.min(0.96, Math.max(0, pGeom - PHONE_START_LEAD_S / sweepS));
+			const pSweepEnd = pHold + (1 - pHold) * PHONE_SWEEP_TIME_FRAC;
+			const pctHold = (pHold * 100).toFixed(2);
+			const pctEnd = (pSweepEnd * 100).toFixed(2);
+
+			const mobileGlow = window.matchMedia(MQ_MOBILE_GLOW).matches;
+			const sweepKf = `@keyframes hero-phone-sweep-sync {
+  0%, ${pctHold}% { top: -14%; }
+  ${pctEnd}%, 100% { top: 102%; }
+}`;
+
+			let glowKf: string;
+			if (mobileGlow) {
+				/* CSS disables chassis filter animation on narrow viewports; keep a tiny rule for valid @keyframes. */
+				glowKf = `@keyframes hero-phone-contact-glow {
+  0%, 100% { filter: none; }
+}`;
+			} else {
+				const pHit = Math.min(0.97, Math.max(0.02, pGeom));
+				const pGlowIn0 = Math.max(0, pHit - 0.13);
+				const pGlowIn1 = Math.max(0, pHit - 0.085);
+				const pGlowIn2 = Math.max(0, pHit - 0.045);
+				const pGlowMid = Math.min(0.985, pHit + 0.035);
+				const pGlowPeak = Math.min(0.99, pHit + 0.1);
+				const pGlowOut1 = Math.min(0.993, pGlowPeak + 0.14);
+				const pGlowOut2 = Math.min(0.996, pGlowPeak + 0.32);
+				const pGlowFade = Math.min(0.998, pGlowPeak + 0.52);
+				const pctGlowIn0 = (pGlowIn0 * 100).toFixed(2);
+				const pctGlowIn1 = (pGlowIn1 * 100).toFixed(2);
+				const pctGlowIn2 = (pGlowIn2 * 100).toFixed(2);
+				const pctGlowHit = (pHit * 100).toFixed(2);
+				const pctGlowMid = (pGlowMid * 100).toFixed(2);
+				const pctGlowPeak = (pGlowPeak * 100).toFixed(2);
+				const pctGlowOut1 = (pGlowOut1 * 100).toFixed(2);
+				const pctGlowOut2 = (pGlowOut2 * 100).toFixed(2);
+				const pctGlowFade = (pGlowFade * 100).toFixed(2);
+
+				glowKf = buildGlowKeyframesDesktop(
+					pctGlowIn0,
+					pctGlowIn1,
+					pctGlowIn2,
+					pctGlowHit,
+					pctGlowMid,
+					pctGlowPeak,
+					pctGlowOut1,
+					pctGlowOut2,
+					pctGlowFade
+				);
+			}
+
+			injectKeyframes(sweepKf, glowKf);
 			section.style.setProperty('--hero-scan-hold', `${pHold.toFixed(4)}`);
 		}
 
+		function schedulePaint() {
+			if (rafId) return;
+			rafId = requestAnimationFrame(() => {
+				rafId = 0;
+				paint();
+			});
+		}
+
+		const onMqMobile = () => schedulePaint();
+
 		paint();
-		ro = new ResizeObserver(paint);
+		const mqMobile = window.matchMedia(MQ_MOBILE_GLOW);
+		mqMobile.addEventListener('change', onMqMobile);
+
+		ro = new ResizeObserver(() => schedulePaint());
 		ro.observe(section);
-		const phone = section.querySelector('.hero-scan-phone');
-		if (phone) ro.observe(phone);
 
 		return {
 			destroy() {
+				mqMobile.removeEventListener('change', onMqMobile);
+				if (rafId) cancelAnimationFrame(rafId);
+				rafId = 0;
 				ro?.disconnect();
 				removeKf();
 			}
@@ -1172,16 +1228,28 @@
 							src="/badges/badge_dsgvo-konform.svg"
 							alt="DSGVO compliant"
 							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
+							width="96"
+							height="96"
+							loading="lazy"
+							decoding="async"
 						/>
 						<img
 							src="/badges/badge_based-in-germany.svg"
 							alt="Based in Germany"
 							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
+							width="96"
+							height="96"
+							loading="lazy"
+							decoding="async"
 						/>
 						<img
 							src="/badges/badge_hosted-in-eu.svg"
 							alt="Hosted in EU"
 							class="h-20 w-20 object-cover transition duration-300 hover:opacity-95 sm:h-24 sm:w-24"
+							width="96"
+							height="96"
+							loading="lazy"
+							decoding="async"
 						/>
 					</div>
 				</div>
