@@ -159,7 +159,7 @@
 	}
 
 	function linkedinPeopleSearchKeywords(c: Contact): string {
-		const parts = [c.firstName, c.lastName, c.company]
+		const parts = [c.firstName, c.lastName]
 			.map((s) => (typeof s === 'string' ? s.trim() : ''))
 			.filter(Boolean);
 		return parts.join(' ');
@@ -203,7 +203,7 @@
 		}
 		if (!contact || !canOpenLinkedInSearch(contact)) {
 			window.alert(
-				"You can't open LinkedIn search yet. Add at least a first name, last name, or company under Edit details so we can find this person."
+				"You can't open LinkedIn search yet. Add a first name or last name under Edit details so we can search for this person."
 			);
 			return;
 		}
@@ -587,7 +587,7 @@
 						onclick={onLinkedInCtaClick}
 						aria-disabled={loading || !canOpenLinkedInSearch(contact)}
 						title={!canOpenLinkedInSearch(contact)
-							? 'Add first name, last name, or company (Edit details)'
+							? 'Add first name or last name (Edit details)'
 							: undefined}
 					>
 						{#if pulsingCta === 'linkedin'}
