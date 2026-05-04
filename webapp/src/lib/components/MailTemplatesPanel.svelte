@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { resolve } from '$app/paths';
+	import TemplateFieldWithPlaceholders from '$lib/components/TemplateFieldWithPlaceholders.svelte';
+	import { MAIL_TEMPLATE_PLACEHOLDERS } from '$lib/mail-templates/placeholders';
 
 	type Props = { onBack: () => void };
 
@@ -24,6 +26,17 @@
 	let formDisplayName = $state('');
 	let formSubject = $state('');
 	let formBody = $state('');
+	/** Bumps when opening the editor so placeholder fields remount with fresh DOM. */
+	let templateEditorKey = $state(0);
+	let variablesDialogEl = $state<HTMLDialogElement | null>(null);
+
+	function openVariablesHelp() {
+		variablesDialogEl?.showModal();
+	}
+
+	function onVariablesDialogClick(e: MouseEvent) {
+		if (e.target === variablesDialogEl) variablesDialogEl?.close();
+	}
 
 	async function fetchList() {
 		loading = true;
@@ -58,6 +71,7 @@
 		formDisplayName = '';
 		formSubject = '';
 		formBody = '';
+		templateEditorKey += 1;
 		view = 'detail';
 	}
 
@@ -66,6 +80,7 @@
 		formDisplayName = row.displayName;
 		formSubject = row.subject;
 		formBody = row.body;
+		templateEditorKey += 1;
 		view = 'detail';
 	}
 
@@ -164,9 +179,7 @@
 			Follow-up mail templates
 		</h3>
 		<p class="m-0 mt-2 text-[0.875rem] leading-[1.45] text-[var(--text-muted)]">
-			These appear when you send a follow-up email after scanning a card. Use
-			<code class="rounded bg-white/10 px-1 py-0.5 text-[0.8em]">{`{firstName}`}</code>
-			in the subject or body to insert the contact’s first name.
+			Used when you send a follow-up email after a scan.
 		</p>
 
 		{#if unauthorized}
@@ -231,9 +244,58 @@
 				← Templates
 			</button>
 		</div>
-		<h3 class="m-0 mt-3 text-[1.05rem] font-semibold tracking-[-0.02em]">
-			{editingId ? 'Edit template' : 'New template'}
-		</h3>
+		<div class="mt-3 flex items-start justify-between gap-2">
+			<h3 class="m-0 flex-1 text-[1.05rem] font-semibold tracking-[-0.02em]">
+				{editingId ? 'Edit template' : 'New template'}
+			</h3>
+			<button
+				type="button"
+				class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] border border-[var(--border)] text-[var(--text-muted)] transition-colors hover:border-[var(--accent)]/40 hover:text-[var(--text)]"
+				onclick={openVariablesHelp}
+				disabled={saving}
+				aria-label="About contact variables"
+				title="Variables"
+			>
+				<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+					<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" />
+					<path stroke="currentColor" stroke-width="1.5" stroke-linecap="round" d="M12 16v-5M12 8h.01" />
+				</svg>
+			</button>
+		</div>
+
+		<dialog
+			bind:this={variablesDialogEl}
+			class="fixed left-1/2 top-1/2 z-[70] m-0 w-[min(560px,calc(100vw-2rem))] max-h-[min(90dvh,32rem)] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[var(--radius-md)] border border-[var(--border)] bg-[var(--bg-base)] p-0 text-[var(--text)] shadow-lg outline-none [&::backdrop]:bg-black/50"
+			onclick={onVariablesDialogClick}
+		>
+			<div class="border-b border-[var(--border)] px-4 py-3">
+				<p class="m-0 text-[0.9375rem] font-semibold">Contact variables</p>
+			</div>
+			<div class="max-h-[min(60dvh,22rem)] overflow-y-auto px-4 py-3">
+				<p class="m-0 text-[0.8125rem] leading-snug text-[var(--text-muted)]">
+					+ inserts a chip at the cursor. × removes it. On send, chips become the saved contact
+					data.
+				</p>
+				<ul class="m-0 mt-3 list-none space-y-2.5 p-0">
+					{#each MAIL_TEMPLATE_PLACEHOLDERS as row (row.key)}
+						<li class="text-[0.8125rem] leading-snug">
+							<span class="font-semibold text-[var(--text)]">{row.label}</span>
+							<span class="text-[var(--text-muted)]"> — {row.help}</span>
+						</li>
+					{/each}
+				</ul>
+			</div>
+			<div class="border-t border-[var(--border)] px-4 py-3">
+				<form method="dialog">
+					<button
+						type="submit"
+						class="btn-accent-primary btn-accent-primary--r-md min-h-9 w-full px-3 text-[0.8125rem] font-semibold text-[var(--accent-ink)]"
+					>
+						Got it
+					</button>
+				</form>
+			</div>
+		</dialog>
 
 		<div class="mt-4 grid min-h-0 flex-1 gap-4">
 			<div>
@@ -247,26 +309,35 @@
 					placeholder="e.g. Stay in touch"
 				/>
 			</div>
-			<div>
-				<label class={labelClass} for="tpl-subject">Subject</label>
-				<input
-					id="tpl-subject"
-					type="text"
-					class={fieldClass}
-					autocomplete="off"
-					bind:value={formSubject}
-					placeholder="Email subject line"
-				/>
-			</div>
-			<div class="flex min-h-0 flex-1 flex-col">
-				<label class={labelClass} for="tpl-body">Message</label>
-				<textarea
-					id="tpl-body"
-					class={`${fieldClass} min-h-[10rem] flex-1 resize-y font-[inherit] leading-[1.45]`}
-					bind:value={formBody}
-					placeholder={'Email body — {firstName} is replaced by the contact’s first name'}
-				></textarea>
-			</div>
+			{#key templateEditorKey}
+				<div>
+					<!-- Editor is contenteditable; it uses aria-labelledby → this label. -->
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label id="mail-tpl-subject-lbl" class={labelClass}>Subject</label>
+					<TemplateFieldWithPlaceholders
+						id="tpl-subject"
+						labelledBy="mail-tpl-subject-lbl"
+						bind:value={formSubject}
+						multiline={false}
+						disabled={saving}
+						{fieldClass}
+						placeholder="Subject line"
+					/>
+				</div>
+				<div class="flex min-h-0 flex-1 flex-col">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label id="mail-tpl-body-lbl" class={labelClass}>Message</label>
+					<TemplateFieldWithPlaceholders
+						id="tpl-body"
+						labelledBy="mail-tpl-body-lbl"
+						bind:value={formBody}
+						multiline={true}
+						disabled={saving}
+						{fieldClass}
+						placeholder="Message"
+					/>
+				</div>
+			{/key}
 		</div>
 
 		{#if error}

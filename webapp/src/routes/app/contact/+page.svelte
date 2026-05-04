@@ -5,6 +5,7 @@
 	import ContactForm from '$lib/components/scan/ContactForm.svelte';
 	import VcfDownloadButton from '$lib/components/scan/VcfDownloadButton.svelte';
 	import { DEFAULT_MAIL_TEMPLATES_SEED } from '$lib/mail-templates/defaults';
+	import { personalizeMailTemplate } from '$lib/mail-templates/placeholders';
 	import type { Contact } from '$lib/contact';
 	import {
 		clearReviewSession,
@@ -124,8 +125,8 @@
 	}
 
 	function personalizeTemplate(text: string): string {
-		const name = contact?.firstName?.trim() || 'there';
-		return text.replaceAll('{firstName}', name);
+		if (!contact) return text;
+		return personalizeMailTemplate(text, contact);
 	}
 
 	function buildMailtoUrl(to: string, subject: string, body: string): string {
