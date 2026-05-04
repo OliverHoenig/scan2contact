@@ -88,10 +88,6 @@ export const POST: RequestHandler = async ({ request }) => {
 	const imageBuffer = Buffer.from(await image.arrayBuffer());
 	try {
 		const converted = await convertImageToOcrInput(imageBuffer, image.type, image.name);
-		/*
-		const ocr = getOcrProvider();
-		const ocrResult = await ocr.extractText(converted.buffer, converted.mimeType);
-		const parsedContact = contactSchema.parse({ notes: ocrResult.text });*/
 
 		const client = new OpenAI({
 			baseURL: "https://api.scaleway.ai/279b4503-9e22-427a-826e-a221dc1a4539/v1",
